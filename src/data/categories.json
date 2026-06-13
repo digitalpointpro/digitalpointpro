@@ -1,0 +1,137 @@
+[
+  {
+    "id": "cmqcp5hs20000ow45qwvuo5nw",
+    "name": "Artificial Intelligence",
+    "slug": "artificial-intelligence",
+    "description": "Explore the latest in AI technology, tools, and applications",
+    "icon": "🤖",
+    "createdAt": "2026-06-13T18:36:31.683Z",
+    "updatedAt": "2026-06-13T18:55:45.512Z"
+  },
+  {
+    "id": "cmqcp5hs80007ow45zp4o4tbn",
+    "name": "Cyber Security",
+    "slug": "cyber-security",
+    "description": "Protect yourself and your business from cyber threats",
+    "icon": "🔒",
+    "createdAt": "2026-06-13T18:36:31.689Z",
+    "updatedAt": "2026-06-13T18:55:45.518Z"
+  },
+  {
+    "id": "cmqcp5hs80006ow45v0qajzd4",
+    "name": "Digital Marketing",
+    "slug": "digital-marketing",
+    "description": "Master digital marketing strategies for business growth",
+    "icon": "📈",
+    "createdAt": "2026-06-13T18:36:31.688Z",
+    "updatedAt": "2026-06-13T18:55:45.517Z"
+  },
+  {
+    "id": "cmqcp5hsa000aow454by5tr4v",
+    "name": "Education & Learning",
+    "slug": "education-learning",
+    "description": "Discover the best learning platforms and educational resources",
+    "icon": "📚",
+    "createdAt": "2026-06-13T18:36:31.691Z",
+    "updatedAt": "2026-06-13T18:55:45.520Z"
+  },
+  {
+    "id": "cmqcp5hsb000bow45k92ij0wg",
+    "name": "Freelancing",
+    "slug": "freelancing",
+    "description": "Launch and grow your freelance career successfully",
+    "icon": "✏️",
+    "createdAt": "2026-06-13T18:36:31.691Z",
+    "updatedAt": "2026-06-13T18:55:45.521Z"
+  },
+  {
+    "id": "cmqcp5hsc000dow45ox8a0q3m",
+    "name": "Future Careers",
+    "slug": "future-careers",
+    "description": "Prepare for the jobs of tomorrow with career planning insights",
+    "icon": "🎯",
+    "createdAt": "2026-06-13T18:36:31.692Z",
+    "updatedAt": "2026-06-13T18:55:45.522Z"
+  },
+  {
+    "id": "cmqcp5hsa0009ow45uo67vt6p",
+    "name": "Health & Wellness",
+    "slug": "health-wellness",
+    "description": "Achieve better health and wellness in the digital age",
+    "icon": "🌿",
+    "createdAt": "2026-06-13T18:36:31.690Z",
+    "updatedAt": "2026-06-13T18:55:45.519Z"
+  },
+  {
+    "id": "cmqcp5hs40001ow45j4xc3xm1",
+    "name": "Online Business",
+    "slug": "online-business",
+    "description": "Build and grow your online business empire",
+    "icon": "💼",
+    "createdAt": "2026-06-13T18:36:31.685Z",
+    "updatedAt": "2026-06-13T18:55:45.514Z"
+  },
+  {
+    "id": "cmqcp5hs60003ow45auw16cvx",
+    "name": "Personal Finance",
+    "slug": "personal-finance",
+    "description": "Master your money with smart financial strategies",
+    "icon": "💰",
+    "createdAt": "2026-06-13T18:36:31.686Z",
+    "updatedAt": "2026-06-13T18:55:45.515Z"
+  },
+  {
+    "id": "cmqcp5hs60004ow45bcmlwgz7",
+    "name": "Productivity",
+    "slug": "productivity",
+    "description": "Boost your productivity and get more done in less time",
+    "icon": "⚡",
+    "createdAt": "2026-06-13T18:36:31.687Z",
+    "updatedAt": "2026-06-13T18:55:45.516Z"
+  },
+  {
+    "id": "cmqcp5hs50002ow45aexyeu0d",
+    "name": "Remote Jobs",
+    "slug": "remote-jobs",
+    "description": "Find remote work opportunities and thrive working from anywhere",
+    "icon": "🏠",
+    "createdAt": "2026-06-13T18:36:31.685Z",
+    "updatedAt": "2026-06-13T18:55:45.515Z"
+  },
+  {
+    "id": "cmqcp5hsb000cow45g4ny6oa5",
+    "name": "Side Hustles",
+    "slug": "side-hustles",
+    "description": "Find profitable side hustles to boost your income",
+    "icon": "💡",
+    "createdAt": "2026-06-13T18:36:31.692Z",
+    "updatedAt": "2026-06-13T18:55:45.521Z"
+  },
+  {
+    "id": "cmqcp5hs90008ow45nad2u5fm",
+    "name": "Smartphone Tips",
+    "slug": "smartphone-tips",
+    "description": "Get the most out of your smartphone with expert tips",
+    "icon": "📱",
+    "createdAt": "2026-06-13T18:36:31.690Z",
+    "updatedAt": "2026-06-13T18:55:45.519Z"
+  },
+  {
+    "id": "cmqcp5hsc000eow457wj5n8ag",
+    "name": "Social Media Growth",
+    "slug": "social-media-growth",
+    "description": "Grow your social media presence and engagement",
+    "icon": "🔗",
+    "createdAt": "2026-06-13T18:36:31.693Z",
+    "updatedAt": "2026-06-13T18:55:45.522Z"
+  },
+  {
+    "id": "cmqcp5hs70005ow45jt2bhzl8",
+    "name": "Technology Trends",
+    "slug": "technology-trends",
+    "description": "Stay ahead with the latest technology trends and innovations",
+    "icon": "🚀",
+    "createdAt": "2026-06-13T18:36:31.687Z",
+    "updatedAt": "2026-06-13T18:55:45.517Z"
+  }
+]

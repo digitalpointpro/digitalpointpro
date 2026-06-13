@@ -1,17 +1,9 @@
-import { db } from '@/lib/db';
+import { getCategories } from '@/lib/static-data';
 import { NextResponse } from 'next/server';
 
 export async function GET() {
   try {
-    const categories = await db.category.findMany({
-      orderBy: { name: 'asc' },
-      include: {
-        _count: {
-          select: { articles: { where: { published: true } } },
-        },
-      },
-    });
-
+    const categories = getCategories();
     return NextResponse.json({ categories });
   } catch (error) {
     console.error('Error fetching categories:', error);

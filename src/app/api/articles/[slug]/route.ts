@@ -1,4 +1,4 @@
-import { db } from '@/lib/db';
+import { getArticleBySlug } from '@/lib/static-data';
 import { NextRequest, NextResponse } from 'next/server';
 
 export async function GET(
@@ -7,37 +7,13 @@ export async function GET(
 ) {
   try {
     const { slug } = await params;
-    const article = await db.article.findUnique({
-      where: { slug },
-    });
+    const result = getArticleBySlug(slug);
 
-    if (!article) {
+    if (!result) {
       return NextResponse.json({ error: 'Article not found' }, { status: 404 });
     }
 
-    // Get related articles from same category
-    const related = await db.article.findMany({
-      where: {
-        categorySlug: article.categorySlug,
-        slug: { not: slug },
-        published: true,
-      },
-      take: 4,
-      orderBy: { createdAt: 'desc' },
-      select: {
-        id: true,
-        title: true,
-        slug: true,
-        excerpt: true,
-        featuredImage: true,
-        category: true,
-        author: true,
-        readTime: true,
-        createdAt: true,
-      },
-    });
-
-    return NextResponse.json({ article, related });
+    return NextResponse.json(result);
   } catch (error) {
     console.error('Error fetching article:', error);
     return NextResponse.json({ error: 'Failed to fetch article' }, { status: 500 });
