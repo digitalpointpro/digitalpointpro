@@ -52,7 +52,7 @@ export interface FAQ {
   answer: string;
 }
 
-export type OverlayType = 'article' | 'about' | 'privacy' | 'disclaimer' | 'terms' | 'contact' | 'category' | null;
+export type OverlayType = 'article' | 'about' | 'privacy' | 'disclaimer' | 'terms' | 'contact' | 'category' | 'admin' | null;
 
 export interface NavigationState {
   overlayType: OverlayType;

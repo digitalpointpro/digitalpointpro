@@ -13,6 +13,7 @@ import ArticleOverlay from '@/components/article-overlay'
 import StaticPageOverlay from '@/components/static-page-overlay'
 import CategoryOverlay from '@/components/category-overlay'
 import SearchModal from '@/components/search-modal'
+import AdminOverlay from '@/components/admin-overlay'
 import BackToTop from '@/components/back-to-top'
 import { Skeleton } from '@/components/ui/skeleton'
 import { Separator } from '@/components/ui/separator'
@@ -241,6 +242,7 @@ export default function Home() {
         <StaticPageOverlay type={overlayType} />
       )}
       {isOverlayOpen && overlayType === 'category' && <CategoryOverlay />}
+      {isOverlayOpen && overlayType === 'admin' && <AdminOverlay />}
 
       {/* Search Modal */}
       <SearchModal isOpen={searchOpen} onClose={() => setSearchOpen(false)} />

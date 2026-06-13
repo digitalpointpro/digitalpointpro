@@ -25,6 +25,7 @@ import {
   Menu,
   ChevronDown,
   TrendingUp,
+  PenSquare,
 } from 'lucide-react'
 
 const emptySubscribe = () => () => {}
@@ -39,6 +40,14 @@ function useMounted() {
 export default function Header() {
   const { theme, setTheme } = useTheme()
   const { openPage } = useNavigation()
+  const openAdmin = () => {
+    window.history.pushState({ overlay: 'admin' }, '', '/admin')
+    useNavigation.getState().overlayType = 'admin'
+    useNavigation.getState().overlayData = null
+    useNavigation.getState().isOverlayOpen = true
+    document.body.style.overflow = 'hidden'
+    useNavigation.setState({ overlayType: 'admin', overlayData: null, isOverlayOpen: true })
+  }
   const [categories, setCategories] = useState<Category[]>([])
   const [mobileOpen, setMobileOpen] = useState(false)
   const [scrolled, setScrolled] = useState(false)
@@ -158,6 +167,18 @@ export default function Header() {
               <span className="sr-only">Search</span>
             </Button>
 
+            {/* Admin Button */}
+            <Button
+              variant="ghost"
+              size="icon"
+              className="h-9 w-9 text-primary hover:bg-primary/10"
+              onClick={openAdmin}
+              title="Admin Panel - Add Articles"
+            >
+              <PenSquare className="h-4.5 w-4.5" />
+              <span className="sr-only">Admin</span>
+            </Button>
+
             {/* Theme Toggle */}
             {mounted && (
               <Button
@@ -209,6 +230,17 @@ export default function Header() {
                     </div>
                   )}
                   <div className="border-t pt-2 mt-1">
+                    <Button
+                      variant="default"
+                      className="w-full mb-3 gap-2 bg-primary text-primary-foreground"
+                      onClick={() => {
+                        openAdmin()
+                        setMobileOpen(false)
+                      }}
+                    >
+                      <PenSquare className="h-4 w-4" />
+                      Admin - Add Article
+                    </Button>
                     <p className="text-xs font-semibold uppercase tracking-wider text-muted-foreground mb-2 px-3">
                       Pages
                     </p>
