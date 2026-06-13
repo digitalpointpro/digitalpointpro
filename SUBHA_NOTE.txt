@@ -1,0 +1,110 @@
+================================================================
+  🔴 DIGITAL POINT PRO - COMPLETE RECOVERY NOTE 🔴
+  SAVE THIS ON YOUR PHONE / NOTEPAD RIGHT NOW!
+================================================================
+
+🌐 LIVE WEBSITE: digitalpointpro.vercel.app
+💻 GITHUB REPO: github.com/digitalpointpro/digitalpointpro
+👤 GITHUB USERNAME: digitalpointpro
+📊 STATUS: 30 Articles | 15 Categories | Live on Vercel
+
+================================================================
+  SUBHA Z.AI PAR NAYA CHAT START KARO - YE MESSAGE PASTE KARO:
+================================================================
+
+--- COPY FROM HERE ---
+
+Digital Point Pro website live hai digitalpointpro.vercel.app par.
+GitHub repo: digitalpointpro/digitalpointpro
+Code push ho chuka hai GitHub par.
+30 articles + 15 categories working on Vercel.
+Static JSON data use ho raha hai (no database on Vercel).
+
+Mujhe ye changes karne hain:
+1. [YAHAN APNI CHANGES LIKHO - jaise: background color change karo, font change karo etc]
+2. [Yahan naya article topic likho - jaise: AI topic par article add karo]
+3. Adsterra ads lagane hain - code snippets dunga
+
+Code update karke GitHub push karo ta k Vercel auto-deploy ho jaye.
+
+--- COPY TILL HERE ---
+
+================================================================
+  ADSTERRA SETUP STEPS (Subha Karne Hain):
+================================================================
+
+STEP 1: Account Banao
+- adsterra.com kholo
+- "Sign Up" karo (Publisher account)
+- Email verify karo
+
+STEP 2: Website Add Karo
+- Dashboard mein "Add Website" dabo
+- URL dalo: digitalpointpro.vercel.app
+- 1-24 hour mein approve hoga
+
+STEP 3: Ad Zones Banao (Ye 4 Formats Chuno)
+- Banner 728x90 (Header ke liye)
+- Banner 300x250 (Sidebar ke liye)
+- Native Ads (Articles ke beech mein)
+- Direct Link / Social Bar (Extra earning)
+
+STEP 4: Code Copy Karo
+- Har ad zone ka code snippet copy karo
+- Wo code Z.ai chat mein paste karo
+- Main website mein laga dunga
+
+================================================================
+  AGAR ADSTERRA APPROVE NA HO TOH ALTERNATIVES:
+================================================================
+
+1. PropellerAds - propellerads.com (Easy approval)
+2. HilltopAds - hilltopads.com (Easy approval)
+3. RevenueHits - revenuehits.com (Instant approval)
+4. AdSense - google.com/adsense (Hard approval, needs custom domain)
+
+================================================================
+  DOMAIN INFO (AdSense Ke Liye Zaroori):
+================================================================
+
+- AdSense ke liye custom domain chahiye (.vercel.app par nahi hoga)
+- Adsterra ke liye custom domain zaroori NAHI - .vercel.app par bhi chalta hai
+- Best domain options:
+  * digitalpointpro.com (~Rs 2,500/year)
+  * digitalpointpro.pro (~Rs 800/year)
+  * digitalpointpro.site (~Rs 550/year)
+- Kharidne ke liye: namecheap.com ya hostinger.com
+- Domain Vercel par FREE connect hoga
+
+================================================================
+  CURRENT WEBSITE FEATURES:
+================================================================
+
+✅ 30 Full Articles (1000-1500 words each)
+✅ 15 Categories (AI, Business, Finance, Tech etc)
+✅ 30 HD Featured Images
+✅ Professional Emerald/Teal Theme
+✅ Dark Mode Support
+✅ Mobile Responsive Design
+✅ SEO Optimized (Meta tags, Schema, OG tags)
+✅ AdSense Ready Pages (Privacy, Terms, Disclaimer, About, Contact)
+✅ Search Functionality
+✅ Reading Progress Bar
+✅ Back to Top Button
+✅ Newsletter Section
+✅ Admin Panel (Sandbox only)
+✅ Frozen Homepage with Overlay Navigation
+✅ Sticky Header
+✅ Breadcrumbs
+
+================================================================
+  IMPORTANT LINKS:
+================================================================
+
+Website:    digitalpointpro.vercel.app
+GitHub:     github.com/digitalpointpro/digitalpointpro
+Vercel:     vercel.com (login with GitHub)
+Adsterra:   adsterra.com
+Namecheap:  namecheap.com (for domain)
+
+================================================================
