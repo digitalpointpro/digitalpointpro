@@ -12,33 +12,25 @@ import {
   Youtube,
   Mail,
   ArrowRight,
+  Brain,
+  Cpu,
+  Heart,
+  Briefcase,
+  Pen,
+  Newspaper,
 } from 'lucide-react'
 
 export default function Footer() {
   const { openPage } = useNavigation()
 
-  const quickLinks = [
-    { label: 'About Us', action: () => openPage('about') },
-    { label: 'Contact', action: () => openPage('contact') },
-    { label: 'Privacy Policy', action: () => openPage('privacy') },
-    { label: 'Terms & Conditions', action: () => openPage('terms') },
-    { label: 'Disclaimer', action: () => openPage('disclaimer') },
+  const sectionLinks = [
+    { label: 'AI', icon: Brain, slug: 'artificial-intelligence' },
+    { label: 'Technology', icon: Cpu, slug: 'technology-trends' },
+    { label: 'Health', icon: Heart, slug: 'health-wellness' },
+    { label: 'Business', icon: Briefcase, slug: 'online-business' },
+    { label: 'Freelancing', icon: Pen, slug: 'freelancing' },
+    { label: 'Latest News', icon: Newspaper, action: 'latest-news' as const },
   ]
-
-  const [categories, setCategories] = React.useState<{label: string; slug: string}[]>([])
-
-  React.useEffect(() => {
-    fetch('/api/categories')
-      .then(res => res.json())
-      .then(data => {
-        const cats = (data.categories || []).slice(0, 6).map((c: any) => ({
-          label: c.name,
-          slug: c.slug,
-        }))
-        setCategories(cats)
-      })
-      .catch(() => {})
-  }, [])
 
   const socialLinks = [
     { icon: Facebook, href: '#', label: 'Facebook' },
@@ -89,16 +81,23 @@ export default function Footer() {
             </div>
           </div>
 
-          {/* Quick Links */}
+          {/* Section Quick Links */}
           <div>
-            <h3 className="text-sm font-semibold mb-4">Quick Links</h3>
+            <h3 className="text-sm font-semibold mb-4">Sections</h3>
             <ul className="space-y-2">
-              {quickLinks.map((link) => (
+              {sectionLinks.map((link) => (
                 <li key={link.label}>
                   <button
-                    onClick={link.action}
-                    className="text-sm text-muted-foreground hover:text-primary transition-colors"
+                    onClick={() => {
+                      if (link.action === 'latest-news') {
+                        openPage('latest-news')
+                      } else if (link.slug) {
+                        openPage('category', link.slug)
+                      }
+                    }}
+                    className="text-sm text-muted-foreground hover:text-primary transition-colors flex items-center gap-2"
                   >
+                    <link.icon className="h-3.5 w-3.5" />
                     {link.label}
                   </button>
                 </li>
@@ -106,20 +105,18 @@ export default function Footer() {
             </ul>
           </div>
 
-          {/* Categories */}
+          {/* Legal & About */}
           <div>
-            <h3 className="text-sm font-semibold mb-4">Categories</h3>
+            <h3 className="text-sm font-semibold mb-4">Legal & About</h3>
             <ul className="space-y-2">
-              {categories.map((cat) => (
-                <li key={cat.slug}>
-                  <button
-                    onClick={() => openPage('category', cat.slug)}
-                    className="text-sm text-muted-foreground hover:text-primary transition-colors"
-                  >
-                    {cat.label}
-                  </button>
-                </li>
-              ))}
+              <li>
+                <button
+                  onClick={() => openPage('legal')}
+                  className="text-sm text-muted-foreground hover:text-primary transition-colors"
+                >
+                  Legal & About
+                </button>
+              </li>
             </ul>
           </div>
 
@@ -155,13 +152,13 @@ export default function Footer() {
             © {new Date().getFullYear()} Digital Point Pro. All rights reserved.
           </p>
           <div className="flex items-center gap-4 text-xs text-muted-foreground">
-            <button onClick={() => openPage('privacy')} className="hover:text-primary transition-colors">
+            <button onClick={() => openPage('legal', 'privacy')} className="hover:text-primary transition-colors">
               Privacy
             </button>
-            <button onClick={() => openPage('terms')} className="hover:text-primary transition-colors">
+            <button onClick={() => openPage('legal', 'terms')} className="hover:text-primary transition-colors">
               Terms
             </button>
-            <button onClick={() => openPage('disclaimer')} className="hover:text-primary transition-colors">
+            <button onClick={() => openPage('legal', 'disclaimer')} className="hover:text-primary transition-colors">
               Disclaimer
             </button>
           </div>

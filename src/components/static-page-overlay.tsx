@@ -2,14 +2,25 @@
 
 import React from 'react'
 import { useNavigation } from '@/lib/store'
-import { OverlayType } from '@/lib/types'
 import { Button } from '@/components/ui/button'
-import { Separator } from '@/components/ui/separator'
-import { X, ChevronRight, Mail, MapPin, Phone } from 'lucide-react'
+import { Tabs, TabsList, TabsTrigger, TabsContent } from '@/components/ui/tabs'
+import { X, ChevronRight } from 'lucide-react'
 import { Input } from '@/components/ui/input'
 import { Textarea } from '@/components/ui/textarea'
+import { Mail } from 'lucide-react'
 
-const pageContent: Record<string, { title: string; content: React.ReactNode }> = {
+const legalTabs = ['about', 'privacy', 'terms', 'disclaimer', 'contact'] as const
+type LegalTab = typeof legalTabs[number]
+
+const tabLabels: Record<LegalTab, string> = {
+  about: 'About',
+  privacy: 'Privacy',
+  terms: 'Terms',
+  disclaimer: 'Disclaimer',
+  contact: 'Contact',
+}
+
+const legalContent: Record<LegalTab, { title: string; content: React.ReactNode }> = {
   about: {
     title: 'About Us',
     content: (
@@ -104,54 +115,6 @@ const pageContent: Record<string, { title: string; content: React.ReactNode }> =
       </div>
     ),
   },
-  disclaimer: {
-    title: 'Disclaimer',
-    content: (
-      <div className="article-body space-y-6">
-        <p><em>Last updated: January 2025</em></p>
-        <h2>General Information</h2>
-        <p>
-          The information provided on Digital Point Pro is for general informational and
-          educational purposes only. All information on the site is provided in good faith;
-          however, we make no representation or warranty of any kind, express or implied,
-          regarding the accuracy, adequacy, validity, reliability, availability, or completeness
-          of any information on the site.
-        </p>
-        <h2>No Professional Advice</h2>
-        <p>
-          The content on Digital Point Pro does not constitute professional advice of any kind,
-          including but not limited to financial, legal, medical, or technical advice. You should
-          always consult with a qualified professional before making any decisions based on the
-          information provided on this website.
-        </p>
-        <h2>Affiliate Links</h2>
-        <p>
-          Some links on Digital Point Pro may be affiliate links. This means that if you click on
-          the link and make a purchase, we may receive a small commission at no additional cost to
-          you. These commissions help us maintain and operate this website. We only recommend
-          products and services we genuinely believe in.
-        </p>
-        <h2>Third-Party Content</h2>
-        <p>
-          Our website may contain links to third-party websites or content that is not owned or
-          controlled by Digital Point Pro. We have no control over, and assume no responsibility
-          for, the content, privacy policies, or practices of any third-party websites.
-        </p>
-        <h2>Changes to Content</h2>
-        <p>
-          Digital Point Pro reserves the right to add, modify, or remove any content on the
-          website at any time without prior notice. We are not obligated to update any information
-          on the site.
-        </p>
-        <h2>Limitation of Liability</h2>
-        <p>
-          Under no circumstances shall Digital Point Pro be liable for any loss or damage,
-          including without limitation, indirect or consequential loss or damage, arising from or
-          in connection with the use of this website.
-        </p>
-      </div>
-    ),
-  },
   terms: {
     title: 'Terms and Conditions',
     content: (
@@ -204,6 +167,54 @@ const pageContent: Record<string, { title: string; content: React.ReactNode }> =
           These terms and conditions are governed by and construed in accordance with applicable
           laws, and you irrevocably submit to the exclusive jurisdiction of the courts in that
           location.
+        </p>
+      </div>
+    ),
+  },
+  disclaimer: {
+    title: 'Disclaimer',
+    content: (
+      <div className="article-body space-y-6">
+        <p><em>Last updated: January 2025</em></p>
+        <h2>General Information</h2>
+        <p>
+          The information provided on Digital Point Pro is for general informational and
+          educational purposes only. All information on the site is provided in good faith;
+          however, we make no representation or warranty of any kind, express or implied,
+          regarding the accuracy, adequacy, validity, reliability, availability, or completeness
+          of any information on the site.
+        </p>
+        <h2>No Professional Advice</h2>
+        <p>
+          The content on Digital Point Pro does not constitute professional advice of any kind,
+          including but not limited to financial, legal, medical, or technical advice. You should
+          always consult with a qualified professional before making any decisions based on the
+          information provided on this website.
+        </p>
+        <h2>Affiliate Links</h2>
+        <p>
+          Some links on Digital Point Pro may be affiliate links. This means that if you click on
+          the link and make a purchase, we may receive a small commission at no additional cost to
+          you. These commissions help us maintain and operate this website. We only recommend
+          products and services we genuinely believe in.
+        </p>
+        <h2>Third-Party Content</h2>
+        <p>
+          Our website may contain links to third-party websites or content that is not owned or
+          controlled by Digital Point Pro. We have no control over, and assume no responsibility
+          for, the content, privacy policies, or practices of any third-party websites.
+        </p>
+        <h2>Changes to Content</h2>
+        <p>
+          Digital Point Pro reserves the right to add, modify, or remove any content on the
+          website at any time without prior notice. We are not obligated to update any information
+          on the site.
+        </p>
+        <h2>Limitation of Liability</h2>
+        <p>
+          Under no circumstances shall Digital Point Pro be liable for any loss or damage,
+          including without limitation, indirect or consequential loss or damage, arising from or
+          in connection with the use of this website.
         </p>
       </div>
     ),
@@ -272,12 +283,19 @@ interface StaticPageOverlayProps {
   type: OverlayType
 }
 
+function getInitialTab(data: string | null): LegalTab {
+  if (data && legalTabs.includes(data as LegalTab)) {
+    return data as LegalTab
+  }
+  return 'about'
+}
+
 export default function StaticPageOverlay({ type }: StaticPageOverlayProps) {
-  const { closeOverlay } = useNavigation()
+  const { closeOverlay, overlayData } = useNavigation()
+  const initialTab = getInitialTab(overlayData)
+  const [activeTab, setActiveTab] = React.useState<LegalTab>(initialTab)
 
-  if (!type || !pageContent[type]) return null
-
-  const page = pageContent[type]
+  if (type !== 'legal') return null
 
   return (
     <div className="fixed inset-0 z-50 bg-background overlay-enter">
@@ -292,7 +310,7 @@ export default function StaticPageOverlay({ type }: StaticPageOverlayProps) {
               Home
             </button>
             <ChevronRight className="h-3 w-3" />
-            <span className="text-foreground font-medium">{page.title}</span>
+            <span className="text-foreground font-medium">Legal & About</span>
           </div>
           <Button
             variant="ghost"
@@ -308,10 +326,28 @@ export default function StaticPageOverlay({ type }: StaticPageOverlayProps) {
       {/* Content */}
       <div className="overflow-y-auto" style={{ height: 'calc(100vh - 49px)' }}>
         <div className="mx-auto max-w-4xl px-4 sm:px-6 lg:px-8 py-8 sm:py-12">
-          <h1 className="text-3xl sm:text-4xl font-bold tracking-tight mb-8">
-            {page.title}
+          <h1 className="text-3xl sm:text-4xl font-bold tracking-tight mb-6">
+            Legal & About
           </h1>
-          {page.content}
+
+          <Tabs value={activeTab} onValueChange={(v) => setActiveTab(v as LegalTab)}>
+            <TabsList className="mb-8 flex-wrap h-auto gap-1 p-1">
+              {legalTabs.map((tab) => (
+                <TabsTrigger key={tab} value={tab} className="text-sm">
+                  {tabLabels[tab]}
+                </TabsTrigger>
+              ))}
+            </TabsList>
+
+            {legalTabs.map((tab) => (
+              <TabsContent key={tab} value={tab}>
+                <h2 className="text-2xl font-bold tracking-tight mb-6">
+                  {legalContent[tab].title}
+                </h2>
+                {legalContent[tab].content}
+              </TabsContent>
+            ))}
+          </Tabs>
         </div>
       </div>
     </div>

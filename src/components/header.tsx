@@ -17,15 +17,30 @@ import {
   SheetTrigger,
   SheetTitle,
 } from '@/components/ui/sheet'
-import { Category } from '@/lib/types'
 import {
   Sun,
   Moon,
   Search,
   Menu,
+  Home,
+  Newspaper,
+  Brain,
+  Cpu,
+  Heart,
+  Briefcase,
+  Pen,
   ChevronDown,
-  TrendingUp,
   PenSquare,
+  Shield,
+  Smartphone,
+  MapPin,
+  DollarSign,
+  Rocket,
+  Megaphone,
+  GraduationCap,
+  TrendingUp,
+  Share2,
+  Zap,
 } from 'lucide-react'
 
 const emptySubscribe = () => () => {}
@@ -37,18 +52,37 @@ function useMounted() {
   )
 }
 
+const mainNavItems = [
+  { label: 'Home', icon: Home, action: 'home' },
+  { label: 'Latest News', icon: Newspaper, action: 'latest-news' },
+  { label: 'AI', icon: Brain, action: 'category', slug: 'artificial-intelligence' },
+  { label: 'Technology', icon: Cpu, action: 'category', slug: 'technology-trends' },
+  { label: 'Health & Lifestyle', icon: Heart, action: 'category', slug: 'health-wellness' },
+  { label: 'Business', icon: Briefcase, action: 'category', slug: 'online-business' },
+  { label: 'Freelancing', icon: Pen, action: 'category', slug: 'freelancing' },
+]
+
+const moreNavItems = [
+  { label: 'Cyber Security', icon: Shield, slug: 'cyber-security' },
+  { label: 'Smartphone Tips', icon: Smartphone, slug: 'smartphone-tips' },
+  { label: 'Remote Jobs', icon: MapPin, slug: 'remote-jobs' },
+  { label: 'Personal Finance', icon: DollarSign, slug: 'personal-finance' },
+  { label: 'Side Hustles', icon: Rocket, slug: 'side-hustles' },
+  { label: 'Digital Marketing', icon: Megaphone, slug: 'digital-marketing' },
+  { label: 'Education & Learning', icon: GraduationCap, slug: 'education-learning' },
+  { label: 'Future Careers', icon: TrendingUp, slug: 'future-careers' },
+  { label: 'Social Media Growth', icon: Share2, slug: 'social-media-growth' },
+  { label: 'Productivity', icon: Zap, slug: 'productivity' },
+]
+
 export default function Header() {
   const { theme, setTheme } = useTheme()
   const { openPage } = useNavigation()
   const openAdmin = () => {
-    window.history.pushState({ overlay: 'admin' }, '', '/admin')
-    useNavigation.getState().overlayType = 'admin'
-    useNavigation.getState().overlayData = null
-    useNavigation.getState().isOverlayOpen = true
-    document.body.style.overflow = 'hidden'
     useNavigation.setState({ overlayType: 'admin', overlayData: null, isOverlayOpen: true })
+    window.history.pushState({ overlay: 'admin' }, '', '/admin')
+    document.body.style.overflow = 'hidden'
   }
-  const [categories, setCategories] = useState<Category[]>([])
   const [mobileOpen, setMobileOpen] = useState(false)
   const [scrolled, setScrolled] = useState(false)
   const mounted = useMounted()
@@ -61,20 +95,17 @@ export default function Header() {
     return () => window.removeEventListener('scroll', handleScroll)
   }, [])
 
-  useEffect(() => {
-    fetch('/api/categories')
-      .then(res => res.json())
-      .then(data => setCategories(data.categories || []))
-      .catch(() => {})
-  }, [])
-
-  const navLinks = [
-    { label: 'About', action: () => openPage('about') },
-    { label: 'Privacy Policy', action: () => openPage('privacy') },
-    { label: 'Terms', action: () => openPage('terms') },
-    { label: 'Disclaimer', action: () => openPage('disclaimer') },
-    { label: 'Contact', action: () => openPage('contact') },
-  ]
+  const handleNavClick = (item: typeof mainNavItems[number]) => {
+    if (item.action === 'home') {
+      window.history.pushState({}, '', '/')
+      window.location.reload()
+    } else if (item.action === 'latest-news') {
+      openPage('latest-news')
+    } else if (item.action === 'category' && item.slug) {
+      openPage('category', item.slug)
+    }
+    setMobileOpen(false)
+  }
 
   return (
     <header
@@ -86,7 +117,7 @@ export default function Header() {
     >
       <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
         <div className="flex h-16 items-center justify-between">
-          {/* Logo */}
+          {/* Left: Logo */}
           <Link
             href="/"
             onClick={(e) => {
@@ -94,7 +125,7 @@ export default function Header() {
               window.history.pushState({}, '', '/')
               window.location.reload()
             }}
-            className="flex items-center gap-2 group"
+            className="flex items-center gap-2 group shrink-0"
           >
             <div className="flex h-9 w-9 items-center justify-center rounded-lg bg-primary text-primary-foreground font-bold text-lg transition-transform group-hover:scale-105">
               D
@@ -109,50 +140,46 @@ export default function Header() {
             </div>
           </Link>
 
-          {/* Desktop Navigation */}
-          <nav className="hidden lg:flex items-center gap-1">
-            {/* Categories Dropdown */}
+          {/* Center: Desktop Navigation */}
+          <nav className="hidden lg:flex items-center gap-0.5">
+            {mainNavItems.map((item) => (
+              <Button
+                key={item.label}
+                variant="ghost"
+                size="sm"
+                onClick={() => handleNavClick(item)}
+                className="gap-1.5 text-sm font-medium h-9 px-2.5"
+              >
+                <item.icon className="h-4 w-4" />
+                <span className="hidden xl:inline">{item.label}</span>
+              </Button>
+            ))}
+
+            {/* More Dropdown */}
             <DropdownMenu>
               <DropdownMenuTrigger asChild>
-                <Button variant="ghost" size="sm" className="gap-1 text-sm font-medium">
-                  Categories
-                  <ChevronDown className="h-3.5 w-3.5 opacity-50" />
+                <Button variant="ghost" size="sm" className="gap-1 text-sm font-medium h-9 px-2.5">
+                  <span className="hidden xl:inline">More</span>
+                  <ChevronDown className="h-3.5 w-3.5" />
                 </Button>
               </DropdownMenuTrigger>
-              <DropdownMenuContent align="start" className="w-56">
-                {categories.map((cat) => (
+              <DropdownMenuContent align="center" className="w-56">
+                {moreNavItems.map((item) => (
                   <DropdownMenuItem
-                    key={cat.id}
-                    onClick={() => openPage('category', cat.slug)}
-                    className="cursor-pointer"
+                    key={item.slug}
+                    onClick={() => openPage('category', item.slug)}
+                    className="cursor-pointer gap-2"
                   >
-                    <TrendingUp className="mr-2 h-4 w-4 text-primary" />
-                    <span>{cat.name}</span>
-                    {cat._count && (
-                      <span className="ml-auto text-xs text-muted-foreground">
-                        {cat._count.articles}
-                      </span>
-                    )}
+                    <item.icon className="h-4 w-4 text-primary" />
+                    <span>{item.label}</span>
                   </DropdownMenuItem>
                 ))}
               </DropdownMenuContent>
             </DropdownMenu>
-
-            {navLinks.map((link) => (
-              <Button
-                key={link.label}
-                variant="ghost"
-                size="sm"
-                onClick={link.action}
-                className="text-sm font-medium"
-              >
-                {link.label}
-              </Button>
-            ))}
           </nav>
 
-          {/* Right side actions */}
-          <div className="flex items-center gap-1">
+          {/* Right: Actions */}
+          <div className="flex items-center gap-0.5 shrink-0">
             {/* Search */}
             <Button
               variant="ghost"
@@ -167,19 +194,7 @@ export default function Header() {
               <span className="sr-only">Search</span>
             </Button>
 
-            {/* Admin Button */}
-            <Button
-              variant="ghost"
-              size="icon"
-              className="h-9 w-9 text-primary hover:bg-primary/10"
-              onClick={openAdmin}
-              title="Admin Panel - Add Articles"
-            >
-              <PenSquare className="h-4.5 w-4.5" />
-              <span className="sr-only">Admin</span>
-            </Button>
-
-            {/* Theme Toggle */}
+            {/* Dark Mode Toggle */}
             {mounted && (
               <Button
                 variant="ghost"
@@ -196,7 +211,19 @@ export default function Header() {
               </Button>
             )}
 
-            {/* Mobile Menu */}
+            {/* Admin Button */}
+            <Button
+              variant="ghost"
+              size="icon"
+              className="h-9 w-9 text-primary hover:bg-primary/10"
+              onClick={openAdmin}
+              title="Admin Panel - Add Articles"
+            >
+              <PenSquare className="h-4.5 w-4.5" />
+              <span className="sr-only">Admin</span>
+            </Button>
+
+            {/* Mobile Menu - only on mobile */}
             <Sheet open={mobileOpen} onOpenChange={setMobileOpen}>
               <SheetTrigger asChild>
                 <Button variant="ghost" size="icon" className="h-9 w-9 lg:hidden">
@@ -204,59 +231,75 @@ export default function Header() {
                   <span className="sr-only">Menu</span>
                 </Button>
               </SheetTrigger>
-              <SheetContent side="right" className="w-80 p-6">
-                <SheetTitle className="text-lg font-bold mb-6">
-                  Digital Point Pro
-                </SheetTitle>
-                <div className="flex flex-col gap-2">
-                  {categories.length > 0 && (
-                    <div className="mb-2">
-                      <p className="text-xs font-semibold uppercase tracking-wider text-muted-foreground mb-2 px-3">
-                        Categories
+              <SheetContent side="right" className="w-80 p-0">
+                <div className="flex flex-col h-full">
+                  <SheetTitle className="text-lg font-bold px-6 pt-6 pb-2">
+                    Navigation
+                  </SheetTitle>
+                  <div className="flex-1 overflow-y-auto px-4 pb-6">
+                    {/* Main Sections */}
+                    <div className="space-y-1">
+                      <p className="text-xs font-semibold uppercase tracking-wider text-muted-foreground px-3 pt-2 pb-1">
+                        Sections
                       </p>
-                      {categories.map((cat) => (
+                      {mainNavItems.map((item) => (
                         <Button
-                          key={cat.id}
+                          key={item.label}
                           variant="ghost"
-                          className="w-full justify-start text-sm"
-                          onClick={() => {
-                            openPage('category', cat.slug)
-                            setMobileOpen(false)
-                          }}
+                          className="w-full justify-start text-sm gap-3 h-10"
+                          onClick={() => handleNavClick(item)}
                         >
-                          {cat.name}
+                          <item.icon className="h-4 w-4 text-primary" />
+                          {item.label}
                         </Button>
                       ))}
                     </div>
-                  )}
-                  <div className="border-t pt-2 mt-1">
-                    <Button
-                      variant="default"
-                      className="w-full mb-3 gap-2 bg-primary text-primary-foreground"
-                      onClick={() => {
-                        openAdmin()
-                        setMobileOpen(false)
-                      }}
-                    >
-                      <PenSquare className="h-4 w-4" />
-                      Admin - Add Article
-                    </Button>
-                    <p className="text-xs font-semibold uppercase tracking-wider text-muted-foreground mb-2 px-3">
-                      Pages
-                    </p>
-                    {navLinks.map((link) => (
+
+                    {/* More Categories */}
+                    <div className="mt-4 space-y-1">
+                      <p className="text-xs font-semibold uppercase tracking-wider text-muted-foreground px-3 pt-2 pb-1">
+                        More Categories
+                      </p>
+                      {moreNavItems.map((item) => (
+                        <Button
+                          key={item.slug}
+                          variant="ghost"
+                          className="w-full justify-start text-sm gap-3 h-10"
+                          onClick={() => {
+                            openPage('category', item.slug)
+                            setMobileOpen(false)
+                          }}
+                        >
+                          <item.icon className="h-4 w-4 text-muted-foreground" />
+                          {item.label}
+                        </Button>
+                      ))}
+                    </div>
+
+                    {/* Admin & Legal */}
+                    <div className="mt-4 pt-4 border-t space-y-1">
                       <Button
-                        key={link.label}
-                        variant="ghost"
-                        className="w-full justify-start text-sm"
+                        variant="default"
+                        className="w-full gap-2 bg-primary text-primary-foreground h-10"
                         onClick={() => {
-                          link.action()
+                          openAdmin()
                           setMobileOpen(false)
                         }}
                       >
-                        {link.label}
+                        <PenSquare className="h-4 w-4" />
+                        Admin - Add Article
                       </Button>
-                    ))}
+                      <Button
+                        variant="ghost"
+                        className="w-full justify-start text-sm gap-3 h-10"
+                        onClick={() => {
+                          openPage('legal')
+                          setMobileOpen(false)
+                        }}
+                      >
+                        Legal & About
+                      </Button>
+                    </div>
                   </div>
                 </div>
               </SheetContent>

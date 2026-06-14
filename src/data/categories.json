@@ -1,5 +1,14 @@
 [
   {
+    "id": "cat_latest_news_001",
+    "name": "Latest News",
+    "slug": "latest-news",
+    "description": "Breaking news, geopolitical analysis, and live updates from around the world",
+    "icon": "📰",
+    "createdAt": "2026-05-01T08:00:00.000Z",
+    "updatedAt": "2026-05-01T08:00:00.000Z"
+  },
+  {
     "id": "cmqcp5hs20000ow45qwvuo5nw",
     "name": "Artificial Intelligence",
     "slug": "artificial-intelligence",

@@ -14,7 +14,14 @@ export const useNavigation = create<NavigationState>((set) => ({
 
   openPage: (type: OverlayType, data?: string) => {
     if (!type) return;
-    const path = type === 'category' && data ? `/category/${data}` : `/${type}`;
+    let path = `/${type}`;
+    if (type === 'category' && data) {
+      path = `/category/${data}`;
+    } else if (type === 'latest-news') {
+      path = '/latest-news';
+    } else if (type === 'legal') {
+      path = data ? `/legal/${data}` : '/legal';
+    }
     window.history.pushState({ overlay: type, data }, '', path);
     set({ overlayType: type, overlayData: data || null, isOverlayOpen: true });
     document.body.style.overflow = 'hidden';
