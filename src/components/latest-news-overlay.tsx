@@ -23,14 +23,14 @@ const navCategories = [
   { label: 'Phone', icon: Smartphone, action: 'category' as const, slug: 'smartphone-tips' },
 ]
 
-// Live YouTube video IDs related to war/conflict news
+// Real YouTube war/conflict news videos from BBC, Al Jazeera, NBC, CNN etc.
 const warVideos = [
-  { id: 'dG2fJLibE9M', title: 'Israel Iran Conflict Live Updates' },
-  { id: '9bZkp7q19c0', title: 'Middle East Crisis Analysis' },
-  { id: 'kJQP7kiw5Fk', title: 'US Iran Tensions Latest News' },
-  { id: 'RgKAFK5djSk', title: 'Lebanon Hezbollah Conflict Update' },
-  { id: 'JGwWNGJdvx8', title: 'Iraq Military Operations Coverage' },
-  { id: 'fJ9rUzIMcZQ', title: 'Iran Nuclear Deal Breaking News' },
+  { id: 'Tzw3FusCNMg', title: '100th Day of US-Israel War with Iran - BBC News' },
+  { id: 'E8NCz44JRS0', title: 'Iran & Israel Pause Strikes, Ceasefire Warnings - BBC News' },
+  { id: 'GfN_5AN9_5o', title: 'US & Iran Exchange Strikes Across Middle East - BBC News' },
+  { id: 'D3FWeG1Uqhg', title: 'Trump Tells Israel & Iran to Stop Shooting - BBC News' },
+  { id: '9tLp08WpWjY', title: 'Trump Says US-Iran Deal to Be Signed Tomorrow - Al Jazeera' },
+  { id: 'eqtYzJIq520', title: 'US & Iran Close to Signing Agreement - NBC News' },
 ]
 
 export default function LatestNewsOverlay() {
