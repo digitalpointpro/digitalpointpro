@@ -28,11 +28,35 @@ import {
   Linkedin,
   MessageCircle,
   ChevronRight,
+  ArrowLeft,
   List,
+  Home,
+  Newspaper,
+  Brain,
+  Cpu,
+  Heart,
+  Briefcase,
+  Pen,
+  Shield,
+  Smartphone,
+  MapPin,
 } from 'lucide-react'
 
+const navCategories = [
+  { label: 'Home', icon: Home, action: 'home' as const },
+  { label: 'News', icon: Newspaper, action: 'latest-news' as const },
+  { label: 'AI', icon: Brain, action: 'category' as const, slug: 'artificial-intelligence' },
+  { label: 'Tech', icon: Cpu, action: 'category' as const, slug: 'technology-trends' },
+  { label: 'Health', icon: Heart, action: 'category' as const, slug: 'health-lifestyle' },
+  { label: 'Business', icon: Briefcase, action: 'category' as const, slug: 'online-business' },
+  { label: 'Remote', icon: MapPin, action: 'category' as const, slug: 'remote-jobs' },
+  { label: 'Freelance', icon: Pen, action: 'category' as const, slug: 'freelancing' },
+  { label: 'Security', icon: Shield, action: 'category' as const, slug: 'cyber-security' },
+  { label: 'Phone', icon: Smartphone, action: 'category' as const, slug: 'smartphone-tips' },
+]
+
 export default function ArticleOverlay() {
-  const { overlayData, closeOverlay } = useNavigation()
+  const { overlayData, goBack, openPage, closeOverlay, previousOverlayType, previousOverlayData } = useNavigation()
   const [article, setArticle] = useState<Article | null>(null)
   const [related, setRelated] = useState<ArticleListItem[]>([])
   const [loading, setLoading] = useState(true)
@@ -59,7 +83,6 @@ export default function ArticleOverlay() {
     return () => { cancelled = true }
   }, [overlayData])
 
-  // Extract headings from article content - computed, not setState in effect
   const articleContent = article?.content ?? ''
   const headings = useMemo(() => {
     if (!articleContent) return []
@@ -80,7 +103,6 @@ export default function ArticleOverlay() {
     return result
   }, [articleContent])
 
-  // Add IDs to headings in the DOM after render
   useEffect(() => {
     if (!article?.content) return
     const timer = setTimeout(() => {
@@ -112,7 +134,6 @@ export default function ArticleOverlay() {
     })
   }
 
-  // Parse FAQ from string
   const faqs: FAQ[] = article?.faq ? (() => {
     try {
       return JSON.parse(article.faq)
@@ -120,6 +141,19 @@ export default function ArticleOverlay() {
       return []
     }
   })() : []
+
+  const handleNavClick = (cat: typeof navCategories[number]) => {
+    if (cat.action === 'home') {
+      closeOverlay()
+    } else if (cat.action === 'latest-news') {
+      openPage('latest-news')
+    } else if (cat.action === 'category' && cat.slug) {
+      openPage('category', cat.slug)
+    }
+  }
+
+  // Determine which category is active
+  const activeCategorySlug = article?.categorySlug || ''
 
   if (loading) {
     return (
@@ -146,25 +180,23 @@ export default function ArticleOverlay() {
     <div className="fixed inset-0 z-50 bg-background overlay-enter">
       <ReadingProgress />
 
-      {/* Close button */}
+      {/* Top Navigation Bar with all categories */}
       <div className="sticky top-0 z-10 bg-background/95 backdrop-blur-md border-b">
-        <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8 flex items-center justify-between h-12">
-          <div className="flex items-center gap-2 text-sm text-muted-foreground">
-            <button
-              onClick={closeOverlay}
-              className="hover:text-foreground transition-colors"
+        {/* Main nav row with back arrow + breadcrumb */}
+        <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8 flex items-center justify-between h-11">
+          <div className="flex items-center gap-2 text-sm">
+            {/* Back Arrow Button */}
+            <Button
+              variant="ghost"
+              size="sm"
+              onClick={goBack}
+              className="gap-1.5 h-7 px-2 text-primary hover:bg-primary/10 font-medium"
             >
-              Home
-            </button>
-            <ChevronRight className="h-3 w-3" />
-            <button
-              onClick={closeOverlay}
-              className="hover:text-foreground transition-colors"
-            >
-              {article.category}
-            </button>
-            <ChevronRight className="h-3 w-3" />
-            <span className="text-foreground font-medium truncate max-w-[200px]">
+              <ArrowLeft className="h-4 w-4" />
+              <span className="hidden sm:inline">Back</span>
+            </Button>
+            <ChevronRight className="h-3 w-3 text-muted-foreground" />
+            <span className="text-foreground font-medium truncate max-w-[300px]">
               {article.title}
             </span>
           </div>
@@ -177,13 +209,37 @@ export default function ArticleOverlay() {
             <X className="h-4 w-4" />
           </Button>
         </div>
+        {/* Category navigation row */}
+        <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8 -mx-1 pb-1.5 overflow-x-auto no-scrollbar">
+          <div className="flex items-center gap-1 min-w-max">
+            {navCategories.map((cat) => {
+              const isActive = cat.slug === activeCategorySlug || (cat.action === 'latest-news' && activeCategorySlug === 'latest-news')
+              return (
+                <Button
+                  key={cat.label}
+                  variant={isActive ? 'default' : 'ghost'}
+                  size="sm"
+                  onClick={() => handleNavClick(cat)}
+                  className={`gap-1 text-xs font-medium h-7 px-2.5 shrink-0 transition-all ${
+                    isActive
+                      ? 'bg-primary text-primary-foreground shadow-sm'
+                      : 'hover:bg-primary/5 hover:text-primary'
+                  }`}
+                >
+                  <cat.icon className="h-3 w-3" />
+                  {cat.label}
+                </Button>
+              )
+            })}
+          </div>
+        </div>
       </div>
 
       {/* Scrollable content */}
       <div
         id="article-overlay-content"
         className="overflow-y-auto"
-        style={{ height: 'calc(100vh - 49px)' }}
+        style={{ height: 'calc(100vh - 88px)' }}
       >
         <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8 py-8">
           <div className="grid grid-cols-1 lg:grid-cols-12 gap-8">

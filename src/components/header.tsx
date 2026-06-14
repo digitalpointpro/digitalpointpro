@@ -39,19 +39,19 @@ function useMounted() {
 }
 
 const mainNavItems = [
-  { label: 'Home', icon: Home, action: 'home' },
-  { label: 'Latest News', icon: Newspaper, action: 'latest-news' },
-  { label: 'AI', icon: Brain, action: 'category', slug: 'artificial-intelligence' },
-  { label: 'Technology', icon: Cpu, action: 'category', slug: 'technology-trends' },
-  { label: 'Health', icon: Heart, action: 'category', slug: 'health-lifestyle' },
-  { label: 'Business', icon: Briefcase, action: 'category', slug: 'online-business' },
-  { label: 'Remote Jobs', icon: MapPin, action: 'category', slug: 'remote-jobs' },
+  { label: 'Home', icon: Home, action: 'home', color: 'bg-gradient-to-r from-emerald-500 to-teal-500' },
+  { label: 'Latest News', icon: Newspaper, action: 'latest-news', color: 'bg-gradient-to-r from-red-500 to-orange-500' },
+  { label: 'AI', icon: Brain, action: 'category', slug: 'artificial-intelligence', color: 'bg-gradient-to-r from-violet-500 to-purple-500' },
+  { label: 'Technology', icon: Cpu, action: 'category', slug: 'technology-trends', color: 'bg-gradient-to-r from-cyan-500 to-teal-500' },
+  { label: 'Health', icon: Heart, action: 'category', slug: 'health-lifestyle', color: 'bg-gradient-to-r from-pink-500 to-rose-500' },
+  { label: 'Business', icon: Briefcase, action: 'category', slug: 'online-business', color: 'bg-gradient-to-r from-emerald-500 to-green-500' },
+  { label: 'Remote Jobs', icon: MapPin, action: 'category', slug: 'remote-jobs', color: 'bg-gradient-to-r from-sky-500 to-blue-500' },
 ]
 
 const moreNavItems = [
-  { label: 'Freelancing', icon: Pen, slug: 'freelancing' },
-  { label: 'Cyber Security', icon: Shield, slug: 'cyber-security' },
-  { label: 'Smartphone Tips', icon: Smartphone, slug: 'smartphone-tips' },
+  { label: 'Freelancing', icon: Pen, slug: 'freelancing', color: 'bg-gradient-to-r from-amber-500 to-yellow-500' },
+  { label: 'Cyber Security', icon: Shield, slug: 'cyber-security', color: 'bg-gradient-to-r from-red-600 to-rose-600' },
+  { label: 'Smartphone Tips', icon: Smartphone, slug: 'smartphone-tips', color: 'bg-gradient-to-r from-fuchsia-500 to-pink-500' },
 ]
 
 export default function Header() {
@@ -63,7 +63,6 @@ export default function Header() {
     document.body.style.overflow = 'hidden'
   }
   const [scrolled, setScrolled] = useState(false)
-  const [mobileMenuOpen, setMobileMenuOpen] = useState(false)
   const mounted = useMounted()
 
   useEffect(() => {
@@ -76,14 +75,12 @@ export default function Header() {
 
   const handleNavClick = (item: typeof mainNavItems[number]) => {
     if (item.action === 'home') {
-      window.history.pushState({}, '', '/')
-      window.location.reload()
+      useNavigation.getState().closeOverlay()
     } else if (item.action === 'latest-news') {
       openPage('latest-news')
     } else if (item.action === 'category' && item.slug) {
       openPage('category', item.slug)
     }
-    setMobileMenuOpen(false)
   }
 
   return (
@@ -95,54 +92,56 @@ export default function Header() {
       }`}
     >
       <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
-        <div className="flex h-14 items-center justify-between">
-          {/* Left: Logo */}
+        <div className="flex h-16 items-center justify-between">
+          {/* Left: Logo - BIGGER and more colorful */}
           <Link
             href="/"
             onClick={(e) => {
               e.preventDefault()
-              window.history.pushState({}, '', '/')
-              window.location.reload()
+              useNavigation.getState().closeOverlay()
             }}
-            className="flex items-center gap-2.5 group shrink-0"
+            className="flex items-center gap-3 group shrink-0"
           >
-            {/* Professional D Logo */}
-            <div className="relative flex h-9 w-9 items-center justify-center rounded-xl bg-gradient-to-br from-primary via-primary to-emerald-600 shadow-lg shadow-primary/20 transition-transform group-hover:scale-105">
-              <span className="text-primary-foreground font-black text-lg leading-none tracking-tighter">D</span>
-              <div className="absolute inset-0 rounded-xl bg-gradient-to-tr from-white/20 to-transparent" />
+            {/* Professional D Logo - BIGGER */}
+            <div className="relative flex h-12 w-12 items-center justify-center rounded-xl bg-gradient-to-br from-emerald-400 via-teal-500 to-cyan-600 shadow-lg shadow-emerald-500/30 transition-transform group-hover:scale-105">
+              <span className="text-white font-black text-2xl leading-none tracking-tighter">D</span>
+              <div className="absolute inset-0 rounded-xl bg-gradient-to-tr from-white/25 to-transparent" />
+              <div className="absolute -inset-0.5 rounded-xl bg-gradient-to-br from-emerald-400 to-cyan-600 opacity-30 blur-sm" />
             </div>
             <div className="flex flex-col">
-              <span className="text-base sm:text-lg font-bold tracking-tight leading-none text-foreground">
+              <span className="text-lg sm:text-xl font-extrabold tracking-tight leading-none bg-gradient-to-r from-emerald-500 via-teal-500 to-cyan-500 bg-clip-text text-transparent">
                 Digital Point
               </span>
-              <span className="text-[9px] sm:text-[10px] font-bold uppercase tracking-[0.25em] text-primary leading-none mt-0.5">
-                Pro
+              <span className="text-[10px] sm:text-[11px] font-extrabold uppercase tracking-[0.3em] text-emerald-600 dark:text-emerald-400 leading-none mt-0.5">
+                PRO
               </span>
             </div>
           </Link>
 
-          {/* Center: Desktop Navigation */}
-          <nav className="hidden lg:flex items-center gap-0.5">
+          {/* Center: Desktop Navigation - Colorful pill buttons */}
+          <nav className="hidden lg:flex items-center gap-1">
             {mainNavItems.map((item) => (
-              <Button
+              <button
                 key={item.label}
-                variant="ghost"
-                size="sm"
                 onClick={() => handleNavClick(item)}
-                className="gap-1.5 text-sm font-medium h-8 px-2.5 hover:bg-primary/5 hover:text-primary transition-colors"
+                className="group flex items-center gap-1.5 text-sm font-medium h-8 px-3 rounded-full transition-all duration-200 hover:shadow-md hover:scale-[1.02] active:scale-[0.98]"
               >
-                <item.icon className="h-3.5 w-3.5" />
+                <span className={`inline-flex items-center justify-center h-6 w-6 rounded-md ${item.color} shadow-sm transition-transform group-hover:scale-110`}>
+                  <item.icon className="h-3.5 w-3.5 text-white" />
+                </span>
                 <span className="hidden xl:inline">{item.label}</span>
-              </Button>
+              </button>
             ))}
 
             {/* More Dropdown */}
             <DropdownMenu>
               <DropdownMenuTrigger asChild>
-                <Button variant="ghost" size="sm" className="gap-1 text-sm font-medium h-8 px-2.5 hover:bg-primary/5 hover:text-primary">
+                <button className="group flex items-center gap-1 text-sm font-medium h-8 px-3 rounded-full transition-all duration-200 hover:shadow-md hover:scale-[1.02]">
+                  <span className="inline-flex items-center justify-center h-6 w-6 rounded-md bg-gradient-to-r from-slate-500 to-slate-600 shadow-sm">
+                    <ChevronDown className="h-3.5 w-3.5 text-white" />
+                  </span>
                   <span className="hidden xl:inline">More</span>
-                  <ChevronDown className="h-3.5 w-3.5" />
-                </Button>
+                </button>
               </DropdownMenuTrigger>
               <DropdownMenuContent align="center" className="w-52">
                 {moreNavItems.map((item) => (
@@ -151,7 +150,9 @@ export default function Header() {
                     onClick={() => openPage('category', item.slug)}
                     className="cursor-pointer gap-2"
                   >
-                    <item.icon className="h-4 w-4 text-primary" />
+                    <span className={`inline-flex items-center justify-center h-5 w-5 rounded ${item.color}`}>
+                      <item.icon className="h-3 w-3 text-white" />
+                    </span>
                     <span>{item.label}</span>
                   </DropdownMenuItem>
                 ))}
@@ -165,7 +166,7 @@ export default function Header() {
             <Button
               variant="ghost"
               size="icon"
-              className="h-8 w-8 hover:bg-primary/5 hover:text-primary"
+              className="h-9 w-9 hover:bg-primary/5 hover:text-primary"
               onClick={() => {
                 const event = new CustomEvent('openSearch')
                 window.dispatchEvent(event)
@@ -180,7 +181,7 @@ export default function Header() {
               <Button
                 variant="ghost"
                 size="icon"
-                className="h-8 w-8 hover:bg-primary/5 hover:text-primary"
+                className="h-9 w-9 hover:bg-primary/5 hover:text-primary"
                 onClick={() => setTheme(theme === 'dark' ? 'light' : 'dark')}
               >
                 {theme === 'dark' ? (
@@ -196,124 +197,43 @@ export default function Header() {
             <Button
               variant="ghost"
               size="icon"
-              className="h-8 w-8 text-primary hover:bg-primary/10"
+              className="h-9 w-9 text-primary hover:bg-primary/10"
               onClick={openAdmin}
               title="Admin Panel"
             >
               <PenSquare className="h-4 w-4" />
               <span className="sr-only">Admin</span>
             </Button>
-
-            {/* Mobile Navigation - Simple scrollable nav instead of hamburger */}
-            <nav className="flex lg:hidden items-center gap-0.5 ml-1">
-              <Button
-                variant="ghost"
-                size="icon"
-                className="h-8 w-8 hover:bg-primary/5 hover:text-primary"
-                onClick={() => {
-                  const event = new CustomEvent('openSearch')
-                  window.dispatchEvent(event)
-                }}
-              >
-                <Search className="h-4 w-4" />
-              </Button>
-            </nav>
           </div>
         </div>
 
-        {/* Mobile Navigation Bar - scrollable pills instead of hamburger */}
+        {/* Mobile Navigation Bar - Colorful pills */}
         <div className="lg:hidden -mx-4 px-4 pb-2 overflow-x-auto no-scrollbar">
-          <div className="flex items-center gap-1 min-w-max">
-            <Button
-              variant="ghost"
-              size="sm"
-              onClick={() => handleNavClick(mainNavItems[0])}
-              className="gap-1 text-xs font-medium h-7 px-2 shrink-0 hover:bg-primary/5 hover:text-primary"
-            >
-              <Home className="h-3 w-3" />
-              Home
-            </Button>
-            <Button
-              variant="ghost"
-              size="sm"
-              onClick={() => openPage('latest-news')}
-              className="gap-1 text-xs font-medium h-7 px-2 shrink-0 hover:bg-primary/5 hover:text-primary"
-            >
-              <Newspaper className="h-3 w-3" />
-              News
-            </Button>
-            <Button
-              variant="ghost"
-              size="sm"
-              onClick={() => openPage('category', 'artificial-intelligence')}
-              className="gap-1 text-xs font-medium h-7 px-2 shrink-0 hover:bg-primary/5 hover:text-primary"
-            >
-              <Brain className="h-3 w-3" />
-              AI
-            </Button>
-            <Button
-              variant="ghost"
-              size="sm"
-              onClick={() => openPage('category', 'technology-trends')}
-              className="gap-1 text-xs font-medium h-7 px-2 shrink-0 hover:bg-primary/5 hover:text-primary"
-            >
-              <Cpu className="h-3 w-3" />
-              Tech
-            </Button>
-            <Button
-              variant="ghost"
-              size="sm"
-              onClick={() => openPage('category', 'health-lifestyle')}
-              className="gap-1 text-xs font-medium h-7 px-2 shrink-0 hover:bg-primary/5 hover:text-primary"
-            >
-              <Heart className="h-3 w-3" />
-              Health
-            </Button>
-            <Button
-              variant="ghost"
-              size="sm"
-              onClick={() => openPage('category', 'online-business')}
-              className="gap-1 text-xs font-medium h-7 px-2 shrink-0 hover:bg-primary/5 hover:text-primary"
-            >
-              <Briefcase className="h-3 w-3" />
-              Business
-            </Button>
-            <Button
-              variant="ghost"
-              size="sm"
-              onClick={() => openPage('category', 'remote-jobs')}
-              className="gap-1 text-xs font-medium h-7 px-2 shrink-0 hover:bg-primary/5 hover:text-primary"
-            >
-              <MapPin className="h-3 w-3" />
-              Remote
-            </Button>
-            <Button
-              variant="ghost"
-              size="sm"
-              onClick={() => openPage('category', 'freelancing')}
-              className="gap-1 text-xs font-medium h-7 px-2 shrink-0 hover:bg-primary/5 hover:text-primary"
-            >
-              <Pen className="h-3 w-3" />
-              Freelance
-            </Button>
-            <Button
-              variant="ghost"
-              size="sm"
-              onClick={() => openPage('category', 'cyber-security')}
-              className="gap-1 text-xs font-medium h-7 px-2 shrink-0 hover:bg-primary/5 hover:text-primary"
-            >
-              <Shield className="h-3 w-3" />
-              Security
-            </Button>
-            <Button
-              variant="ghost"
-              size="sm"
-              onClick={() => openPage('category', 'smartphone-tips')}
-              className="gap-1 text-xs font-medium h-7 px-2 shrink-0 hover:bg-primary/5 hover:text-primary"
-            >
-              <Smartphone className="h-3 w-3" />
-              Phone
-            </Button>
+          <div className="flex items-center gap-1.5 min-w-max">
+            {mainNavItems.map((item) => (
+              <button
+                key={item.label}
+                onClick={() => handleNavClick(item)}
+                className="group flex items-center gap-1 text-xs font-medium h-8 px-2.5 shrink-0 rounded-full transition-all hover:shadow-sm"
+              >
+                <span className={`inline-flex items-center justify-center h-5 w-5 rounded ${item.color}`}>
+                  <item.icon className="h-3 w-3 text-white" />
+                </span>
+                <span>{item.label === 'Latest News' ? 'News' : item.label}</span>
+              </button>
+            ))}
+            {moreNavItems.map((item) => (
+              <button
+                key={item.label}
+                onClick={() => openPage('category', item.slug)}
+                className="group flex items-center gap-1 text-xs font-medium h-8 px-2.5 shrink-0 rounded-full transition-all hover:shadow-sm"
+              >
+                <span className={`inline-flex items-center justify-center h-5 w-5 rounded ${item.color}`}>
+                  <item.icon className="h-3 w-3 text-white" />
+                </span>
+                <span>{item.label === 'Smartphone Tips' ? 'Phone' : item.label === 'Cyber Security' ? 'Security' : 'Freelance'}</span>
+              </button>
+            ))}
           </div>
         </div>
       </div>

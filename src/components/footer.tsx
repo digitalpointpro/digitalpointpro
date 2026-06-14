@@ -20,6 +20,11 @@ import {
   Shield,
   Smartphone,
   MapPin,
+  Info,
+  FileText,
+  ShieldCheck,
+  MailIcon,
+  Scale,
 } from 'lucide-react'
 
 export default function Footer() {
@@ -44,24 +49,33 @@ export default function Footer() {
     { icon: Mail, href: '#', label: 'Email' },
   ]
 
+  // About & Legal section items with icons
+  const aboutLegalLinks = [
+    { label: 'About Us', icon: Info, tab: 'about' },
+    { label: 'Contact Us', icon: MailIcon, tab: 'contact' },
+    { label: 'Disclaimer', icon: FileText, tab: 'disclaimer' },
+    { label: 'Privacy Policy', icon: ShieldCheck, tab: 'privacy' },
+    { label: 'Terms & Conditions', icon: Scale, tab: 'terms' },
+  ]
+
   return (
-    <footer className="mt-auto border-t bg-muted/30 shrink-0">
+    <footer className="mt-auto border-t bg-gradient-to-r from-slate-50 to-emerald-50/30 dark:from-slate-900 dark:to-emerald-950/20 shrink-0">
       <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
-        {/* Main Footer - Compact */}
-        <div className="py-6 grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-4 gap-6">
+        {/* Main Footer */}
+        <div className="py-6 grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-5 gap-6">
           {/* Brand */}
           <div className="col-span-2 sm:col-span-1">
             <div className="flex items-center gap-2 mb-3">
-              <div className="relative flex h-7 w-7 items-center justify-center rounded-lg bg-gradient-to-br from-primary via-primary to-emerald-600 shadow-sm">
-                <span className="text-primary-foreground font-black text-sm leading-none">D</span>
-                <div className="absolute inset-0 rounded-lg bg-gradient-to-tr from-white/20 to-transparent" />
+              <div className="relative flex h-9 w-9 items-center justify-center rounded-xl bg-gradient-to-br from-emerald-400 via-teal-500 to-cyan-600 shadow-md">
+                <span className="text-white font-black text-base leading-none">D</span>
+                <div className="absolute inset-0 rounded-xl bg-gradient-to-tr from-white/25 to-transparent" />
               </div>
               <div className="flex flex-col">
-                <span className="text-sm font-bold tracking-tight leading-none">
+                <span className="text-sm font-bold tracking-tight leading-none bg-gradient-to-r from-emerald-500 to-teal-500 bg-clip-text text-transparent">
                   Digital Point
                 </span>
-                <span className="text-[8px] font-bold uppercase tracking-[0.25em] text-primary leading-none mt-0.5">
-                  Pro
+                <span className="text-[8px] font-extrabold uppercase tracking-[0.3em] text-emerald-600 dark:text-emerald-400 leading-none mt-0.5">
+                  PRO
                 </span>
               </div>
             </div>
@@ -128,15 +142,24 @@ export default function Footer() {
                   </button>
                 </li>
               ))}
-              {/* Combined Legal & About link */}
-              <li>
-                <button
-                  onClick={() => openPage('legal')}
-                  className="text-xs text-muted-foreground hover:text-primary transition-colors"
-                >
-                  About & Legal
-                </button>
-              </li>
+            </ul>
+          </div>
+
+          {/* About & Legal - NEW SECTION */}
+          <div>
+            <h3 className="text-xs font-semibold mb-2 uppercase tracking-wider text-muted-foreground">About & Legal</h3>
+            <ul className="space-y-1.5">
+              {aboutLegalLinks.map((link) => (
+                <li key={link.tab}>
+                  <button
+                    onClick={() => openPage('legal', link.tab)}
+                    className="text-xs text-muted-foreground hover:text-primary transition-colors flex items-center gap-1.5"
+                  >
+                    <link.icon className="h-3 w-3" />
+                    {link.label}
+                  </button>
+                </li>
+              ))}
             </ul>
           </div>
 
@@ -157,7 +180,7 @@ export default function Footer() {
                 placeholder="Your email"
                 className="h-8 text-xs"
               />
-              <Button type="submit" size="sm" className="h-8 shrink-0 px-3">
+              <Button type="submit" size="sm" className="h-8 shrink-0 px-3 bg-gradient-to-r from-emerald-500 to-teal-500 hover:from-emerald-600 hover:to-teal-600">
                 <ArrowRight className="h-3.5 w-3.5" />
               </Button>
             </form>
@@ -172,21 +195,11 @@ export default function Footer() {
             &copy; {new Date().getFullYear()} Digital Point Pro. All rights reserved.
           </p>
           <div className="flex items-center gap-3 text-[11px] text-muted-foreground">
-            <button onClick={() => openPage('legal', 'privacy')} className="hover:text-primary transition-colors">
-              Privacy
-            </button>
-            <button onClick={() => openPage('legal', 'terms')} className="hover:text-primary transition-colors">
-              Terms
-            </button>
-            <button onClick={() => openPage('legal', 'disclaimer')} className="hover:text-primary transition-colors">
-              Disclaimer
-            </button>
-            <button onClick={() => openPage('legal', 'about')} className="hover:text-primary transition-colors">
-              About
-            </button>
-            <button onClick={() => openPage('legal', 'contact')} className="hover:text-primary transition-colors">
-              Contact
-            </button>
+            <button onClick={() => openPage('legal', 'about')} className="hover:text-primary transition-colors">About</button>
+            <button onClick={() => openPage('legal', 'contact')} className="hover:text-primary transition-colors">Contact</button>
+            <button onClick={() => openPage('legal', 'privacy')} className="hover:text-primary transition-colors">Privacy</button>
+            <button onClick={() => openPage('legal', 'terms')} className="hover:text-primary transition-colors">Terms</button>
+            <button onClick={() => openPage('legal', 'disclaimer')} className="hover:text-primary transition-colors">Disclaimer</button>
           </div>
         </div>
       </div>

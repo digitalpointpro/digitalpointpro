@@ -66,36 +66,39 @@ export default function HomePage() {
     return () => window.removeEventListener('keydown', handleKeyDown)
   }, [])
 
-  // Navigation sections with icons and gradient colors
+  // Navigation sections with icons and gradient colors - COLORFUL backgrounds
   const sections = [
-    { icon: Newspaper, label: 'Latest News', desc: 'Breaking stories & war updates', color: 'from-red-500 to-orange-500', action: () => openPage('latest-news') },
-    { icon: Brain, label: 'AI', desc: 'Artificial Intelligence trends', color: 'from-violet-500 to-purple-500', action: () => openPage('category', 'artificial-intelligence') },
-    { icon: Cpu, label: 'Technology', desc: 'Tech innovations & gadgets', color: 'from-cyan-500 to-teal-500', action: () => openPage('category', 'technology-trends') },
-    { icon: Heart, label: 'Health', desc: 'Wellness & lifestyle tips', color: 'from-pink-500 to-rose-500', action: () => openPage('category', 'health-lifestyle') },
-    { icon: Briefcase, label: 'Business', desc: 'Online money & business', color: 'from-emerald-500 to-teal-500', action: () => openPage('category', 'online-business') },
-    { icon: MapPin, label: 'Remote Jobs', desc: 'Work from anywhere', color: 'from-sky-500 to-blue-500', action: () => openPage('category', 'remote-jobs') },
-    { icon: Pen, label: 'Freelancing', desc: 'Freelance career & skills', color: 'from-amber-500 to-yellow-500', action: () => openPage('category', 'freelancing') },
-    { icon: Shield, label: 'Cyber Security', desc: 'Stay safe online', color: 'from-red-600 to-rose-600', action: () => openPage('category', 'cyber-security') },
-    { icon: Smartphone, label: 'Smartphone', desc: 'Tips, tricks & apps', color: 'from-indigo-500 to-violet-500', action: () => openPage('category', 'smartphone-tips') },
+    { icon: Newspaper, label: 'Latest News', desc: 'Breaking stories & war updates', gradient: 'from-red-500 to-orange-500', bg: 'bg-gradient-to-br from-red-500 to-orange-500', shadow: 'shadow-red-500/20' },
+    { icon: Brain, label: 'AI', desc: 'Artificial Intelligence trends', gradient: 'from-violet-500 to-purple-600', bg: 'bg-gradient-to-br from-violet-500 to-purple-600', shadow: 'shadow-violet-500/20' },
+    { icon: Cpu, label: 'Technology', desc: 'Tech innovations & gadgets', gradient: 'from-cyan-500 to-teal-500', bg: 'bg-gradient-to-br from-cyan-500 to-teal-500', shadow: 'shadow-cyan-500/20' },
+    { icon: Heart, label: 'Health', desc: 'Wellness & lifestyle tips', gradient: 'from-pink-500 to-rose-500', bg: 'bg-gradient-to-br from-pink-500 to-rose-500', shadow: 'shadow-pink-500/20' },
+    { icon: Briefcase, label: 'Business', desc: 'Online money & business', gradient: 'from-emerald-500 to-green-600', bg: 'bg-gradient-to-br from-emerald-500 to-green-600', shadow: 'shadow-emerald-500/20' },
+    { icon: MapPin, label: 'Remote Jobs', desc: 'Work from anywhere', gradient: 'from-sky-500 to-blue-600', bg: 'bg-gradient-to-br from-sky-500 to-blue-600', shadow: 'shadow-sky-500/20' },
+    { icon: Pen, label: 'Freelancing', desc: 'Freelance career & skills', gradient: 'from-amber-500 to-yellow-500', bg: 'bg-gradient-to-br from-amber-500 to-yellow-500', shadow: 'shadow-amber-500/20' },
+    { icon: Shield, label: 'Cyber Security', desc: 'Stay safe online', gradient: 'from-red-600 to-rose-700', bg: 'bg-gradient-to-br from-red-600 to-rose-700', shadow: 'shadow-red-600/20' },
+    { icon: Smartphone, label: 'Smartphone', desc: 'Tips, tricks & apps', gradient: 'from-fuchsia-500 to-pink-600', bg: 'bg-gradient-to-br from-fuchsia-500 to-pink-600', shadow: 'shadow-fuchsia-500/20' },
   ]
 
   return (
-    <div className="h-screen flex flex-col overflow-hidden bg-background">
-      {/* Animated Background */}
+    <div className="h-screen flex flex-col overflow-hidden bg-gradient-to-br from-slate-50 via-white to-emerald-50/30 dark:from-slate-950 dark:via-slate-900 dark:to-emerald-950/30">
+      {/* Animated Background - More Colorful */}
       <div className="fixed inset-0 pointer-events-none overflow-hidden z-0">
-        {/* Gradient orbs */}
-        <div className="absolute -top-32 -right-32 w-[500px] h-[500px] bg-primary/5 rounded-full blur-[100px] animate-pulse" />
-        <div className="absolute -bottom-32 -left-32 w-[600px] h-[600px] bg-emerald-500/5 rounded-full blur-[100px] animate-pulse" style={{ animationDelay: '2s' }} />
-        <div className="absolute top-1/3 left-1/4 w-[400px] h-[400px] bg-teal-500/3 rounded-full blur-[80px] animate-pulse" style={{ animationDelay: '4s' }} />
-        <div className="absolute bottom-1/4 right-1/4 w-[300px] h-[300px] bg-rose-500/3 rounded-full blur-[80px] animate-pulse" style={{ animationDelay: '3s' }} />
+        {/* Gradient orbs - more vibrant */}
+        <div className="absolute -top-32 -right-32 w-[600px] h-[600px] bg-emerald-500/10 rounded-full blur-[120px] animate-pulse" />
+        <div className="absolute -bottom-32 -left-32 w-[700px] h-[700px] bg-teal-500/8 rounded-full blur-[120px] animate-pulse" style={{ animationDelay: '2s' }} />
+        <div className="absolute top-1/3 left-1/4 w-[500px] h-[500px] bg-violet-500/5 rounded-full blur-[100px] animate-pulse" style={{ animationDelay: '4s' }} />
+        <div className="absolute bottom-1/4 right-1/4 w-[400px] h-[400px] bg-rose-500/5 rounded-full blur-[100px] animate-pulse" style={{ animationDelay: '3s' }} />
+        <div className="absolute top-2/3 left-1/2 w-[350px] h-[350px] bg-cyan-500/5 rounded-full blur-[80px] animate-pulse" style={{ animationDelay: '1s' }} />
+        <div className="absolute top-1/4 right-1/3 w-[300px] h-[300px] bg-amber-500/5 rounded-full blur-[80px] animate-pulse" style={{ animationDelay: '5s' }} />
         {/* Floating particles */}
-        <div className="absolute top-20 left-[15%] w-2 h-2 bg-primary/20 rounded-full animate-float" />
-        <div className="absolute top-40 right-[20%] w-1.5 h-1.5 bg-primary/15 rounded-full animate-float-delayed" />
-        <div className="absolute bottom-32 left-[30%] w-2.5 h-2.5 bg-primary/10 rounded-full animate-float-slow" />
-        <div className="absolute top-[60%] right-[10%] w-1 h-1 bg-primary/20 rounded-full animate-float" />
-        <div className="absolute top-[30%] left-[60%] w-2 h-2 bg-emerald-500/10 rounded-full animate-float-delayed" />
+        <div className="absolute top-20 left-[15%] w-2 h-2 bg-emerald-500/20 rounded-full animate-float" />
+        <div className="absolute top-40 right-[20%] w-1.5 h-1.5 bg-teal-500/15 rounded-full animate-float-delayed" />
+        <div className="absolute bottom-32 left-[30%] w-2.5 h-2.5 bg-violet-500/10 rounded-full animate-float-slow" />
+        <div className="absolute top-[60%] right-[10%] w-1 h-1 bg-rose-500/20 rounded-full animate-float" />
+        <div className="absolute top-[30%] left-[60%] w-2 h-2 bg-amber-500/10 rounded-full animate-float-delayed" />
+        <div className="absolute top-[80%] left-[70%] w-1.5 h-1.5 bg-cyan-500/15 rounded-full animate-float" />
         {/* Grid overlay */}
-        <div className="absolute inset-0 bg-[linear-gradient(rgba(0,0,0,.02)_1px,transparent_1px),linear-gradient(90deg,rgba(0,0,0,.02)_1px,transparent_1px)] bg-[size:60px_60px] dark:bg-[linear-gradient(rgba(255,255,255,.02)_1px,transparent_1px),linear-gradient(90deg,rgba(255,255,255,.02)_1px,transparent_1px)]" />
+        <div className="absolute inset-0 bg-[linear-gradient(rgba(0,0,0,.015)_1px,transparent_1px),linear-gradient(90deg,rgba(0,0,0,.015)_1px,transparent_1px)] bg-[size:60px_60px] dark:bg-[linear-gradient(rgba(255,255,255,.015)_1px,transparent_1px),linear-gradient(90deg,rgba(255,255,255,.015)_1px,transparent_1px)]" />
       </div>
 
       {/* Header - Fixed at Top */}
@@ -108,21 +111,40 @@ export default function HomePage() {
             {/* Hero Banner */}
             <Hero />
 
-            {/* Section Navigation Cards */}
+            {/* Section Navigation Cards - Colorful backgrounds */}
             <section className="mt-6">
               <div className="grid grid-cols-3 sm:grid-cols-5 lg:grid-cols-9 gap-2 sm:gap-3">
                 {sections.map((section) => (
                   <button
                     key={section.label}
-                    onClick={section.action}
-                    className="group relative overflow-hidden rounded-xl border bg-white/80 dark:bg-slate-800/80 backdrop-blur-sm p-3 sm:p-4 text-center transition-all duration-300 hover:shadow-lg hover:scale-[1.03] hover:border-primary/30 active:scale-[0.98]"
+                    onClick={() => {
+                      if (section.label === 'Latest News') {
+                        openPage('latest-news')
+                      } else {
+                        const slugs: Record<string, string> = {
+                          'AI': 'artificial-intelligence',
+                          'Technology': 'technology-trends',
+                          'Health': 'health-lifestyle',
+                          'Business': 'online-business',
+                          'Remote Jobs': 'remote-jobs',
+                          'Freelancing': 'freelancing',
+                          'Cyber Security': 'cyber-security',
+                          'Smartphone': 'smartphone-tips',
+                        }
+                        openPage('category', slugs[section.label])
+                      }
+                    }}
+                    className="group relative overflow-hidden rounded-xl p-3 sm:p-4 text-center transition-all duration-300 hover:shadow-lg hover:scale-[1.05] active:scale-[0.97]"
+                    style={{ background: 'transparent' }}
                   >
-                    <div className={`w-8 h-8 sm:w-10 sm:h-10 mx-auto mb-1.5 sm:mb-2 rounded-lg bg-gradient-to-br ${section.color} flex items-center justify-center transition-transform group-hover:scale-110 shadow-sm`}>
+                    {/* Colorful gradient background */}
+                    <div className={`absolute inset-0 ${section.bg} opacity-[0.08] group-hover:opacity-[0.15] transition-opacity duration-300 rounded-xl`} />
+                    <div className="absolute inset-0 border border-current/5 rounded-xl" />
+                    <div className={`w-9 h-9 sm:w-11 sm:h-11 mx-auto mb-1.5 sm:mb-2 rounded-xl ${section.bg} flex items-center justify-center transition-transform group-hover:scale-110 shadow-md ${section.shadow}`}>
                       <section.icon className="h-4 w-4 sm:h-5 sm:w-5 text-white" />
                     </div>
-                    <h3 className="font-bold text-xs sm:text-sm text-foreground leading-tight">{section.label}</h3>
-                    <p className="text-[9px] sm:text-[10px] text-muted-foreground mt-0.5 hidden sm:block">{section.desc}</p>
-                    <div className={`absolute inset-0 bg-gradient-to-br ${section.color} opacity-0 group-hover:opacity-5 transition-opacity duration-300`} />
+                    <h3 className="font-bold text-xs sm:text-sm text-foreground leading-tight relative z-10">{section.label}</h3>
+                    <p className="text-[9px] sm:text-[10px] text-muted-foreground mt-0.5 hidden sm:block relative z-10">{section.desc}</p>
                   </button>
                 ))}
               </div>
@@ -136,7 +158,7 @@ export default function HomePage() {
               <div className="lg:col-span-8">
                 <section>
                   <div className="flex items-center gap-2 mb-4">
-                    <div className="w-1 h-6 bg-primary rounded-full" />
+                    <div className="w-1 h-6 bg-gradient-to-b from-emerald-500 to-teal-500 rounded-full" />
                     <h2 className="text-lg sm:text-xl font-bold tracking-tight">
                       Latest Articles
                     </h2>

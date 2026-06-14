@@ -32,3 +32,33 @@ Stage Summary:
 - Article dates: 01 May 2026 to 14 June 2026
 - All changes pushed to GitHub (commit 6cdfade)
 - Vercel auto-deploy triggered
+
+---
+Task ID: 3
+Agent: Image Updater
+Task: Update articles.json with unique Unsplash images for every article
+
+Work Log:
+- Read articles.json: found 45 articles with local /images/articles/ paths as featuredImage
+- Mapped each article to a unique, topic-relevant Unsplash photo ID
+- Category assignments:
+  - War/Military (5): news-001 through news-005 → satellite/military/conflict imagery
+  - Cybersecurity (5): cyber-001 through cyber-005 → hacking/security/privacy imagery
+  - AI/Tech (10): ai-001 through ai-010 → AI/chatbot/quantum/EV/gadget imagery
+  - Health (5): ozempic, longevity, sleep, gut, mental health → health/food/wellness imagery
+  - Business (5): online business, passive income, Amazon FBA, marketing → business/startup imagery
+  - Remote Work (5): remote-001 through remote-005 → remote work/collaboration imagery
+  - Freelance (5): freelance-001 through freelance-005 → freelancing/skills/finance imagery
+  - Smartphone (5): phone-001 through phone-005 → smartphone/photography/tech imagery
+- Replaced all 45 featuredImage fields with Unsplash URLs in format: https://images.unsplash.com/photo-XXXXX?w=1200&h=630&fit=crop
+- Verified: 45/45 articles have Unsplash URLs
+- Verified: 45/45 URLs are unique (zero duplicates)
+- Verified: All URLs match required format (https://images.unsplash.com/photo-*?w=1200&h=630&fit=crop)
+- Verified: No articles retain old /images/ paths
+- Updated articles.json written successfully
+
+Stage Summary:
+- 45 unique Unsplash image URLs assigned to all articles
+- All images are topic-relevant (military images for war articles, cybersecurity for cyber articles, etc.)
+- Zero duplicate URLs across the entire dataset
+- File: /home/z/my-project/src/data/articles.json updated in place

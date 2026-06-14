@@ -56,9 +56,12 @@ export type OverlayType = 'article' | 'legal' | 'category' | 'admin' | 'latest-n
 
 export interface NavigationState {
   overlayType: OverlayType;
-  overlayData: string | null; // article slug or category slug
+  overlayData: string | null;
   isOverlayOpen: boolean;
+  previousOverlayType: OverlayType;
+  previousOverlayData: string | null;
   openArticle: (slug: string) => void;
   openPage: (type: OverlayType, data?: string) => void;
+  goBack: () => void;
   closeOverlay: () => void;
 }

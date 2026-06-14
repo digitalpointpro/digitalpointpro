@@ -2,22 +2,44 @@
 
 import React from 'react'
 import { useNavigation } from '@/lib/store'
+import { OverlayType } from '@/lib/types'
 import { Button } from '@/components/ui/button'
 import { Tabs, TabsList, TabsTrigger, TabsContent } from '@/components/ui/tabs'
-import { X, ChevronRight } from 'lucide-react'
+import { X, ChevronRight, ArrowLeft, Info, ShieldCheck, Scale, FileText, MailIcon, Home, Newspaper, Brain, Cpu, Heart, Briefcase, Pen, Shield, Smartphone, MapPin } from 'lucide-react'
 import { Input } from '@/components/ui/input'
 import { Textarea } from '@/components/ui/textarea'
 import { Mail } from 'lucide-react'
+
+const navCategories = [
+  { label: 'Home', icon: Home, action: 'home' as const },
+  { label: 'News', icon: Newspaper, action: 'latest-news' as const },
+  { label: 'AI', icon: Brain, action: 'category' as const, slug: 'artificial-intelligence' },
+  { label: 'Tech', icon: Cpu, action: 'category' as const, slug: 'technology-trends' },
+  { label: 'Health', icon: Heart, action: 'category' as const, slug: 'health-lifestyle' },
+  { label: 'Business', icon: Briefcase, action: 'category' as const, slug: 'online-business' },
+  { label: 'Remote', icon: MapPin, action: 'category' as const, slug: 'remote-jobs' },
+  { label: 'Freelance', icon: Pen, action: 'category' as const, slug: 'freelancing' },
+  { label: 'Security', icon: Shield, action: 'category' as const, slug: 'cyber-security' },
+  { label: 'Phone', icon: Smartphone, action: 'category' as const, slug: 'smartphone-tips' },
+]
 
 const legalTabs = ['about', 'privacy', 'terms', 'disclaimer', 'contact'] as const
 type LegalTab = typeof legalTabs[number]
 
 const tabLabels: Record<LegalTab, string> = {
-  about: 'About',
-  privacy: 'Privacy',
-  terms: 'Terms',
+  about: 'About Us',
+  privacy: 'Privacy Policy',
+  terms: 'Terms & Conditions',
   disclaimer: 'Disclaimer',
-  contact: 'Contact',
+  contact: 'Contact Us',
+}
+
+const tabIcons: Record<LegalTab, React.ElementType> = {
+  about: Info,
+  privacy: ShieldCheck,
+  terms: Scale,
+  disclaimer: FileText,
+  contact: MailIcon,
 }
 
 const legalContent: Record<LegalTab, { title: string; content: React.ReactNode }> = {
@@ -261,7 +283,7 @@ const legalContent: Record<LegalTab, { title: string; content: React.ReactNode }
             <label className="text-sm font-medium mb-1.5 block">Message</label>
             <Textarea placeholder="Your message..." rows={5} />
           </div>
-          <Button className="w-full sm:w-auto">Send Message</Button>
+          <Button className="w-full sm:w-auto bg-gradient-to-r from-emerald-500 to-teal-500 hover:from-emerald-600 hover:to-teal-600">Send Message</Button>
         </div>
         <h2>Follow Us</h2>
         <p>
@@ -291,26 +313,39 @@ function getInitialTab(data: string | null): LegalTab {
 }
 
 export default function StaticPageOverlay({ type }: StaticPageOverlayProps) {
-  const { closeOverlay, overlayData } = useNavigation()
+  const { closeOverlay, openPage, overlayData } = useNavigation()
   const initialTab = getInitialTab(overlayData)
   const [activeTab, setActiveTab] = React.useState<LegalTab>(initialTab)
 
   if (type !== 'legal') return null
 
+  const handleNavClick = (cat: typeof navCategories[number]) => {
+    if (cat.action === 'home') {
+      closeOverlay()
+    } else if (cat.action === 'latest-news') {
+      openPage('latest-news')
+    } else if (cat.action === 'category' && cat.slug) {
+      openPage('category', cat.slug)
+    }
+  }
+
   return (
     <div className="fixed inset-0 z-50 bg-background overlay-enter">
-      {/* Header */}
+      {/* Header with back arrow and nav */}
       <div className="sticky top-0 z-10 bg-background/95 backdrop-blur-md border-b">
-        <div className="mx-auto max-w-4xl px-4 sm:px-6 lg:px-8 flex items-center justify-between h-12">
-          <div className="flex items-center gap-2 text-sm text-muted-foreground">
-            <button
+        <div className="mx-auto max-w-4xl px-4 sm:px-6 lg:px-8 flex items-center justify-between h-11">
+          <div className="flex items-center gap-2 text-sm">
+            <Button
+              variant="ghost"
+              size="sm"
               onClick={closeOverlay}
-              className="hover:text-foreground transition-colors"
+              className="gap-1.5 h-7 px-2 text-primary hover:bg-primary/10 font-medium"
             >
-              Home
-            </button>
-            <ChevronRight className="h-3 w-3" />
-            <span className="text-foreground font-medium">Legal & About</span>
+              <ArrowLeft className="h-4 w-4" />
+              <span className="hidden sm:inline">Back</span>
+            </Button>
+            <ChevronRight className="h-3 w-3 text-muted-foreground" />
+            <span className="text-foreground font-medium">About & Legal</span>
           </div>
           <Button
             variant="ghost"
@@ -321,22 +356,43 @@ export default function StaticPageOverlay({ type }: StaticPageOverlayProps) {
             <X className="h-4 w-4" />
           </Button>
         </div>
+        {/* Category navigation row */}
+        <div className="mx-auto max-w-4xl px-4 sm:px-6 lg:px-8 -mx-1 pb-1.5 overflow-x-auto no-scrollbar">
+          <div className="flex items-center gap-1 min-w-max">
+            {navCategories.map((cat) => (
+              <Button
+                key={cat.label}
+                variant="ghost"
+                size="sm"
+                onClick={() => handleNavClick(cat)}
+                className="gap-1 text-xs font-medium h-7 px-2.5 shrink-0 hover:bg-primary/5 hover:text-primary"
+              >
+                <cat.icon className="h-3 w-3" />
+                {cat.label}
+              </Button>
+            ))}
+          </div>
+        </div>
       </div>
 
       {/* Content */}
-      <div className="overflow-y-auto" style={{ height: 'calc(100vh - 49px)' }}>
+      <div className="overflow-y-auto" style={{ height: 'calc(100vh - 88px)' }}>
         <div className="mx-auto max-w-4xl px-4 sm:px-6 lg:px-8 py-8 sm:py-12">
           <h1 className="text-3xl sm:text-4xl font-bold tracking-tight mb-6">
-            Legal & About
+            About & Legal
           </h1>
 
           <Tabs value={activeTab} onValueChange={(v) => setActiveTab(v as LegalTab)}>
             <TabsList className="mb-8 flex-wrap h-auto gap-1 p-1">
-              {legalTabs.map((tab) => (
-                <TabsTrigger key={tab} value={tab} className="text-sm">
-                  {tabLabels[tab]}
-                </TabsTrigger>
-              ))}
+              {legalTabs.map((tab) => {
+                const Icon = tabIcons[tab]
+                return (
+                  <TabsTrigger key={tab} value={tab} className="text-sm gap-1.5">
+                    <Icon className="h-3.5 w-3.5" />
+                    {tabLabels[tab]}
+                  </TabsTrigger>
+                )
+              })}
             </TabsList>
 
             {legalTabs.map((tab) => (

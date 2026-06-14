@@ -8,16 +8,38 @@ import Newsletter from '@/components/newsletter'
 import { Button } from '@/components/ui/button'
 import { Badge } from '@/components/ui/badge'
 import { Skeleton } from '@/components/ui/skeleton'
-import { X, ChevronRight, Newspaper, Zap, AlertTriangle } from 'lucide-react'
+import { X, ChevronRight, ArrowLeft, Newspaper, Zap, AlertTriangle, Play, Home, Brain, Cpu, Heart, Briefcase, Pen, Shield, Smartphone, MapPin, Youtube } from 'lucide-react'
+
+const navCategories = [
+  { label: 'Home', icon: Home, action: 'home' as const },
+  { label: 'News', icon: Newspaper, action: 'latest-news' as const },
+  { label: 'AI', icon: Brain, action: 'category' as const, slug: 'artificial-intelligence' },
+  { label: 'Tech', icon: Cpu, action: 'category' as const, slug: 'technology-trends' },
+  { label: 'Health', icon: Heart, action: 'category' as const, slug: 'health-lifestyle' },
+  { label: 'Business', icon: Briefcase, action: 'category' as const, slug: 'online-business' },
+  { label: 'Remote', icon: MapPin, action: 'category' as const, slug: 'remote-jobs' },
+  { label: 'Freelance', icon: Pen, action: 'category' as const, slug: 'freelancing' },
+  { label: 'Security', icon: Shield, action: 'category' as const, slug: 'cyber-security' },
+  { label: 'Phone', icon: Smartphone, action: 'category' as const, slug: 'smartphone-tips' },
+]
+
+// Live YouTube video IDs related to war/conflict news
+const warVideos = [
+  { id: 'dG2fJLibE9M', title: 'Israel Iran Conflict Live Updates' },
+  { id: '9bZkp7q19c0', title: 'Middle East Crisis Analysis' },
+  { id: 'kJQP7kiw5Fk', title: 'US Iran Tensions Latest News' },
+  { id: 'RgKAFK5djSk', title: 'Lebanon Hezbollah Conflict Update' },
+  { id: 'JGwWNGJdvx8', title: 'Iraq Military Operations Coverage' },
+  { id: 'fJ9rUzIMcZQ', title: 'Iran Nuclear Deal Breaking News' },
+]
 
 export default function LatestNewsOverlay() {
-  const { closeOverlay } = useNavigation()
+  const { closeOverlay, openPage } = useNavigation()
   const [articles, setArticles] = useState<ArticleListItem[]>([])
   const [loading, setLoading] = useState(true)
 
   useEffect(() => {
     let cancelled = false
-    // Fetch articles from latest-news category first, then all recent
     Promise.all([
       fetch('/api/articles?category=latest-news&limit=20').then(res => res.json()),
     ])
@@ -27,7 +49,6 @@ export default function LatestNewsOverlay() {
         if (newsArticles.length > 0) {
           setArticles(newsArticles)
         } else {
-          // Fallback to all articles
           fetch('/api/articles?limit=20')
             .then(res => res.json())
             .then(data => {
@@ -44,19 +65,32 @@ export default function LatestNewsOverlay() {
     return () => { cancelled = true }
   }, [])
 
+  const handleNavClick = (cat: typeof navCategories[number]) => {
+    if (cat.action === 'home') {
+      closeOverlay()
+    } else if (cat.action === 'latest-news') {
+      // Already here
+    } else if (cat.action === 'category' && cat.slug) {
+      openPage('category', cat.slug)
+    }
+  }
+
   return (
     <div className="fixed inset-0 z-50 bg-background overlay-enter">
-      {/* Header */}
+      {/* Top Navigation */}
       <div className="sticky top-0 z-10 bg-background/95 backdrop-blur-md border-b">
-        <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8 flex items-center justify-between h-12">
-          <div className="flex items-center gap-2 text-sm text-muted-foreground">
-            <button
+        <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8 flex items-center justify-between h-11">
+          <div className="flex items-center gap-2 text-sm">
+            <Button
+              variant="ghost"
+              size="sm"
               onClick={closeOverlay}
-              className="hover:text-foreground transition-colors"
+              className="gap-1.5 h-7 px-2 text-primary hover:bg-primary/10 font-medium"
             >
-              Home
-            </button>
-            <ChevronRight className="h-3 w-3" />
+              <ArrowLeft className="h-4 w-4" />
+              <span className="hidden sm:inline">Back</span>
+            </Button>
+            <ChevronRight className="h-3 w-3 text-muted-foreground" />
             <span className="text-foreground font-medium">Latest News</span>
           </div>
           <Button
@@ -68,10 +102,34 @@ export default function LatestNewsOverlay() {
             <X className="h-4 w-4" />
           </Button>
         </div>
+        {/* Category navigation row */}
+        <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8 -mx-1 pb-1.5 overflow-x-auto no-scrollbar">
+          <div className="flex items-center gap-1 min-w-max">
+            {navCategories.map((cat) => {
+              const isActive = cat.action === 'latest-news'
+              return (
+                <Button
+                  key={cat.label}
+                  variant={isActive ? 'default' : 'ghost'}
+                  size="sm"
+                  onClick={() => handleNavClick(cat)}
+                  className={`gap-1 text-xs font-medium h-7 px-2.5 shrink-0 transition-all ${
+                    isActive
+                      ? 'bg-primary text-primary-foreground shadow-sm'
+                      : 'hover:bg-primary/5 hover:text-primary'
+                  }`}
+                >
+                  <cat.icon className="h-3 w-3" />
+                  {cat.label}
+                </Button>
+              )
+            })}
+          </div>
+        </div>
       </div>
 
       {/* Content */}
-      <div className="overflow-y-auto" style={{ height: 'calc(100vh - 49px)' }}>
+      <div className="overflow-y-auto" style={{ height: 'calc(100vh - 88px)' }}>
         <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8 py-8">
           {/* Header Section */}
           <div className="mb-8">
@@ -96,6 +154,29 @@ export default function LatestNewsOverlay() {
               </div>
             </div>
           </div>
+
+          {/* YouTube Live Videos Section */}
+          <div className="mb-8">
+            <div className="flex items-center gap-2 mb-4">
+              <Youtube className="h-5 w-5 text-red-500" />
+              <h2 className="text-xl font-bold tracking-tight">Live War Coverage & Video Reports</h2>
+            </div>
+            <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4">
+              {warVideos.map((video) => (
+                <div key={video.id} className="relative aspect-video rounded-xl overflow-hidden bg-black/5 border group">
+                  <iframe
+                    src={`https://www.youtube.com/embed/${video.id}`}
+                    title={video.title}
+                    allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
+                    allowFullScreen
+                    className="w-full h-full"
+                  />
+                </div>
+              ))}
+            </div>
+          </div>
+
+          <div className="border-t my-8" />
 
           {loading ? (
             <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
