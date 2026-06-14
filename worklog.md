@@ -31,3 +31,32 @@ Stage Summary:
 - All category buttons have colorful gradient backgrounds
 - Lint passes, TypeScript clean (no new errors)
 - Pushed commit 51e1062 to origin/main
+
+---
+Task ID: 9
+Agent: Data Migration
+Task: Migrate JSON articles and categories to SQLite database using Prisma
+
+Work Log:
+- Read project files: prisma/schema.prisma, src/lib/db.ts, src/data/categories.json, src/data/articles.json
+- Analyzed schema: Category has id/name/slug/description/icon/createdAt/updatedAt; Article has 20 fields including categorySlug relation
+- Categories JSON: 9 items with slugs like latest-news, artificial-intelligence, etc.
+- Articles JSON: 45 items with full content, metadata, FAQ, and categorySlug references
+- Created migration script at scripts/migrate-data.ts
+  - Uses PrismaClient directly (not @/lib/db alias which doesn't resolve in tsx)
+  - Reads JSON files with fs.readFileSync
+  - Inserts categories first (upsert by slug) then articles (upsert by slug)
+  - Converts ISO date strings to Date objects for Prisma DateTime fields
+  - Preserves original JSON ids on create, uses slug as upsert key
+  - Validates categorySlug references against category slugs after migration
+- Ran migration successfully: 2 categories newly inserted (7 already existed from prior seed), 43 articles newly inserted (2 already existed)
+- Verified data: 17 total categories (9 from JSON + 8 from prior seed), 73 total articles (45 from JSON + 28 from prior seed)
+- All 9 JSON categories confirmed in database with correct slugs and names
+- 15 articles have categorySlug references to categories not in the JSON file (personal-finance, productivity, digital-marketing, etc. from prior seed data) - these are expected orphans from the pre-existing seed
+
+Stage Summary:
+- Migration script created and executed successfully
+- All 9 categories and all 45 articles from JSON files are now in SQLite database
+- Upsert approach ensures idempotent re-runs without duplicates
+- Date format properly handled (ISO string → Date object)
+- categorySlug relation field correctly mapped for category association
