@@ -15,9 +15,9 @@ const geistMono = Geist_Mono({
 });
 
 export const metadata: Metadata = {
-  title: "Digital Point Pro - Knowledge & Trends Platform",
-  description: "Your premier destination for expert insights in technology, business, finance, and personal development. Stay ahead with Digital Point Pro.",
-  keywords: ["technology", "business", "finance", "personal development", "AI", "cybersecurity", "productivity", "Digital Point Pro"],
+  title: "Digital Point Pro - Breaking News, Tech, Business & Lifestyle",
+  description: "Your premier source for breaking news, AI insights, tech trends, health tips, business strategies, and career guidance. Stay informed with Digital Point Pro.",
+  keywords: ["breaking news", "technology", "AI", "artificial intelligence", "business", "health", "freelancing", "cybersecurity", "remote jobs", "smartphone tips", "Digital Point Pro"],
   authors: [{ name: "Digital Point Pro Team" }],
   icons: {
     icon: "/favicon.ico",

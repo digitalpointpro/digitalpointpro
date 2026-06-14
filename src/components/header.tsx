@@ -12,16 +12,9 @@ import {
   DropdownMenuTrigger,
 } from '@/components/ui/dropdown-menu'
 import {
-  Sheet,
-  SheetContent,
-  SheetTrigger,
-  SheetTitle,
-} from '@/components/ui/sheet'
-import {
   Sun,
   Moon,
   Search,
-  Menu,
   Home,
   Newspaper,
   Brain,
@@ -34,13 +27,6 @@ import {
   Shield,
   Smartphone,
   MapPin,
-  DollarSign,
-  Rocket,
-  Megaphone,
-  GraduationCap,
-  TrendingUp,
-  Share2,
-  Zap,
 } from 'lucide-react'
 
 const emptySubscribe = () => () => {}
@@ -57,22 +43,15 @@ const mainNavItems = [
   { label: 'Latest News', icon: Newspaper, action: 'latest-news' },
   { label: 'AI', icon: Brain, action: 'category', slug: 'artificial-intelligence' },
   { label: 'Technology', icon: Cpu, action: 'category', slug: 'technology-trends' },
-  { label: 'Health & Lifestyle', icon: Heart, action: 'category', slug: 'health-wellness' },
+  { label: 'Health', icon: Heart, action: 'category', slug: 'health-lifestyle' },
   { label: 'Business', icon: Briefcase, action: 'category', slug: 'online-business' },
-  { label: 'Freelancing', icon: Pen, action: 'category', slug: 'freelancing' },
+  { label: 'Remote Jobs', icon: MapPin, action: 'category', slug: 'remote-jobs' },
 ]
 
 const moreNavItems = [
+  { label: 'Freelancing', icon: Pen, slug: 'freelancing' },
   { label: 'Cyber Security', icon: Shield, slug: 'cyber-security' },
   { label: 'Smartphone Tips', icon: Smartphone, slug: 'smartphone-tips' },
-  { label: 'Remote Jobs', icon: MapPin, slug: 'remote-jobs' },
-  { label: 'Personal Finance', icon: DollarSign, slug: 'personal-finance' },
-  { label: 'Side Hustles', icon: Rocket, slug: 'side-hustles' },
-  { label: 'Digital Marketing', icon: Megaphone, slug: 'digital-marketing' },
-  { label: 'Education & Learning', icon: GraduationCap, slug: 'education-learning' },
-  { label: 'Future Careers', icon: TrendingUp, slug: 'future-careers' },
-  { label: 'Social Media Growth', icon: Share2, slug: 'social-media-growth' },
-  { label: 'Productivity', icon: Zap, slug: 'productivity' },
 ]
 
 export default function Header() {
@@ -83,8 +62,8 @@ export default function Header() {
     window.history.pushState({ overlay: 'admin' }, '', '/admin')
     document.body.style.overflow = 'hidden'
   }
-  const [mobileOpen, setMobileOpen] = useState(false)
   const [scrolled, setScrolled] = useState(false)
+  const [mobileMenuOpen, setMobileMenuOpen] = useState(false)
   const mounted = useMounted()
 
   useEffect(() => {
@@ -104,7 +83,7 @@ export default function Header() {
     } else if (item.action === 'category' && item.slug) {
       openPage('category', item.slug)
     }
-    setMobileOpen(false)
+    setMobileMenuOpen(false)
   }
 
   return (
@@ -112,11 +91,11 @@ export default function Header() {
       className={`sticky top-0 z-50 w-full border-b transition-all duration-300 ${
         scrolled
           ? 'bg-background/95 backdrop-blur-md shadow-sm'
-          : 'bg-background'
+          : 'bg-background/80 backdrop-blur-sm'
       }`}
     >
       <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
-        <div className="flex h-16 items-center justify-between">
+        <div className="flex h-14 items-center justify-between">
           {/* Left: Logo */}
           <Link
             href="/"
@@ -125,16 +104,18 @@ export default function Header() {
               window.history.pushState({}, '', '/')
               window.location.reload()
             }}
-            className="flex items-center gap-2 group shrink-0"
+            className="flex items-center gap-2.5 group shrink-0"
           >
-            <div className="flex h-9 w-9 items-center justify-center rounded-lg bg-primary text-primary-foreground font-bold text-lg transition-transform group-hover:scale-105">
-              D
+            {/* Professional D Logo */}
+            <div className="relative flex h-9 w-9 items-center justify-center rounded-xl bg-gradient-to-br from-primary via-primary to-emerald-600 shadow-lg shadow-primary/20 transition-transform group-hover:scale-105">
+              <span className="text-primary-foreground font-black text-lg leading-none tracking-tighter">D</span>
+              <div className="absolute inset-0 rounded-xl bg-gradient-to-tr from-white/20 to-transparent" />
             </div>
             <div className="flex flex-col">
-              <span className="text-lg font-bold tracking-tight leading-none text-foreground">
+              <span className="text-base sm:text-lg font-bold tracking-tight leading-none text-foreground">
                 Digital Point
               </span>
-              <span className="text-[10px] font-semibold uppercase tracking-[0.2em] text-primary leading-none mt-0.5">
+              <span className="text-[9px] sm:text-[10px] font-bold uppercase tracking-[0.25em] text-primary leading-none mt-0.5">
                 Pro
               </span>
             </div>
@@ -148,9 +129,9 @@ export default function Header() {
                 variant="ghost"
                 size="sm"
                 onClick={() => handleNavClick(item)}
-                className="gap-1.5 text-sm font-medium h-9 px-2.5"
+                className="gap-1.5 text-sm font-medium h-8 px-2.5 hover:bg-primary/5 hover:text-primary transition-colors"
               >
-                <item.icon className="h-4 w-4" />
+                <item.icon className="h-3.5 w-3.5" />
                 <span className="hidden xl:inline">{item.label}</span>
               </Button>
             ))}
@@ -158,12 +139,12 @@ export default function Header() {
             {/* More Dropdown */}
             <DropdownMenu>
               <DropdownMenuTrigger asChild>
-                <Button variant="ghost" size="sm" className="gap-1 text-sm font-medium h-9 px-2.5">
+                <Button variant="ghost" size="sm" className="gap-1 text-sm font-medium h-8 px-2.5 hover:bg-primary/5 hover:text-primary">
                   <span className="hidden xl:inline">More</span>
                   <ChevronDown className="h-3.5 w-3.5" />
                 </Button>
               </DropdownMenuTrigger>
-              <DropdownMenuContent align="center" className="w-56">
+              <DropdownMenuContent align="center" className="w-52">
                 {moreNavItems.map((item) => (
                   <DropdownMenuItem
                     key={item.slug}
@@ -184,13 +165,13 @@ export default function Header() {
             <Button
               variant="ghost"
               size="icon"
-              className="h-9 w-9"
+              className="h-8 w-8 hover:bg-primary/5 hover:text-primary"
               onClick={() => {
                 const event = new CustomEvent('openSearch')
                 window.dispatchEvent(event)
               }}
             >
-              <Search className="h-4.5 w-4.5" />
+              <Search className="h-4 w-4" />
               <span className="sr-only">Search</span>
             </Button>
 
@@ -199,13 +180,13 @@ export default function Header() {
               <Button
                 variant="ghost"
                 size="icon"
-                className="h-9 w-9"
+                className="h-8 w-8 hover:bg-primary/5 hover:text-primary"
                 onClick={() => setTheme(theme === 'dark' ? 'light' : 'dark')}
               >
                 {theme === 'dark' ? (
-                  <Sun className="h-4.5 w-4.5" />
+                  <Sun className="h-4 w-4" />
                 ) : (
-                  <Moon className="h-4.5 w-4.5" />
+                  <Moon className="h-4 w-4" />
                 )}
                 <span className="sr-only">Toggle theme</span>
               </Button>
@@ -215,95 +196,124 @@ export default function Header() {
             <Button
               variant="ghost"
               size="icon"
-              className="h-9 w-9 text-primary hover:bg-primary/10"
+              className="h-8 w-8 text-primary hover:bg-primary/10"
               onClick={openAdmin}
-              title="Admin Panel - Add Articles"
+              title="Admin Panel"
             >
-              <PenSquare className="h-4.5 w-4.5" />
+              <PenSquare className="h-4 w-4" />
               <span className="sr-only">Admin</span>
             </Button>
 
-            {/* Mobile Menu - only on mobile */}
-            <Sheet open={mobileOpen} onOpenChange={setMobileOpen}>
-              <SheetTrigger asChild>
-                <Button variant="ghost" size="icon" className="h-9 w-9 lg:hidden">
-                  <Menu className="h-5 w-5" />
-                  <span className="sr-only">Menu</span>
-                </Button>
-              </SheetTrigger>
-              <SheetContent side="right" className="w-80 p-0">
-                <div className="flex flex-col h-full">
-                  <SheetTitle className="text-lg font-bold px-6 pt-6 pb-2">
-                    Navigation
-                  </SheetTitle>
-                  <div className="flex-1 overflow-y-auto px-4 pb-6">
-                    {/* Main Sections */}
-                    <div className="space-y-1">
-                      <p className="text-xs font-semibold uppercase tracking-wider text-muted-foreground px-3 pt-2 pb-1">
-                        Sections
-                      </p>
-                      {mainNavItems.map((item) => (
-                        <Button
-                          key={item.label}
-                          variant="ghost"
-                          className="w-full justify-start text-sm gap-3 h-10"
-                          onClick={() => handleNavClick(item)}
-                        >
-                          <item.icon className="h-4 w-4 text-primary" />
-                          {item.label}
-                        </Button>
-                      ))}
-                    </div>
+            {/* Mobile Navigation - Simple scrollable nav instead of hamburger */}
+            <nav className="flex lg:hidden items-center gap-0.5 ml-1">
+              <Button
+                variant="ghost"
+                size="icon"
+                className="h-8 w-8 hover:bg-primary/5 hover:text-primary"
+                onClick={() => {
+                  const event = new CustomEvent('openSearch')
+                  window.dispatchEvent(event)
+                }}
+              >
+                <Search className="h-4 w-4" />
+              </Button>
+            </nav>
+          </div>
+        </div>
 
-                    {/* More Categories */}
-                    <div className="mt-4 space-y-1">
-                      <p className="text-xs font-semibold uppercase tracking-wider text-muted-foreground px-3 pt-2 pb-1">
-                        More Categories
-                      </p>
-                      {moreNavItems.map((item) => (
-                        <Button
-                          key={item.slug}
-                          variant="ghost"
-                          className="w-full justify-start text-sm gap-3 h-10"
-                          onClick={() => {
-                            openPage('category', item.slug)
-                            setMobileOpen(false)
-                          }}
-                        >
-                          <item.icon className="h-4 w-4 text-muted-foreground" />
-                          {item.label}
-                        </Button>
-                      ))}
-                    </div>
-
-                    {/* Admin & Legal */}
-                    <div className="mt-4 pt-4 border-t space-y-1">
-                      <Button
-                        variant="default"
-                        className="w-full gap-2 bg-primary text-primary-foreground h-10"
-                        onClick={() => {
-                          openAdmin()
-                          setMobileOpen(false)
-                        }}
-                      >
-                        <PenSquare className="h-4 w-4" />
-                        Admin - Add Article
-                      </Button>
-                      <Button
-                        variant="ghost"
-                        className="w-full justify-start text-sm gap-3 h-10"
-                        onClick={() => {
-                          openPage('legal')
-                          setMobileOpen(false)
-                        }}
-                      >
-                        Legal & About
-                      </Button>
-                    </div>
-                  </div>
-                </div>
-              </SheetContent>
-            </Sheet>
+        {/* Mobile Navigation Bar - scrollable pills instead of hamburger */}
+        <div className="lg:hidden -mx-4 px-4 pb-2 overflow-x-auto no-scrollbar">
+          <div className="flex items-center gap-1 min-w-max">
+            <Button
+              variant="ghost"
+              size="sm"
+              onClick={() => handleNavClick(mainNavItems[0])}
+              className="gap-1 text-xs font-medium h-7 px-2 shrink-0 hover:bg-primary/5 hover:text-primary"
+            >
+              <Home className="h-3 w-3" />
+              Home
+            </Button>
+            <Button
+              variant="ghost"
+              size="sm"
+              onClick={() => openPage('latest-news')}
+              className="gap-1 text-xs font-medium h-7 px-2 shrink-0 hover:bg-primary/5 hover:text-primary"
+            >
+              <Newspaper className="h-3 w-3" />
+              News
+            </Button>
+            <Button
+              variant="ghost"
+              size="sm"
+              onClick={() => openPage('category', 'artificial-intelligence')}
+              className="gap-1 text-xs font-medium h-7 px-2 shrink-0 hover:bg-primary/5 hover:text-primary"
+            >
+              <Brain className="h-3 w-3" />
+              AI
+            </Button>
+            <Button
+              variant="ghost"
+              size="sm"
+              onClick={() => openPage('category', 'technology-trends')}
+              className="gap-1 text-xs font-medium h-7 px-2 shrink-0 hover:bg-primary/5 hover:text-primary"
+            >
+              <Cpu className="h-3 w-3" />
+              Tech
+            </Button>
+            <Button
+              variant="ghost"
+              size="sm"
+              onClick={() => openPage('category', 'health-lifestyle')}
+              className="gap-1 text-xs font-medium h-7 px-2 shrink-0 hover:bg-primary/5 hover:text-primary"
+            >
+              <Heart className="h-3 w-3" />
+              Health
+            </Button>
+            <Button
+              variant="ghost"
+              size="sm"
+              onClick={() => openPage('category', 'online-business')}
+              className="gap-1 text-xs font-medium h-7 px-2 shrink-0 hover:bg-primary/5 hover:text-primary"
+            >
+              <Briefcase className="h-3 w-3" />
+              Business
+            </Button>
+            <Button
+              variant="ghost"
+              size="sm"
+              onClick={() => openPage('category', 'remote-jobs')}
+              className="gap-1 text-xs font-medium h-7 px-2 shrink-0 hover:bg-primary/5 hover:text-primary"
+            >
+              <MapPin className="h-3 w-3" />
+              Remote
+            </Button>
+            <Button
+              variant="ghost"
+              size="sm"
+              onClick={() => openPage('category', 'freelancing')}
+              className="gap-1 text-xs font-medium h-7 px-2 shrink-0 hover:bg-primary/5 hover:text-primary"
+            >
+              <Pen className="h-3 w-3" />
+              Freelance
+            </Button>
+            <Button
+              variant="ghost"
+              size="sm"
+              onClick={() => openPage('category', 'cyber-security')}
+              className="gap-1 text-xs font-medium h-7 px-2 shrink-0 hover:bg-primary/5 hover:text-primary"
+            >
+              <Shield className="h-3 w-3" />
+              Security
+            </Button>
+            <Button
+              variant="ghost"
+              size="sm"
+              onClick={() => openPage('category', 'smartphone-tips')}
+              className="gap-1 text-xs font-medium h-7 px-2 shrink-0 hover:bg-primary/5 hover:text-primary"
+            >
+              <Smartphone className="h-3 w-3" />
+              Phone
+            </Button>
           </div>
         </div>
       </div>

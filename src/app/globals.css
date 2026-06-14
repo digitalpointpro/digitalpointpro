@@ -46,6 +46,10 @@
   --color-emerald-foreground: oklch(0.985 0 0);
   --color-emerald-light: oklch(0.92 0.05 160);
   --color-emerald-dark: oklch(0.35 0.12 160);
+  --animate-float: float 6s ease-in-out infinite;
+  --animate-float-delayed: float 8s ease-in-out 2s infinite;
+  --animate-float-slow: float 10s ease-in-out 4s infinite;
+  --animate-ticker: ticker 20s linear infinite;
 }
 
 :root {
@@ -128,8 +132,8 @@
 
 /* Custom scrollbar */
 ::-webkit-scrollbar {
-  width: 8px;
-  height: 8px;
+  width: 6px;
+  height: 6px;
 }
 
 ::-webkit-scrollbar-track {
@@ -320,6 +324,19 @@
     opacity: 0;
     transform: translateY(20px);
   }
+}
+
+/* Floating particle animations */
+@keyframes float {
+  0%, 100% { transform: translateY(0px) translateX(0px); }
+  25% { transform: translateY(-20px) translateX(10px); }
+  50% { transform: translateY(-10px) translateX(-5px); }
+  75% { transform: translateY(-30px) translateX(15px); }
+}
+
+@keyframes ticker {
+  0% { transform: translateX(0); }
+  100% { transform: translateX(-50%); }
 }
 
 /* Smooth focus styles */
