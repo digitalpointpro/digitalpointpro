@@ -1,13 +1,20 @@
 'use client'
 
-import React, { useEffect, useRef } from 'react'
+import React from 'react'
 
 // ============================================
-// ADSTERRA ADS - BANNER + SMART LINK
+// ADSTERRA BANNER ADS - SANDBOXED IFRAMES
 // ============================================
-// Using direct script injection (Adsterra's official method)
-// Redirect protection added via window.open override
-// Smart Link = simple clickable link (safe, no auto-redirect)
+// Each banner ad loads via /api/ad?position=xxx
+// inside an iframe with sandbox="allow-scripts"
+//
+// sandbox="allow-scripts" BLOCKS:
+//   ❌ allow-top-navigation → NO page redirects!
+//   ❌ allow-popups → NO popup windows!
+//   ❌ allow-same-origin → NO parent page access!
+// Only ✅ allow-scripts → ad creative can render
+//
+// Smart Link = simple clickable link (safe, no redirect)
 // ============================================
 
 type AdPosition =
@@ -20,37 +27,17 @@ type AdPosition =
   | 'mobileSticky'
   | 'smartLink'
 
-interface BannerConfig {
-  key: string
-  width: number
-  height: number
-}
-
-const BANNER_ADS: Record<string, BannerConfig> = {
-  headerBanner: { key: 'bee03c8feeebc403d01e864f5008c118', width: 728, height: 90 },
-  betweenArticles: { key: 'de9c4f6555d0c2b70c90f6cf8b3c5c04', width: 468, height: 60 },
-  sidebar: { key: 'b1f8bed5795a25e0bf744125256b244c', width: 300, height: 250 },
-  sidebarTall: { key: 'd94b42a76e538f26af5695da265ba72e', width: 160, height: 600 },
-  midSection: { key: 'f3c66e2f00457c1271edf2b126802ce7', width: 160, height: 300 },
-  footerBanner: { key: 'bee03c8feeebc403d01e864f5008c118', width: 728, height: 90 },
-  mobileSticky: { key: '182344e1b81fbbec81aaafe6d201cda9', width: 320, height: 50 },
+const BANNER_SIZES: Record<string, { width: number; height: number }> = {
+  headerBanner: { width: 728, height: 90 },
+  betweenArticles: { width: 468, height: 60 },
+  sidebar: { width: 300, height: 250 },
+  sidebarTall: { width: 160, height: 600 },
+  midSection: { width: 160, height: 300 },
+  footerBanner: { width: 728, height: 90 },
+  mobileSticky: { width: 320, height: 50 },
 }
 
 const SMART_LINK_URL = 'https://www.effectivecpmnetwork.com/wfpqbe5835?key=1785cba448cf21011923ee9ce9b92e8a'
-
-// Install redirect protection ONCE globally
-if (typeof window !== 'undefined') {
-  // Block popup windows from ad scripts
-  const originalOpen = window.open
-  window.open = function(...args) {
-    // Allow if user explicitly clicked something (not from ad script)
-    const url = args[0] || ''
-    if (url && !url.includes('highperformanceformat') && !url.includes('effectivecpmnetwork')) {
-      return originalOpen.apply(window, args)
-    }
-    return null
-  }
-}
 
 interface AdSlotProps {
   position: AdPosition
@@ -63,69 +50,31 @@ export default function AdSlot({ position, className = '' }: AdSlotProps) {
     return <SmartLinkButton className={className} />
   }
 
-  const config = BANNER_ADS[position]
-  if (!config) return null
-
-  return <BannerAd position={position} config={config} className={className} />
-}
-
-// ============================================
-// Banner Ad Component - Direct Script Injection
-// ============================================
-function BannerAd({ position, config, className }: {
-  position: string
-  config: BannerConfig
-  className: string
-}) {
-  const containerRef = useRef<HTMLDivElement>(null)
-  const loaded = useRef(false)
-
-  useEffect(() => {
-    if (loaded.current) return
-    loaded.current = true
-
-    const container = containerRef.current
-    if (!container) return
-
-    // Clear any existing content
-    container.innerHTML = ''
-
-    // Create the atOptions script
-    const optionsScript = document.createElement('script')
-    optionsScript.type = 'text/javascript'
-    optionsScript.innerHTML = `
-      atOptions = {
-        'key' : '${config.key}',
-        'format' : 'iframe',
-        'height' : ${config.height},
-        'width' : ${config.width},
-        'params' : {}
-      };
-    `
-
-    // Create the invoke script
-    const invokeScript = document.createElement('script')
-    invokeScript.type = 'text/javascript'
-    invokeScript.src = `https://www.highperformanceformat.com/${config.key}/invoke.js`
-    invokeScript.async = true
-
-    container.appendChild(optionsScript)
-    container.appendChild(invokeScript)
-  }, [config, position])
+  const size = BANNER_SIZES[position]
+  if (!size) return null
 
   return (
     <div
-      className={`ad-container flex items-center justify-center overflow-hidden ${className}`}
+      className={`ad-container flex items-center justify-center ${className}`}
       style={{
-        width: config.width > 0 ? `min(${config.width}px, 100%)` : '100%',
-        maxWidth: '100%',
-        minHeight: `${config.height}px`,
+        width: '100%',
+        maxWidth: `${size.width}px`,
+        minHeight: `${size.height}px`,
       }}
     >
-      <div
-        ref={containerRef}
-        className="w-full h-full flex items-center justify-center"
-        id={`adslot-${position}`}
+      <iframe
+        src={`/api/ad?position=${position}`}
+        sandbox="allow-scripts"
+        style={{
+          width: `${size.width}px`,
+          height: `${size.height}px`,
+          maxWidth: '100%',
+          border: 'none',
+          overflow: 'hidden',
+          display: 'block',
+        }}
+        scrolling="no"
+        title="Advertisement"
       />
     </div>
   )
