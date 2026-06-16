@@ -15,6 +15,7 @@ import SearchModal from '@/components/search-modal'
 import AdminOverlay from '@/components/admin-overlay'
 import LatestNewsOverlay from '@/components/latest-news-overlay'
 import BackToTop from '@/components/back-to-top'
+import AdSlot from '@/components/ad-slot'
 import { Separator } from '@/components/ui/separator'
 import { Newspaper, Brain, Cpu, Heart, Briefcase, Pen, Shield, Smartphone, MapPin } from 'lucide-react'
 
@@ -108,6 +109,9 @@ export default function HomePage() {
       <main className="flex-1 overflow-hidden relative z-10">
         <div className="h-full overflow-y-auto">
           <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8 py-4 sm:py-6">
+            {/* Header Banner Ad */}
+            <AdSlot position="headerBanner" className="mb-4" />
+
             {/* Hero Banner */}
             <Hero />
 
@@ -150,7 +154,10 @@ export default function HomePage() {
               </div>
             </section>
 
-            <Separator className="my-6" />
+            <Separator className="my-4" />
+
+            {/* Between Sections Ad */}
+            <AdSlot position="betweenArticles" className="my-4" />
 
             {/* Main Content Grid - Latest Articles + Sidebar */}
             <div className="grid grid-cols-1 lg:grid-cols-12 gap-6">
@@ -174,15 +181,30 @@ export default function HomePage() {
                       ))}
                     </div>
                   ) : (
-                    <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
-                      {latest.slice(0, 8).map((article) => (
-                        <ArticleCard
-                          key={article.id}
-                          article={article}
-                          variant="vertical"
-                        />
-                      ))}
-                    </div>
+                    <>
+                      <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
+                        {latest.slice(0, 4).map((article) => (
+                          <ArticleCard
+                            key={article.id}
+                            article={article}
+                            variant="vertical"
+                          />
+                        ))}
+                      </div>
+
+                      {/* Mid-Articles Ad */}
+                      <AdSlot position="betweenArticles" className="my-4" />
+
+                      <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
+                        {latest.slice(4, 8).map((article) => (
+                          <ArticleCard
+                            key={article.id}
+                            article={article}
+                            variant="vertical"
+                          />
+                        ))}
+                      </div>
+                    </>
                   )}
                 </section>
               </div>
@@ -201,6 +223,9 @@ export default function HomePage() {
               <SidebarRight />
             </div>
 
+            {/* Footer Banner Ad */}
+            <AdSlot position="footerBanner" className="mt-6" />
+
             {/* Bottom spacer for scroll */}
             <div className="h-8" />
           </div>
@@ -209,6 +234,11 @@ export default function HomePage() {
 
       {/* Footer - Sticky at Bottom */}
       <Footer />
+
+      {/* Mobile Sticky Ad - shown only on mobile */}
+      <div className="lg:hidden fixed bottom-0 left-0 right-0 z-40 bg-background/95 backdrop-blur-sm border-t py-1 px-2">
+        <AdSlot position="mobileSticky" />
+      </div>
 
       {/* Overlays */}
       {isOverlayOpen && overlayType === 'article' && <ArticleOverlay />}

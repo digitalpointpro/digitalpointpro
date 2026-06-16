@@ -9,6 +9,7 @@ import { Button } from '@/components/ui/button'
 import { Badge } from '@/components/ui/badge'
 import { Skeleton } from '@/components/ui/skeleton'
 import { X, ChevronRight, ArrowLeft, Newspaper, Zap, AlertTriangle, Play, Home, Brain, Cpu, Heart, Briefcase, Pen, Shield, Smartphone, MapPin, Youtube } from 'lucide-react'
+import AdSlot from '@/components/ad-slot'
 
 const navCategories = [
   { label: 'Home', icon: Home, action: 'home' as const },
@@ -131,6 +132,9 @@ export default function LatestNewsOverlay() {
       {/* Content */}
       <div className="overflow-y-auto" style={{ height: 'calc(100vh - 88px)' }}>
         <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8 py-8">
+          {/* Header Ad */}
+          <AdSlot position="headerBanner" className="mb-6" />
+
           {/* Header Section */}
           <div className="mb-8">
             <div className="flex items-center gap-3 mb-2">
@@ -178,6 +182,9 @@ export default function LatestNewsOverlay() {
 
           <div className="border-t my-8" />
 
+          {/* Between Videos & Articles Ad */}
+          <AdSlot position="betweenArticles" className="my-6" />
+
           {loading ? (
             <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
               {Array.from({ length: 6 }).map((_, i) => (
@@ -224,6 +231,9 @@ export default function LatestNewsOverlay() {
               <div className="hidden lg:block lg:col-span-4">
                 <div className="sticky top-20 space-y-6">
                   <Newsletter />
+
+                  {/* Sidebar Ad */}
+                  <AdSlot position="sidebar" />
 
                   <div className="rounded-lg border bg-card p-4">
                     <h3 className="font-semibold text-sm mb-3 flex items-center gap-2">

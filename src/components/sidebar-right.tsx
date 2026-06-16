@@ -4,6 +4,7 @@ import React, { useState, useEffect } from 'react'
 import { ArticleListItem } from '@/lib/types'
 import ArticleCard from '@/components/article-card'
 import Newsletter from '@/components/newsletter'
+import AdSlot from '@/components/ad-slot'
 import { Clock } from 'lucide-react'
 
 export default function SidebarRight() {
@@ -36,6 +37,9 @@ export default function SidebarRight() {
 
       {/* Newsletter */}
       <Newsletter />
+
+      {/* Sidebar Ad */}
+      <AdSlot position="sidebar" />
     </aside>
   )
 }

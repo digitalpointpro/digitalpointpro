@@ -17,6 +17,7 @@ import {
   AccordionItem,
   AccordionTrigger,
 } from '@/components/ui/accordion'
+import AdSlot from '@/components/ad-slot'
 import {
   X,
   Clock,
@@ -41,6 +42,28 @@ import {
   Smartphone,
   MapPin,
 } from 'lucide-react'
+
+// Component that splits article content and inserts ads between paragraphs
+function ArticleBodyWithAds({ content }: { content: string }) {
+  // Split content at H2 headings to insert ads between sections
+  const sections = content.split(/(?=^## )/m)
+
+  return (
+    <div id="article-body-content" className="article-body">
+      {sections.map((section, idx) => (
+        <React.Fragment key={idx}>
+          <ReactMarkdown remarkPlugins={[remarkGfm]}>{section}</ReactMarkdown>
+          {/* Insert ad after every 2nd section (roughly every 2 H2 headings) */}
+          {(idx > 0 && idx % 2 === 0 && idx < sections.length - 1) && (
+            <div className="my-6">
+              <AdSlot position="inArticle" />
+            </div>
+          )}
+        </React.Fragment>
+      ))}
+    </div>
+  )
+}
 
 const navCategories = [
   { label: 'Home', icon: Home, action: 'home' as const },
@@ -242,6 +265,9 @@ export default function ArticleOverlay() {
         style={{ height: 'calc(100vh - 88px)' }}
       >
         <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8 py-8">
+          {/* Top Banner Ad in Article */}
+          <AdSlot position="headerBanner" className="mb-6" />
+
           <div className="grid grid-cols-1 lg:grid-cols-12 gap-8">
             {/* Main Content */}
             <div className="lg:col-span-8">
@@ -312,10 +338,8 @@ export default function ArticleOverlay() {
                 </div>
               )}
 
-              {/* Article Body */}
-              <div id="article-body-content" className="article-body">
-                <ReactMarkdown remarkPlugins={[remarkGfm]}>{article.content || ''}</ReactMarkdown>
-              </div>
+              {/* Article Body with In-Article Ads */}
+              <ArticleBodyWithAds content={article.content || ''} />
 
               {/* Social Sharing */}
               <Separator className="my-8" />
@@ -431,6 +455,9 @@ export default function ArticleOverlay() {
                 )}
 
                 <Newsletter />
+
+                {/* Sidebar Ad */}
+                <AdSlot position="sidebar" />
 
                 {/* Recommended Reads */}
                 {related.length > 0 && (

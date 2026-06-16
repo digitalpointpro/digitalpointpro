@@ -9,6 +9,7 @@ import { Button } from '@/components/ui/button'
 import { Badge } from '@/components/ui/badge'
 import { Skeleton } from '@/components/ui/skeleton'
 import { X, ChevronRight, ArrowLeft, Home, Newspaper, Brain, Cpu, Heart, Briefcase, Pen, Shield, Smartphone, MapPin } from 'lucide-react'
+import AdSlot from '@/components/ad-slot'
 
 const navCategories = [
   { label: 'Home', icon: Home, action: 'home' as const },
@@ -125,6 +126,9 @@ export default function CategoryOverlay() {
       {/* Content */}
       <div className="overflow-y-auto" style={{ height: 'calc(100vh - 88px)' }}>
         <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8 py-8">
+          {/* Header Ad */}
+          <AdSlot position="headerBanner" className="mb-6" />
+
           {/* Category Header */}
           <div className="mb-8">
             <Badge className="mb-3">{category?.name || 'Category'}</Badge>
@@ -180,6 +184,9 @@ export default function CategoryOverlay() {
               <div className="hidden lg:block lg:col-span-4">
                 <div className="sticky top-20 space-y-6">
                   <Newsletter />
+
+                  {/* Sidebar Ad */}
+                  <AdSlot position="sidebar" />
 
                   <div className="rounded-lg border bg-card p-4">
                     <h3 className="font-semibold text-sm mb-3">Popular in {category?.name}</h3>
