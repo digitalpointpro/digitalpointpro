@@ -3,7 +3,7 @@
 ## 📌 Project Info
 - **Website:** https://digitalpointpro.vercel.app (LIVE 24/7)
 - **GitHub:** https://github.com/digitalpointpro/digitalpointpro
-- **GitHub Token:** TOKEN_REMOVED (keep safe, kal kaam aayega)
+- **GitHub Token:** EXPIRED — user needs to create new token (TOKEN_REMOVED is invalid now)
 - **Framework:** Next.js 16 + TypeScript + Tailwind CSS + shadcn/ui
 - **Data:** Static JSON files (NO backend/database needed)
 - **Hosting:** Vercel (free, auto-deploys from GitHub push)
@@ -11,6 +11,18 @@
 ---
 
 ## ✅ COMPLETED Tasks
+
+### Ad System (LATEST - June 2025)
+- [x] Created AdSlot component (`src/components/ad-slot.tsx`) with 6 ad positions
+- [x] Ad positions: headerBanner, inArticle, sidebar, betweenArticles, footerBanner, mobileSticky
+- [x] Only BANNER/DISPLAY ads — NO popunder/interstitial (those cause redirect/popup issue)
+- [x] Ads added to ALL pages: home, article overlay, category overlay, latest news overlay, sidebar
+- [x] In-article ads split content at H2 headings and insert between sections
+- [x] Mobile sticky ad at bottom (hidden on desktop)
+- [x] Placeholder ads show when no Adsterra Zone ID is configured
+- [x] **TO ACTIVATE:** Add your Adsterra Zone IDs in `src/components/ad-slot.tsx` AD_CONFIG object
+- [x] Fix: No more popunder/interstitial ads that redirect and close the website
+- [x] **GITHUB PUSH PENDING:** Token expired, need new token to deploy to Vercel
 
 ### Website Design & Features
 - [x] Professional colorful gradient background theme
@@ -62,13 +74,19 @@
 
 ---
 
-## ⏳ PENDING Tasks (Kal karenge)
+## ⏳ PENDING Tasks
+
+### URGENT: GitHub Push
+- [ ] User needs to create NEW GitHub token (old one expired)
+- [ ] Push latest code to GitHub so Vercel deploys the ad fix
 
 ### Ads Integration (PRIORITY #1)
-- [ ] User will create Adsterra account and provide ad code
-- [ ] Install Adsterra ads on website
+- [ ] User needs to create Adsterra account
+- [ ] Create BANNER ads only in Adsterra (728x90, 300x250, 320x50) — DO NOT create popunder/interstitial
+- [ ] Get Zone IDs from Adsterra banner ads
+- [ ] Put Zone IDs in `src/components/ad-slot.tsx` AD_CONFIG object
+- [ ] Push code to GitHub → Vercel auto-deploys
 - [ ] After 2 weeks: Apply for Google AdSense
-- [ ] Install AdSense ads when approved
 
 ### Optional (Only if user wants later)
 - [ ] Full backend (admin panel, login, AI article generator)
@@ -78,13 +96,15 @@
 ---
 
 ## 📁 Key Files
-- `src/app/page.tsx` — Main homepage
+- `src/app/page.tsx` — Main homepage (with ad placements)
+- `src/components/ad-slot.tsx` — **NEW** Ad system with 6 positions (add your Zone IDs here!)
 - `src/components/header.tsx` — Header with colorful nav
 - `src/components/footer.tsx` — Footer with About/Legal
 - `src/components/hero.tsx` — Hero banner carousel
-- `src/components/article-overlay.tsx` — Article view (back arrow + nav)
-- `src/components/category-overlay.tsx` — Category view
-- `src/components/latest-news-overlay.tsx` — News + YouTube videos
+- `src/components/article-overlay.tsx` — Article view (back arrow + nav + in-article ads)
+- `src/components/category-overlay.tsx` — Category view (with ads)
+- `src/components/latest-news-overlay.tsx` — News + YouTube videos (with ads)
+- `src/components/sidebar-right.tsx` — Sidebar (with sidebar ad)
 - `src/components/static-page-overlay.tsx` — Legal pages
 - `src/components/admin-overlay.tsx` — Admin panel (UI only)
 - `src/lib/store.ts` — Zustand state (goBack, previousOverlay tracking)
