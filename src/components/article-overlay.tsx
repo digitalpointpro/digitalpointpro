@@ -53,10 +53,10 @@ function ArticleBodyWithAds({ content }: { content: string }) {
       {sections.map((section, idx) => (
         <React.Fragment key={idx}>
           <ReactMarkdown remarkPlugins={[remarkGfm]}>{section}</ReactMarkdown>
-          {/* Insert ad after every 2nd section (roughly every 2 H2 headings) */}
+          {/* Insert between articles banner ad after every 2nd section */}
           {(idx > 0 && idx % 2 === 0 && idx < sections.length - 1) && (
             <div className="my-6">
-              <AdSlot position="inArticle" />
+              <AdSlot position="betweenArticles" />
               {/* Smart Link between sections - maximum clicks here */}
               <div className="mt-4 text-center">
                 <AdSlot position="smartLink" />

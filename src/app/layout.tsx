@@ -3,7 +3,6 @@ import { Geist, Geist_Mono } from "next/font/google";
 import "./globals.css";
 import { Toaster } from "@/components/ui/toaster";
 import { ThemeProvider } from "@/components/theme-provider";
-import AdSlot from "@/components/ad-slot";
 
 const geistSans = Geist({
   variable: "--font-geist-sans",
@@ -60,8 +59,6 @@ export default function RootLayout({
         >
           {children}
           <Toaster />
-          {/* Adsterra Social Bar - loads globally */}
-          <AdSlot position="socialBar" />
         </ThemeProvider>
       </body>
     </html>

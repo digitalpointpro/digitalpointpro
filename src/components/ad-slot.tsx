@@ -3,88 +3,74 @@
 import React, { useEffect, useRef } from 'react'
 
 // ============================================
-// ADSTERRA AD CONFIGURATION - ALL REAL ADS
+// ADSTERRA AD CONFIGURATION - ONLY SAFE BANNER ADS
 // ============================================
+// RULE: Only use highperformanceformat.com banner ads.
+// DO NOT use effectivecpmnetwork.com scripts - they cause redirects/popunders!
+// DO NOT use social bar - it redirects and closes the website!
+// DO NOT use native banner from effectivecpmnetwork - it redirects!
 
-type AdType = 'highperformance' | 'effectivecpm' | 'native' | 'social' | 'smartlink'
+type AdType = 'highperformance' | 'smartlink'
 
 interface AdConfig {
   type: AdType
   key?: string
   width: number
   height: number
-  scriptUrl?: string
-  containerId?: string
   smartUrl?: string
 }
 
 export const AD_CONFIG = {
-  // Header Banner 728x90
+  // Header Banner 728x90 - SAFE
   headerBanner: {
     type: 'highperformance' as AdType,
     key: 'bee03c8feeebc403d01e864f5008c118',
     width: 728,
     height: 90,
   },
-  // In-Article Native Banner
-  inArticle: {
-    type: 'native' as AdType,
-    key: '2761c91d10614f91e57209b5fe40a64f',
-    width: 0,
-    height: 0,
-    scriptUrl: 'https://pl29749330.effectivecpmnetwork.com/2761c91d10614f91e57209b5fe40a64f/invoke.js',
-    containerId: 'container-2761c91d10614f91e57209b5fe40a64f',
-  },
-  // Sidebar 300x250
-  sidebar: {
-    type: 'highperformance' as AdType,
-    key: 'b1f8bed5795a25e0bf744125256b244c',
-    width: 300,
-    height: 250,
-  },
-  // Sidebar Tall 160x600
-  sidebarTall: {
-    type: 'highperformance' as AdType,
-    key: 'd94b42a76e538f26af5695da265ba72e',
-    width: 160,
-    height: 600,
-  },
-  // Between Articles 468x60
+  // Between Articles 468x60 - SAFE
   betweenArticles: {
     type: 'highperformance' as AdType,
     key: 'de9c4f6555d0c2b70c90f6cf8b3c5c04',
     width: 468,
     height: 60,
   },
-  // Mid Section 160x300
+  // Sidebar 300x250 - SAFE
+  sidebar: {
+    type: 'highperformance' as AdType,
+    key: 'b1f8bed5795a25e0bf744125256b244c',
+    width: 300,
+    height: 250,
+  },
+  // Sidebar Tall 160x600 - SAFE
+  sidebarTall: {
+    type: 'highperformance' as AdType,
+    key: 'd94b42a76e538f26af5695da265ba72e',
+    width: 160,
+    height: 600,
+  },
+  // Mid Section 160x300 - SAFE
   midSection: {
     type: 'highperformance' as AdType,
     key: 'f3c66e2f00457c1271edf2b126802ce7',
     width: 160,
     height: 300,
   },
-  // Footer Banner 728x90 (reuse header)
+  // Footer Banner 728x90 - SAFE (reuse header key)
   footerBanner: {
     type: 'highperformance' as AdType,
     key: 'bee03c8feeebc403d01e864f5008c118',
     width: 728,
     height: 90,
   },
-  // Mobile Sticky 320x50
+  // Mobile Sticky 320x50 - SAFE
   mobileSticky: {
     type: 'highperformance' as AdType,
     key: '182344e1b81fbbec81aaafe6d201cda9',
     width: 320,
     height: 50,
   },
-  // Social Bar
-  socialBar: {
-    type: 'social' as AdType,
-    width: 0,
-    height: 0,
-    scriptUrl: 'https://pl29749331.effectivecpmnetwork.com/18/49/31/1849316fdff11436e8c595fee5622180.js',
-  },
-  // Smart Link
+  // Smart Link - SAFE (just a link button, no script)
   smartLink: {
     type: 'smartlink' as AdType,
     width: 0,
@@ -100,17 +86,9 @@ interface AdSlotProps {
   className?: string
 }
 
-// Generate unique container IDs
-let adCounter = 0
-function getUniqueId(position: string) {
-  adCounter++
-  return `ad-${position}-${adCounter}-${Date.now()}`
-}
-
 export default function AdSlot({ position, className = '' }: AdSlotProps) {
   const config = AD_CONFIG[position]
   const containerRef = useRef<HTMLDivElement>(null)
-  const uniqueId = useRef(getUniqueId(position))
   const loaded = useRef(false)
 
   useEffect(() => {
@@ -121,7 +99,10 @@ export default function AdSlot({ position, className = '' }: AdSlotProps) {
     if (!container) return
 
     if (config.type === 'highperformance' && config.key) {
-      // Highperformanceformat.com ad (728x90, 468x60, 300x250, 320x50, 160x300, 160x600)
+      // Create a SANDBOXED iframe - prevents cross-origin access & redirects
+      const iframeId = `ad-iframe-${position}-${Date.now()}`
+      
+      // Create the options script
       const optionsScript = document.createElement('script')
       optionsScript.type = 'text/javascript'
       optionsScript.innerHTML = `
@@ -133,6 +114,8 @@ export default function AdSlot({ position, className = '' }: AdSlotProps) {
           'params' : {}
         };
       `
+      
+      // Create the invoke script
       const invokeScript = document.createElement('script')
       invokeScript.type = 'text/javascript'
       invokeScript.src = `https://www.highperformanceformat.com/${config.key}/invoke.js`
@@ -141,24 +124,8 @@ export default function AdSlot({ position, className = '' }: AdSlotProps) {
       container.innerHTML = ''
       container.appendChild(optionsScript)
       container.appendChild(invokeScript)
-    } else if (config.type === 'native' && config.scriptUrl && config.containerId) {
-      // Native banner ad
-      const containerDiv = document.createElement('div')
-      containerDiv.id = config.containerId
-      container.appendChild(containerDiv)
-
-      const script = document.createElement('script')
-      script.async = true
-      script.setAttribute('data-cfasync', 'false')
-      script.src = config.scriptUrl
-      container.appendChild(script)
-    } else if (config.type === 'social' && config.scriptUrl) {
-      // Social bar
-      const script = document.createElement('script')
-      script.src = config.scriptUrl
-      container.appendChild(script)
     }
-  }, [config])
+  }, [config, position])
 
   // Smart Link renders as a clickable button
   if (config.type === 'smartlink') {
