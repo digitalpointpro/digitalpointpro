@@ -12,17 +12,17 @@
 
 ## ✅ COMPLETED Tasks
 
-### Ad System (LATEST - June 2025)
-- [x] Created AdSlot component (`src/components/ad-slot.tsx`) with 6 ad positions
-- [x] Ad positions: headerBanner, inArticle, sidebar, betweenArticles, footerBanner, mobileSticky
-- [x] Only BANNER/DISPLAY ads — NO popunder/interstitial (those cause redirect/popup issue)
-- [x] Ads added to ALL pages: home, article overlay, category overlay, latest news overlay, sidebar
+### Ad System (LATEST - March 2025)
+- [x] **COMPLETE REWRITE** - All ads now run in SANDBOXED IFRAMES to prevent redirects
+- [x] `sandbox="allow-scripts"` only — BLOCKS allow-top-navigation, allow-popups, allow-same-origin
+- [x] Ad positions: headerBanner(728x90), betweenArticles(468x60), sidebar(300x250), sidebarTall(160x600), midSection(160x300), footerBanner(728x90), mobileSticky(320x50)
+- [x] Removed ALL: social bar, smart links, native ads (these caused redirects!)
+- [x] Only highperformanceformat.com banner ads in sandboxed iframes
+- [x] Ads on ALL pages: home, article overlay, category overlay, latest news overlay, sidebar
 - [x] In-article ads split content at H2 headings and insert between sections
 - [x] Mobile sticky ad at bottom (hidden on desktop)
-- [x] Placeholder ads show when no Adsterra Zone ID is configured
-- [x] **TO ACTIVATE:** Add your Adsterra Zone IDs in `src/components/ad-slot.tsx` AD_CONFIG object
-- [x] Fix: No more popunder/interstitial ads that redirect and close the website
-- [x] **DEPLOYED TO VERCEL** — All ads live on website!
+- [x] **REDIRECT FIX VERIFIED** — Agent Browser tested, NO redirects!
+- [x] **DEPLOYED TO VERCEL** — Pushed to GitHub, auto-deploying
 
 ### Website Design & Features
 - [x] Professional colorful gradient background theme
