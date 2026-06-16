@@ -120,3 +120,103 @@
 - Adsterra = easy approval, start earning immediately
 - AdSense = apply after 2 weeks of website being live
 - NO backend needed for current setup — static site is perfect for ads
+
+---
+
+## 📅 SESSION: SEO + Traffic System (Latest)
+
+### ✅ COMPLETED — Sab Ready Hai
+
+#### 1. Critical URL Bug Fix
+- **Problem:** Article URLs `/article/slug` 404 on direct visit/share → broke SEO + social sharing
+- **Fix:** Changed to query-param URLs `/?article=slug`, `/?category=slug`, `/?news=1`, `/?legal=slug`
+- **Files changed:** `src/lib/store.ts`, `src/app/page.tsx` (hydration + popstate fix)
+- Direct visits now open correct overlay (browser-verified)
+
+#### 2. SEO Files Created
+- `src/lib/site-config.ts` — central config (URL, name, social, GA4, OneSignal, GSC)
+- `src/app/sitemap.ts` — auto XML sitemap (45 articles + 9 categories + legal)
+- `src/app/robots.ts` — allows all + Googlebot-News + sitemap ref
+- `src/app/manifest.ts` — PWA manifest + shortcuts
+- `src/components/structured-data.tsx` — JsonLd, NewsArticleJsonLd, BreadcrumbJsonLd
+
+#### 3. Metadata + Schema (layout.tsx rewritten)
+- OG tags, Twitter cards, canonical, robots directives
+- JSON-LD: Organization + WebSite (with SearchAction) sitewide
+- NewsArticle + Breadcrumb JSON-LD per article (Google News ready)
+- Dynamic title/meta/OG update when article opens
+- GA4 + OneSignal via next/script (ready, needs IDs)
+
+#### 4. Article Sharing Enhanced (article-overlay.tsx)
+- 6 share buttons: Facebook, X, LinkedIn, WhatsApp, Telegram, Copy Link
+- Native Web Share API button (mobile)
+- Share URLs use canonical `articleUrl(slug)` (no 404s)
+
+#### 5. Push Notification Prompt
+- `src/components/push-notification-prompt.tsx` — shows after 15s, dismissible
+- Added to page.tsx
+
+#### 6. Generated Assets
+- `public/og-default.jpg` (1344x768) — social share image
+- `public/icon.png` (1024x1024) — app/PWA icon
+
+#### 7. Removed
+- `public/robots.txt` (static) → replaced by dynamic `robots.ts`
+
+### ⏳ PENDING — Kal Karna Hai (User Action Required)
+
+#### A. 3 Values `src/lib/site-config.ts` me dalni hain (line 31-36):
+```ts
+ga4Id: '',              // ← G-XXXXXXXXXX from analytics.google.com
+oneSignalAppId: '',     // ← UUID from onesignal.com
+gscVerification: '',    // ← token from search.google.com/search-console
+```
+**User ko 3 free accounts banana hai:**
+1. Google Analytics 4 → analytics.google.com → Measurement ID `G-XXX`
+2. OneSignal → onesignal.com → App ID (UUID format)
+3. Google Search Console → search.google.com/search-console → HTML tag verification → content value
+
+**Note:** Main (AI) in IDs ko generate nahi kar sakta — yeh user ke account-specific hain. User ko khud banana hoga.
+
+#### B. Jab IDs mil jayein:
+1. `site-config.ts` me 3 values paste karo (single quotes ke andar, comma preserve)
+2. GitHub pe push karo → Vercel auto-deploy
+3. Google Search Console me `https://digitalpointpro.vercel.app/sitemap.xml` submit karo
+4. Google Publisher Center (publisher.google.com) me site add karo → Google News feature
+5. Bing Webmaster Tools me bhi sitemap submit karo (free extra traffic)
+
+### 🧪 Browser-Verified Status
+- Homepage renders ✓
+- /sitemap.xml serves ✓ (45 articles + categories)
+- /robots.txt serves ✓
+- /manifest.webmanifest serves ✓
+- Article direct visit `/?article=slug` opens overlay ✓
+- Category direct visit `/?category=slug` opens overlay ✓
+- 4 JSON-LD schemas injected (Organization, WebSite, NewsArticle, BreadcrumbList) ✓
+- 6 share buttons present ✓
+- In-app Back button closes overlay + restores URL ✓
+- Title updates dynamically ✓
+- Lint clean ✓
+- Zero runtime errors ✓
+
+### 📁 Files Modified This Session
+- `src/lib/site-config.ts` (NEW — recreated after file loss)
+- `src/lib/store.ts` (URL structure query-param)
+- `src/app/page.tsx` (hydration + popstate)
+- `src/app/layout.tsx` (full metadata rewrite + GA4/OneSignal scripts)
+- `src/app/sitemap.ts` (NEW)
+- `src/app/robots.ts` (NEW)
+- `src/app/manifest.ts` (NEW)
+- `src/components/structured-data.tsx` (NEW)
+- `src/components/article-overlay.tsx` (sharing + schema + meta update)
+- `src/components/push-notification-prompt.tsx` (NEW)
+- `public/og-default.jpg` (NEW — generated)
+- `public/icon.png` (NEW — generated)
+- `public/robots.txt` (DELETED)
+
+### 🔜 Kal Ka Plan (Resume Point)
+1. User 3 accounts bana ke IDs layega
+2. `site-config.ts` me values paste karenge
+3. GitHub push → Vercel deploy
+4. Google Search Console + Publisher Center me submit
+5. Phir traffic strategies pe kaam (Google Trends articles, FB/WhatsApp/Telegram groups, etc.)
