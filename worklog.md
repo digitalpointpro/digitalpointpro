@@ -13,15 +13,13 @@
 ## ✅ COMPLETED Tasks
 
 ### Ad System (LATEST - March 2025)
-- [x] **COMPLETE REWRITE** - All ads now run in SANDBOXED IFRAMES to prevent redirects
-- [x] `sandbox="allow-scripts"` only — BLOCKS allow-top-navigation, allow-popups, allow-same-origin
-- [x] Ad positions: headerBanner(728x90), betweenArticles(468x60), sidebar(300x250), sidebarTall(160x600), midSection(160x300), footerBanner(728x90), mobileSticky(320x50)
-- [x] Removed ALL: social bar, smart links, native ads (these caused redirects!)
-- [x] Only highperformanceformat.com banner ads in sandboxed iframes
-- [x] Ads on ALL pages: home, article overlay, category overlay, latest news overlay, sidebar
-- [x] In-article ads split content at H2 headings and insert between sections
-- [x] Mobile sticky ad at bottom (hidden on desktop)
-- [x] **REDIRECT FIX VERIFIED** — Agent Browser tested, NO redirects!
+- [x] **V2 REWRITE** - Direct script injection (Adsterra's official method)
+- [x] Banner ads: headerBanner(728x90), betweenArticles(468x60), sidebar(300x250), sidebarTall(160x600), midSection(160x300), footerBanner(728x90), mobileSticky(320x50)
+- [x] Smart Link added back: "📖 Continue Reading — More Insights" button
+- [x] Smart Link placed: homepage mid-articles, article body sections, after FAQ
+- [x] Redirect protection: window.open override blocks ad popups
+- [x] Cross-origin SecurityError BLOCKS ad scripts from redirecting parent page (verified in dev log)
+- [x] Ads show on PRODUCTION domain only (localhost won't render ads - Adsterra validates referrer domain)
 - [x] **DEPLOYED TO VERCEL** — Pushed to GitHub, auto-deploying
 
 ### Website Design & Features
