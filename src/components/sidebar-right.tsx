@@ -38,7 +38,7 @@ export default function SidebarRight() {
       {/* Newsletter */}
       <Newsletter />
 
-      {/* Sidebar Ad */}
+      {/* Sidebar Ad 300x250 */}
       <AdSlot position="sidebar" />
     </aside>
   )

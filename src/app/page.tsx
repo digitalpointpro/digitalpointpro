@@ -195,6 +195,11 @@ export default function HomePage() {
                       {/* Mid-Articles Ad */}
                       <AdSlot position="betweenArticles" className="my-4" />
 
+                      {/* Smart Link - High Click Area */}
+                      <div className="my-4 text-center">
+                        <AdSlot position="smartLink" />
+                      </div>
+
                       <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
                         {latest.slice(4, 8).map((article) => (
                           <ArticleCard
@@ -213,6 +218,10 @@ export default function HomePage() {
               <div className="hidden lg:block lg:col-span-4">
                 <div className="sticky top-20">
                   <SidebarRight />
+                  {/* Sidebar Tall Ad 160x600 */}
+                  <AdSlot position="sidebarTall" className="mt-4" />
+                  {/* Mid Section Ad 160x300 */}
+                  <AdSlot position="midSection" className="mt-4" />
                 </div>
               </div>
             </div>

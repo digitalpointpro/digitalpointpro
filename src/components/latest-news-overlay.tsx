@@ -232,8 +232,14 @@ export default function LatestNewsOverlay() {
                 <div className="sticky top-20 space-y-6">
                   <Newsletter />
 
-                  {/* Sidebar Ad */}
+                  {/* Sidebar Ad 300x250 */}
                   <AdSlot position="sidebar" />
+
+                  {/* Sidebar Tall Ad 160x600 */}
+                  <AdSlot position="sidebarTall" className="mt-4" />
+
+                  {/* Mid Section Ad 160x300 */}
+                  <AdSlot position="midSection" className="mt-4" />
 
                   <div className="rounded-lg border bg-card p-4">
                     <h3 className="font-semibold text-sm mb-3 flex items-center gap-2">

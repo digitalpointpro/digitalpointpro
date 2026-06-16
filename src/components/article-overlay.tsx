@@ -57,6 +57,10 @@ function ArticleBodyWithAds({ content }: { content: string }) {
           {(idx > 0 && idx % 2 === 0 && idx < sections.length - 1) && (
             <div className="my-6">
               <AdSlot position="inArticle" />
+              {/* Smart Link between sections - maximum clicks here */}
+              <div className="mt-4 text-center">
+                <AdSlot position="smartLink" />
+              </div>
             </div>
           )}
         </React.Fragment>
@@ -411,6 +415,14 @@ export default function ArticleOverlay() {
                 </div>
               )}
 
+              {/* Smart Link After FAQ - High click area */}
+              <div className="my-6 text-center">
+                <AdSlot position="smartLink" />
+              </div>
+
+              {/* Between Articles Ad */}
+              <AdSlot position="betweenArticles" className="my-6" />
+
               {/* Related Articles */}
               {related.length > 0 && (
                 <div className="mb-8">
@@ -456,8 +468,14 @@ export default function ArticleOverlay() {
 
                 <Newsletter />
 
-                {/* Sidebar Ad */}
+                {/* Sidebar Ad 300x250 */}
                 <AdSlot position="sidebar" />
+
+                {/* Sidebar Tall Ad 160x600 */}
+                <AdSlot position="sidebarTall" className="mt-4" />
+
+                {/* Mid Section Ad 160x300 */}
+                <AdSlot position="midSection" className="mt-4" />
 
                 {/* Recommended Reads */}
                 {related.length > 0 && (
