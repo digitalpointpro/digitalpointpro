@@ -6,15 +6,21 @@ import React from 'react'
 // ADSTERRA ADS - BANNER + SMART LINK
 // ============================================
 // Banner ads run inside SANDBOXED IFRAMES:
-//   sandbox="allow-scripts allow-same-origin"
+//   sandbox="allow-scripts allow-same-origin
+//            allow-top-navigation-by-user-activation
+//            allow-popups"
 //
 // This ALLOWS:
 //   ✅ allow-scripts → ad scripts execute
-//   ✅ allow-same-origin → ad can create nested iframes & render content
+//   ✅ allow-same-origin → ad renders nested iframes
+//   ✅ allow-top-navigation-by-user-activation → ad click NAVIGATES (user clicked!)
+//   ✅ allow-popups → ad click opens new window/tab
 //
-// This BLOCKS (by NOT including):
-//   ❌ allow-top-navigation → CANNOT redirect parent page!
-//   ❌ allow-popups → CANNOT open popup windows!
+// KEY PROTECTION:
+//   ❌ allow-top-navigation is NOT included!
+//   → Auto-redirect (without user click) is BLOCKED!
+//   → Only USER CLICKS can navigate the page
+//   → Popunder scripts that auto-fire are BLOCKED
 //
 // Smart Link = simple clickable URL (safe, no auto-redirect)
 // ============================================
@@ -66,7 +72,7 @@ export default function AdSlot({ position, className = '' }: AdSlotProps) {
     >
       <iframe
         src={`/api/ad?position=${position}`}
-        sandbox="allow-scripts allow-same-origin"
+        sandbox="allow-scripts allow-same-origin allow-top-navigation-by-user-activation allow-popups"
         style={{
           width: `${size.width}px`,
           height: `${size.height}px`,
