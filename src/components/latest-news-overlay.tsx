@@ -132,9 +132,6 @@ export default function LatestNewsOverlay() {
       {/* Content */}
       <div className="overflow-y-auto" style={{ height: 'calc(100vh - 88px)' }}>
         <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8 py-8">
-          {/* Header Ad */}
-          <AdSlot position="headerBanner" className="mb-6" />
-
           {/* Header Section */}
           <div className="mb-8">
             <div className="flex items-center gap-3 mb-2">
@@ -182,8 +179,10 @@ export default function LatestNewsOverlay() {
 
           <div className="border-t my-8" />
 
-          {/* Between Videos & Articles Ad */}
-          <AdSlot position="betweenArticles" className="my-6" />
+          {/* Smart Link */}
+          <div className="my-6 text-center">
+            <AdSlot position="smartLink" />
+          </div>
 
           {loading ? (
             <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
@@ -232,14 +231,10 @@ export default function LatestNewsOverlay() {
                 <div className="sticky top-20 space-y-6">
                   <Newsletter />
 
-                  {/* Sidebar Ad 300x250 */}
-                  <AdSlot position="sidebar" />
-
-                  {/* Sidebar Tall Ad 160x600 */}
-                  <AdSlot position="sidebarTall" className="mt-4" />
-
-                  {/* Mid Section Ad 160x300 */}
-                  <AdSlot position="midSection" className="mt-4" />
+                  {/* Smart Link */}
+                  <div className="mt-4 text-center">
+                    <AdSlot position="smartLink" />
+                  </div>
 
                   <div className="rounded-lg border bg-card p-4">
                     <h3 className="font-semibold text-sm mb-3 flex items-center gap-2">

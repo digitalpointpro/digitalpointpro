@@ -53,13 +53,10 @@ function ArticleBodyWithAds({ content }: { content: string }) {
       {sections.map((section, idx) => (
         <React.Fragment key={idx}>
           <ReactMarkdown remarkPlugins={[remarkGfm]}>{section}</ReactMarkdown>
-          {/* Insert between articles banner ad + smart link after every 2nd section */}
+          {/* Insert smart link after every 2nd section */}
           {(idx > 0 && idx % 2 === 0 && idx < sections.length - 1) && (
-            <div className="my-6">
-              <AdSlot position="betweenArticles" />
-              <div className="mt-4 text-center">
-                <AdSlot position="smartLink" />
-              </div>
+            <div className="my-6 text-center">
+              <AdSlot position="smartLink" />
             </div>
           )}
         </React.Fragment>
@@ -268,9 +265,6 @@ export default function ArticleOverlay() {
         style={{ height: 'calc(100vh - 88px)' }}
       >
         <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8 py-8">
-          {/* Top Banner Ad in Article */}
-          <AdSlot position="headerBanner" className="mb-6" />
-
           <div className="grid grid-cols-1 lg:grid-cols-12 gap-8">
             {/* Main Content */}
             <div className="lg:col-span-8">
@@ -414,13 +408,10 @@ export default function ArticleOverlay() {
                 </div>
               )}
 
-              {/* Smart Link After FAQ */}
+              {/* Between Articles - Smart Link */}
               <div className="my-6 text-center">
                 <AdSlot position="smartLink" />
               </div>
-
-              {/* Between Articles Ad */}
-              <AdSlot position="betweenArticles" className="my-6" />
 
               {/* Related Articles */}
               {related.length > 0 && (
@@ -466,15 +457,6 @@ export default function ArticleOverlay() {
                 )}
 
                 <Newsletter />
-
-                {/* Sidebar Ad 300x250 */}
-                <AdSlot position="sidebar" />
-
-                {/* Sidebar Tall Ad 160x600 */}
-                <AdSlot position="sidebarTall" className="mt-4" />
-
-                {/* Mid Section Ad 160x300 */}
-                <AdSlot position="midSection" className="mt-4" />
 
                 {/* Recommended Reads */}
                 {related.length > 0 && (
