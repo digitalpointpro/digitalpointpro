@@ -3,7 +3,7 @@
 ## 📌 Project Info
 - **Website:** https://digitalpointpro.vercel.app (LIVE 24/7)
 - **GitHub:** https://github.com/digitalpointpro/digitalpointpro
-- **GitHub Token:** TOKEN_SAVED_SEPARATELY (no expiry)
+- **GitHub Token:** Saved separately (no expiry)
 - **Framework:** Next.js 16 + TypeScript + Tailwind CSS + shadcn/ui
 - **Data:** Static JSON files (NO backend/database needed)
 - **Hosting:** Vercel (free, auto-deploys from GitHub push)
