@@ -3,7 +3,7 @@
 ## 📌 Project Info
 - **Website:** https://digitalpointpro.vercel.app (LIVE 24/7)
 - **GitHub:** https://github.com/digitalpointpro/digitalpointpro
-- **GitHub Token:** EXPIRED — user needs to create new token (TOKEN_REMOVED is invalid now)
+- **GitHub Token:** TOKEN_SAVED_SEPARATELY (no expiry)
 - **Framework:** Next.js 16 + TypeScript + Tailwind CSS + shadcn/ui
 - **Data:** Static JSON files (NO backend/database needed)
 - **Hosting:** Vercel (free, auto-deploys from GitHub push)
@@ -22,7 +22,7 @@
 - [x] Placeholder ads show when no Adsterra Zone ID is configured
 - [x] **TO ACTIVATE:** Add your Adsterra Zone IDs in `src/components/ad-slot.tsx` AD_CONFIG object
 - [x] Fix: No more popunder/interstitial ads that redirect and close the website
-- [x] **GITHUB PUSH PENDING:** Token expired, need new token to deploy to Vercel
+- [x] **DEPLOYED TO VERCEL** — All ads live on website!
 
 ### Website Design & Features
 - [x] Professional colorful gradient background theme
