@@ -57,10 +57,6 @@ function ArticleBodyWithAds({ content }: { content: string }) {
           {(idx > 0 && idx % 2 === 0 && idx < sections.length - 1) && (
             <div className="my-6">
               <AdSlot position="betweenArticles" />
-              {/* Smart Link between sections - maximum clicks here */}
-              <div className="mt-4 text-center">
-                <AdSlot position="smartLink" />
-              </div>
             </div>
           )}
         </React.Fragment>
@@ -414,11 +410,6 @@ export default function ArticleOverlay() {
                   </Accordion>
                 </div>
               )}
-
-              {/* Smart Link After FAQ - High click area */}
-              <div className="my-6 text-center">
-                <AdSlot position="smartLink" />
-              </div>
 
               {/* Between Articles Ad */}
               <AdSlot position="betweenArticles" className="my-6" />
