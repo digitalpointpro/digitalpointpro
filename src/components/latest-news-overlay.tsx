@@ -132,6 +132,8 @@ export default function LatestNewsOverlay() {
       {/* Content */}
       <div className="overflow-y-auto" style={{ height: 'calc(100vh - 88px)' }}>
         <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8 py-8">
+          <AdSlot position="headerBanner" className="mb-6" />
+
           {/* Header Section */}
           <div className="mb-8">
             <div className="flex items-center gap-3 mb-2">
@@ -178,6 +180,8 @@ export default function LatestNewsOverlay() {
           </div>
 
           <div className="border-t my-8" />
+
+          <AdSlot position="betweenArticles" className="my-6" />
 
           {/* Smart Link */}
           <div className="my-6 text-center">
@@ -230,6 +234,10 @@ export default function LatestNewsOverlay() {
               <div className="hidden lg:block lg:col-span-4">
                 <div className="sticky top-20 space-y-6">
                   <Newsletter />
+
+                  <AdSlot position="sidebar" />
+                  <AdSlot position="sidebarTall" className="mt-4" />
+                  <AdSlot position="midSection" className="mt-4" />
 
                   {/* Smart Link */}
                   <div className="mt-4 text-center">
