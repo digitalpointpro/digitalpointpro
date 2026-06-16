@@ -6,15 +6,23 @@ import React from 'react'
 // ADSTERRA BANNER ADS - SANDBOXED IFRAMES
 // ============================================
 // Each banner ad loads via /api/ad?position=xxx
-// inside an iframe with sandbox="allow-scripts"
+// inside an iframe with sandbox="allow-scripts allow-same-origin"
 //
-// sandbox="allow-scripts" BLOCKS:
+// sandbox allows:
+//   ✅ allow-scripts → ad scripts can execute
+//   ✅ allow-same-origin → ad can create nested iframes & load content
+//
+// sandbox BLOCKS (by NOT including these):
 //   ❌ allow-top-navigation → NO page redirects!
+//   ❌ allow-top-navigation-by-user-activation → NO redirects even on click!
 //   ❌ allow-popups → NO popup windows!
-//   ❌ allow-same-origin → NO parent page access!
-// Only ✅ allow-scripts → ad creative can render
+//   ❌ allow-popups-to-escape-sandbox → NO escaping!
 //
-// Smart Link = simple clickable link (safe, no redirect)
+// Without allow-top-navigation, the iframe CANNOT redirect parent page
+// Without allow-popups, the iframe CANNOT open popup windows
+// This is the KEY protection against ad redirects!
+//
+// Smart Link = simple clickable link (safe, no auto-redirect)
 // ============================================
 
 type AdPosition =
@@ -64,7 +72,7 @@ export default function AdSlot({ position, className = '' }: AdSlotProps) {
     >
       <iframe
         src={`/api/ad?position=${position}`}
-        sandbox="allow-scripts"
+        sandbox="allow-scripts allow-same-origin"
         style={{
           width: `${size.width}px`,
           height: `${size.height}px`,
