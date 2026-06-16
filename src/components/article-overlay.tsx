@@ -53,10 +53,13 @@ function ArticleBodyWithAds({ content }: { content: string }) {
       {sections.map((section, idx) => (
         <React.Fragment key={idx}>
           <ReactMarkdown remarkPlugins={[remarkGfm]}>{section}</ReactMarkdown>
-          {/* Insert between articles banner ad after every 2nd section */}
+          {/* Insert between articles banner ad + smart link after every 2nd section */}
           {(idx > 0 && idx % 2 === 0 && idx < sections.length - 1) && (
             <div className="my-6">
               <AdSlot position="betweenArticles" />
+              <div className="mt-4 text-center">
+                <AdSlot position="smartLink" />
+              </div>
             </div>
           )}
         </React.Fragment>
@@ -410,6 +413,11 @@ export default function ArticleOverlay() {
                   </Accordion>
                 </div>
               )}
+
+              {/* Smart Link After FAQ */}
+              <div className="my-6 text-center">
+                <AdSlot position="smartLink" />
+              </div>
 
               {/* Between Articles Ad */}
               <AdSlot position="betweenArticles" className="my-6" />
