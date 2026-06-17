@@ -195,6 +195,11 @@ export default function HomePage() {
               </div>
             </section>
 
+            {/* Banner Ad — single 728x90 leaderboard (visible on all screens) */}
+            <div className="mt-6">
+              <AdSlot position="headerBanner" />
+            </div>
+
             {/* Main Content Grid - Latest Articles + Sidebar */}
             <div className="grid grid-cols-1 lg:grid-cols-12 gap-6">
               {/* Main Articles */}

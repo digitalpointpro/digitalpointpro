@@ -5,6 +5,7 @@ import "./globals.css";
 import { Toaster } from "@/components/ui/toaster";
 import { ThemeProvider } from "@/components/theme-provider";
 import { SITE_CONFIG } from "@/lib/site-config";
+import { ADS_CONFIG, adsterraScriptUrl, adsterraSocialBarScriptUrl } from "@/lib/ads-config";
 import { JsonLd } from "@/components/structured-data";
 
 const geistSans = Geist({
@@ -286,6 +287,54 @@ export default function RootLayout({
               `}
             </Script>
           </>
+        )}
+
+        {/* ============================================
+            ADSTERRA POPUNDER AD
+            Fires on user click — opens ad tab behind current page.
+            Loaded globally (NOT sandboxed) so it can detect clicks
+            on the whole document and trigger the popunder.
+            Only renders on production (Adsterra validates referrer).
+            ============================================ */}
+        {ADS_CONFIG.popunderKey && (
+          <Script id="adsterra-popunder" strategy="afterInteractive">
+            {`
+              (function() {
+                var atOptions = {
+                  'key' : '${ADS_CONFIG.popunderKey}',
+                  'format' : 'iframe',
+                  'height' : 50,
+                  'width' : 320,
+                  'params' : {}
+                };
+                var s = document.createElement('script');
+                s.type = 'text/javascript';
+                s.async = true;
+                s.src = '${adsterraScriptUrl(ADS_CONFIG.popunderKey)}';
+                var opts = document.createElement('script');
+                opts.type = 'text/javascript';
+                opts.innerHTML = 'atOptions = ' + JSON.stringify(atOptions) + ';';
+                document.head.appendChild(opts);
+                document.head.appendChild(s);
+              })();
+            `}
+          </Script>
+        )}
+
+        {/* ============================================
+            ADSTERRA SOCIAL BAR
+            Floating widget with social icons (WhatsApp, Telegram, etc).
+            Loaded globally so it renders as an overlay on the page.
+            Only renders on production (Adsterra validates referrer).
+            ============================================ */}
+        {ADS_CONFIG.socialBarKey && (
+          <Script
+            id="adsterra-social-bar"
+            src={adsterraSocialBarScriptUrl(ADS_CONFIG.socialBarKey)}
+            strategy="afterInteractive"
+            async
+            defer
+          />
         )}
       </body>
     </html>

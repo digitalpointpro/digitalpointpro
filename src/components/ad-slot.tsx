@@ -1,9 +1,10 @@
 'use client'
 
 import React from 'react'
+import { ADS_CONFIG } from '@/lib/ads-config'
 
 // ============================================
-// ADSTERRA ADS - BANNER + SMART LINK
+// ADSTERRA ADS — BANNER + SMART LINK
 // ============================================
 // Banner ads run inside SANDBOXED IFRAMES:
 //   sandbox="allow-scripts allow-same-origin
@@ -20,32 +21,14 @@ import React from 'react'
 //   ❌ allow-top-navigation is NOT included!
 //   → Auto-redirect (without user click) is BLOCKED!
 //   → Only USER CLICKS can navigate the page
-//   → Popunder scripts that auto-fire are BLOCKED
 //
 // Smart Link = simple clickable URL (safe, no auto-redirect)
+//
+// NOTE: Popunder + Social Bar are loaded globally in layout.tsx
+// (NOT via this component) because they need full-page access.
 // ============================================
 
-type AdPosition =
-  | 'headerBanner'
-  | 'betweenArticles'
-  | 'sidebar'
-  | 'sidebarTall'
-  | 'midSection'
-  | 'footerBanner'
-  | 'mobileSticky'
-  | 'smartLink'
-
-const BANNER_SIZES: Record<string, { width: number; height: number }> = {
-  headerBanner: { width: 728, height: 90 },
-  betweenArticles: { width: 468, height: 60 },
-  sidebar: { width: 300, height: 250 },
-  sidebarTall: { width: 160, height: 600 },
-  midSection: { width: 160, height: 300 },
-  footerBanner: { width: 728, height: 90 },
-  mobileSticky: { width: 320, height: 50 },
-}
-
-const SMART_LINK_URL = 'https://www.effectivecpmnetwork.com/wfpqbe5835?key=1785cba448cf21011923ee9ce9b92e8a'
+type AdPosition = 'headerBanner' | 'smartLink'
 
 interface AdSlotProps {
   position: AdPosition
@@ -58,34 +41,38 @@ export default function AdSlot({ position, className = '' }: AdSlotProps) {
     return <SmartLinkButton className={className} />
   }
 
-  const size = BANNER_SIZES[position]
-  if (!size) return null
-
-  return (
-    <div
-      className={`ad-container flex items-center justify-center ${className}`}
-      style={{
-        width: '100%',
-        maxWidth: `${size.width}px`,
-        minHeight: `${size.height}px`,
-      }}
-    >
-      <iframe
-        src={`/api/ad?position=${position}`}
-        sandbox="allow-scripts allow-same-origin allow-top-navigation-by-user-activation allow-popups"
+  // Banner ad — single 728x90 leaderboard via sandboxed iframe
+  if (position === 'headerBanner') {
+    const size = ADS_CONFIG.bannerSize
+    return (
+      <div
+        className={`ad-container flex items-center justify-center w-full ${className}`}
         style={{
-          width: `${size.width}px`,
-          height: `${size.height}px`,
-          maxWidth: '100%',
-          border: 'none',
-          overflow: 'hidden',
-          display: 'block',
+          width: '100%',
+          maxWidth: `${size.width}px`,
+          minHeight: `${size.height}px`,
+          margin: '0 auto',
         }}
-        scrolling="no"
-        title="Advertisement"
-      />
-    </div>
-  )
+      >
+        <iframe
+          src={`/api/ad?position=headerBanner`}
+          sandbox="allow-scripts allow-same-origin allow-top-navigation-by-user-activation allow-popups"
+          style={{
+            width: `${size.width}px`,
+            height: `${size.height}px`,
+            maxWidth: '100%',
+            border: 'none',
+            overflow: 'hidden',
+            display: 'block',
+          }}
+          scrolling="no"
+          title="Advertisement"
+        />
+      </div>
+    )
+  }
+
+  return null
 }
 
 // ============================================
@@ -95,7 +82,7 @@ export default function AdSlot({ position, className = '' }: AdSlotProps) {
 function SmartLinkButton({ className = '' }: { className?: string }) {
   return (
     <a
-      href={SMART_LINK_URL}
+      href={ADS_CONFIG.smartLinkUrl}
       target="_blank"
       rel="noopener noreferrer sponsored"
       className={`inline-flex items-center justify-center gap-2 w-full sm:w-auto px-6 py-3 rounded-xl bg-gradient-to-r from-emerald-500 to-teal-600 hover:from-emerald-600 hover:to-teal-700 text-white font-semibold text-sm shadow-lg shadow-emerald-500/25 transition-all hover:shadow-xl hover:scale-[1.02] active:scale-[0.98] no-underline ${className}`}

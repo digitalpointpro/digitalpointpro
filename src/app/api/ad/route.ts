@@ -1,30 +1,29 @@
 import { NextRequest, NextResponse } from 'next/server'
+import { ADS_CONFIG } from '@/lib/ads-config'
 
-// API route that serves Adsterra banner ad HTML
-// Ads load inside sandboxed iframes which BLOCK redirects
-// sandbox="allow-scripts allow-same-origin" allows ad to render
-// but BLOCKS allow-top-navigation (NO page redirects!)
-// and BLOCKS allow-popups (NO popup windows!)
+// API route that serves the single Adsterra banner ad (728x90) HTML.
+// Ads load inside a SANDBOXED IFRAME on the client:
+//   sandbox="allow-scripts allow-same-origin
+//            allow-top-navigation-by-user-activation
+//            allow-popups"
+// This lets the ad render + open clicks in new tabs,
+// but BLOCKS auto-redirect of the parent page.
+//
+// Only ONE banner ad position is used site-wide (headerBanner).
+// Popunder + Social Bar are loaded directly in layout.tsx
+// (not through this endpoint) because they need full-page access.
 
-const BANNER_CONFIGS: Record<string, { key: string; width: number; height: number }> = {
-  headerBanner: { key: 'bee03c8feeebc403d01e864f5008c118', width: 728, height: 90 },
-  betweenArticles: { key: 'de9c4f6555d0c2b70c90f6cf8b3c5c04', width: 468, height: 60 },
-  sidebar: { key: 'b1f8bed5795a25e0bf744125256b244c', width: 300, height: 250 },
-  sidebarTall: { key: 'd94b42a76e538f26af5695da265ba72e', width: 160, height: 600 },
-  midSection: { key: 'f3c66e2f00457c1271edf2b126802ce7', width: 160, height: 300 },
-  footerBanner: { key: 'bee03c8feeebc403d01e864f5008c118', width: 728, height: 90 },
-  mobileSticky: { key: '182344e1b81fbbec81aaafe6d201cda9', width: 320, height: 50 },
-}
+const BANNER_SIZE = ADS_CONFIG.bannerSize // { width: 728, height: 90 }
 
 export async function GET(request: NextRequest) {
   const { searchParams } = new URL(request.url)
   const position = searchParams.get('position')
 
-  if (!position || !BANNER_CONFIGS[position]) {
+  if (position !== 'headerBanner') {
     return new NextResponse('Invalid ad position', { status: 400 })
   }
 
-  const config = BANNER_CONFIGS[position]
+  const key = ADS_CONFIG.bannerKey
 
   const html = `<!DOCTYPE html>
 <html>
@@ -39,14 +38,14 @@ export async function GET(request: NextRequest) {
 <body>
 <script type="text/javascript">
   atOptions = {
-    'key': '${config.key}',
+    'key': '${key}',
     'format': 'iframe',
-    'height': ${config.height},
-    'width': ${config.width},
+    'height': ${BANNER_SIZE.height},
+    'width': ${BANNER_SIZE.width},
     'params': {}
   };
 </script>
-<script type="text/javascript" src="https://www.highperformanceformat.com/${config.key}/invoke.js"></script>
+<script type="text/javascript" src="https://www.highperformanceformat.com/${key}/invoke.js"></script>
 </body>
 </html>`
 
