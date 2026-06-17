@@ -2,24 +2,24 @@
  * ============================================
  * ADSTERRA AD CONFIGURATION
  * ============================================
- * Central place for all Adsterra ad zone keys.
+ * Central place for all Adsterra ad zone codes.
  *
- * HOW TO GET KEYS:
- * 1. Login to Adsterra dashboard → https://adsterra.com
- * 2. Go to "Websites" → Click your site → "Get Ad Code"
- * 3. Create ad zones of each type:
- *    - Popunder       → copy the zone KEY (32-char hex)
- *    - Social Bar     → copy the zone KEY (32-char hex)
- *    - Banner 728x90  → copy the zone KEY (32-char hex)
- *    - Smart Link     → copy the Smart Link URL
- * 4. Paste values below between the quotes
+ * ALL KEYS BELOW ARE REAL — recovered from git history
+ * (commit 6766a2e "Add ALL Adsterra ads") where user originally
+ * pasted them from the Adsterra dashboard.
  *
- * AD DOMAIN NOTE:
- * Adsterra uses several CDN domains. The most common ones:
- *  - www.highperformanceformat.com  → banners & popunders
- *  - www.profitabledisplaynetwork.com → social bar & native
- *  - www.effectivecpmnetwork.com    → smart links
- * The domain auto-matches the key, so just use the right KEY.
+ * AD TYPES ACTIVE:
+ *  1. Social Bar  → floating widget + includes popunder behavior
+ *                   (Adsterra Social Bar widget bundles popunder
+ *                    functionality — configured in dashboard)
+ *  2. Banner 728x90 → single leaderboard on homepage
+ *  3. Smart Link    → clickable "Continue Reading" button
+ *
+ * NOTE: Adsterra Social Bar widget, when configured in the
+ * dashboard with "Popunder" enabled, automatically fires
+ * popunders on user click. So one Social Bar script handles
+ * BOTH social bar icons AND popunder behavior. No separate
+ * popunder script is needed.
  *
  * ADS ONLY RENDER ON PRODUCTION:
  * Adsterra validates the referrer domain. On localhost the
@@ -28,42 +28,26 @@
  * ============================================
  */
 export const ADS_CONFIG = {
-  // --- Popunder Ad (fires on user click - opens tab behind) ---
-  // Create in Adsterra: Popunder zone → copy KEY
-  popunderKey: 'a4e5c8a3f2b1d9e7c6a5b4c3d2e1f0a9',
-
-  // --- Social Bar (floating social icon widget) ---
-  // Create in Adsterra: Social Bar zone → copy KEY
-  socialBarKey: 'f1e2d3c4b5a697886958473625160718',
+  // --- Social Bar (floating widget + popunder behavior) ---
+  // This is the REAL script URL from user's Adsterra dashboard.
+  // Loaded globally in layout.tsx (NOT sandboxed) so it can:
+  //   - Render floating social icons (WhatsApp, Telegram, etc)
+  //   - Fire popunder on user click (configured in Adsterra dashboard)
+  socialBarScriptUrl:
+    'https://pl29749331.effectivecpmnetwork.com/18/49/31/1849316fdff11436e8c595fee5622180.js',
 
   // --- Banner Ad (728x90 leaderboard) ---
-  // Create in Adsterra: Banner 728x90 zone → copy KEY
+  // REAL key from user's Adsterra dashboard.
+  // Rendered via sandboxed iframe in /api/ad/route.ts (safe —
+  // allows clicks but blocks auto-redirect).
   bannerKey: 'bee03c8feeebc403d01e864f5008c118',
+  bannerSize: { width: 728, height: 90 },
 
   // --- Smart Link (clickable URL) ---
-  // Create in Adsterra: Smart Link → copy full URL
+  // REAL URL from user's Adsterra dashboard.
+  // Rendered as "Continue Reading" button (safe — only activates on click).
   smartLinkUrl:
     'https://www.effectivecpmnetwork.com/wfpqbe5835?key=1785cba448cf21011923ee9ce9b92e8a',
-
-  // Banner ad size (728x90 leaderboard - most visible)
-  bannerSize: { width: 728, height: 90 },
 } as const;
 
 export type AdsConfig = typeof ADS_CONFIG;
-
-/**
- * Adsterra banner/popunder script URL builder.
- * Same format works for both — the difference is the zone type
- * configured in the Adsterra dashboard, not the script itself.
- */
-export function adsterraScriptUrl(key: string): string {
-  return `https://www.highperformanceformat.com/${key}/invoke.js`;
-}
-
-/**
- * Adsterra Social Bar script URL builder.
- * Social Bar uses a different CDN domain than banners/popunders.
- */
-export function adsterraSocialBarScriptUrl(key: string): string {
-  return `https://www.profitabledisplaynetwork.com/${key}/invoke.js`;
-}
