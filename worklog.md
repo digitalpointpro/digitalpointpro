@@ -589,3 +589,69 @@ Stage Summary:
   3. Smart Link (real URL) — homepage + article + category + news overlays
 - User action remaining: enable Popunder toggle in Adsterra dashboard → Social Bar zone settings
 - Ads will now render for real visitors (Adsterra validates production referrer domain ✓)
+
+---
+Task ID: 13
+Agent: main
+Task: Fix ERR_BLOCKED_BY_RESPONSE error + add top & bottom sticky ads + push to GitHub
+
+Work Log:
+- User uploaded 2 screenshots:
+  1. Error: "one-vv0990.com is blocked — ERR_BLOCKED_BY_RESPONSE" (browser error page)
+  2. Center ad: 1win gambling banner ad (Adsterra-served) on the website
+- User said: clicking the center ad triggers the error, and asked to add more ads (bottom + front)
+
+ROOT CAUSE ANALYSIS:
+- Banner ad sandbox had `allow-top-navigation-by-user-activation` permission
+- This let the ad click NAVIGATE THE MAIN PAGE to adsterra's redirect URL → one-vv0990.com
+- Browser blocks one-vv0990.com (gambling/shady domain) → ERR_BLOCKED_BY_RESPONSE on main page
+- The ad itself was working (1win banner displayed), but clicks broke the page
+
+FIX (sandbox tightening):
+- Removed `allow-top-navigation-by-user-activation` from banner iframe sandbox
+- Kept `allow-popups` so ad clicks still open NEW TABS (ads remain clickable + earn revenue)
+- New sandbox: `allow-scripts allow-same-origin allow-popups`
+- Result: Main page NEVER redirects on ad click. Clicks open new tabs only. Error eliminated.
+
+NEW ADS ADDED:
+1. **Top Banner Ad** (728x90 leaderboard) — above hero section, most visible position
+2. **Bottom Sticky Ad** — fixed at bottom of viewport:
+   - Mobile: 320x50 mobileSticky ad
+   - Desktop: 728x90 leaderboard ad
+   - Dismissible with close (✕) button
+   - Respects iOS safe-area-inset-bottom
+3. **Center Banner Ad** (728x90) — kept below section cards (existing)
+4. **Smart Link** — kept on homepage (existing)
+5. **Social Bar** — kept global in layout.tsx (existing)
+
+FILES CHANGED:
+- `src/lib/ads-config.ts` — refactored: added `banners` object with all 4 real keys (leaderboard/medium/box/mobileSticky), added BANNER_SIZES map + BannerType type
+- `src/app/api/ad/route.ts` — supports all 4 banner positions (leaderboard, medium, box, mobileSticky), uses centralized config
+- `src/components/ad-slot.tsx` — sandbox fix (removed allow-top-navigation-by-user-activation), added BottomStickyAd component (fixed bottom, dismissible, mobile 320x50 + desktop 728x90)
+- `src/app/page.tsx` — added top leaderboard ad above hero + BottomStickyAd at bottom of page
+
+GITHUB PUSH ISSUE:
+- First push blocked by GitHub Push Protection (secret scanning) — worklog.md contained GitHub PAT in plain text (from Task 12 log)
+- Fix: redacted token from worklog, did `git reset --soft 9f540e1` (origin/main), created single clean commit 362e594
+- Push SUCCESS: 9f540e1..362e594
+
+PRODUCTION VERIFICATION (https://digitalpointpro.vercel.app):
+- Homepage: HTTP 200 (0.82s) ✓
+- /api/ad?position=leaderboard: HTTP 200 ✓
+- /api/ad?position=mobileSticky: HTTP 200 ✓
+- Social Bar script in live HTML: pl29749331.effectivecpmnetwork.com/... ✓
+- Sandbox attribute on iframes: only "allow-popups" (no allow-top-navigation) ✓
+- Browser verification (agent-browser on production):
+  * 4 ad iframes: 3 leaderboard (top:89, center:913, bottom:487) + 1 mobileSticky ✓
+  * Bottom sticky: bottom:577 = viewport:577, hasClose:true ✓
+  * Social Bar script loaded ✓
+  * Smart Link: 1 ✓
+  * Console errors: 0 (only expected OneSignal warning) ✓
+
+Stage Summary:
+- ERR_BLOCKED_BY_RESPONSE error FIXED (sandbox no longer allows main page redirect)
+- 2 NEW ad placements added: top leaderboard + bottom sticky (mobile + desktop)
+- Total ads on homepage now: top leaderboard + center leaderboard + bottom sticky + smart link + social bar (global) = 5 ad placements
+- All changes pushed to GitHub (commit 362e594) and deployed to Vercel
+- Production fully browser-verified: 0 errors, all 4 ad iframes rendering, bottom sticky dismissible, footer still sticky
+- Ads remain CLICKABLE (open new tabs) but main page stays safe — best of both worlds
