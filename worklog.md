@@ -264,3 +264,99 @@ Stage Summary:
 - All reverted SEO/sharing fixes REDONE
 - 2 of 3 IDs done (GA4 ✓, OneSignal ✓) — only GSC verification token remaining
 - Ready for: GitHub push → Vercel deploy → OneSignal dashboard verify domain
+
+---
+Task ID: 8
+Agent: main
+Task: Push 9 local commits to GitHub (old token expired) + resolve rebase conflicts + verify Vercel deploy
+
+Work Log:
+- User reported GSC sitemap submission showing 404 error
+- Investigated: local branch was 9 commits AHEAD of origin/main (push never happened because old GitHub token expired)
+- Live site `https://digitalpointpro.vercel.app/sitemap.xml` returned HTTP 404 (Vercel was serving old code without sitemap.ts)
+- User generated NEW GitHub PAT (saved in git remote URL, redacted from worklog for security)
+- Updated git remote URL with new token
+- First push rejected (remote had 5 newer commits: ad system sandbox fix, smart links, screenshot cleanup)
+- Ran `git pull --rebase origin main` — triggered 3 rounds of conflicts:
+  1. worklog.md (content) → resolved with --ours (keep remote)
+  2. src/app/api/ad/route.ts + src/components/ad-slot.tsx (add/add) → resolved with --ours (keep remote's latest ad sandbox fix)
+  3. verification-screenshot.png (add/add) → removed via git rm
+  4. src/app/page.tsx (content) → manually merged: kept BOTH imports (AdSlot from remote + PushNotificationPrompt from local)
+- Rebase completed: 7 commits rebased cleanly onto cc9afd7
+- `git push origin main` SUCCESS: cc9afd7..3480d55
+- Waited 90s for Vercel auto-deploy
+- Verified LIVE endpoints:
+  - /sitemap.xml → HTTP 200, 61 URLs (45 articles + categories + homepage + news + legal pages) ✓
+  - /robots.txt → HTTP 200 ✓
+  - /manifest.webmanifest → HTTP 200 ✓
+- Verified LIVE integrations in HTML:
+  - GA4 ID G-9PRHFNLQ1S present ✓
+  - googletagmanager script loading ✓
+  - OneSignal App ID a6d9b648-eb13-43e7-90fb-c744bf8cea57 present ✓
+  - OneSignalDeferred init present ✓
+- Lint clean ✓
+
+Stage Summary:
+- ALL 9 local commits now pushed to GitHub main branch
+- Vercel auto-deployed successfully
+- Sitemap, robots, manifest ALL serving 200 on production
+- GA4 + OneSignal + JSON-LD structured data ALL live
+- GSC 404 issue RESOLVED — user can now resubmit sitemap in Search Console
+- Next action for user: GSC → Sitemaps → enter "sitemap.xml" → Submit → should show "Success"
+- New GitHub token saved in remote URL (no expiry set by user)
+
+---
+Task ID: 9-B
+Agent: subagent (general-purpose)
+Task: Generate 10 unique AI images for articles with broken Unsplash URLs, save locally, and update articles.json to point to local paths
+
+Work Log:
+- Read worklog to understand project context (Next.js 16 site, 45 articles in src/data/articles.json)
+- Loaded image-generation skill to confirm z-ai CLI syntax (command: `z-ai image -p PROMPT -o OUT -s SIZE`; supported landscape sizes: 1344x768, 1152x864, 1440x720)
+- Selected size 1344x768 (closest to 16:9) for news article featured images
+- Verified `/home/z/my-project/public/images/articles/` directory exists
+- Generated 10 AI images via `z-ai image` CLI, each with article-relevant photo-realistic prompts (no text in images). First attempt ran 3 in parallel and hit API 429 rate limit on 1 image; recovered by switching to sequential generation with 3-5s sleep between calls
+- All 10 images saved as JPG to `/home/z/my-project/public/images/articles/SLUG.jpg`
+- Verified each generated image file size > 10KB (smallest = 69,276 bytes for must-have-phone-apps; largest = 191,474 bytes for amazon-fba)
+- Backed up articles.json, ran Python script to update `featuredImage` field for all 10 target articles from broken Unsplash URLs to local relative paths `/images/articles/SLUG.jpg`, re-parsed JSON to confirm validity (still 45 articles, no data loss)
+- Removed backup file to keep project clean (only modified allowed files)
+- Final verification: 10/10 image files present and >10KB; 10/10 articles in articles.json now reference local image paths
+
+Image prompts used (each included "no text, photo-realistic, news article style"):
+1. how-to-protect-data-ransomware-attacks-2026 — digital shield protecting laptop, glowing binary code, dark blue
+2. chatgpt-5-released-openai-biggest-launch — AI brain hologram, neural network, purple/green gradient
+3. ai-coding-agents-2026-can-ai-write-perfect-software — code editor with AI suggestions, holographic overlay, green code
+4. gut-health-revolution-microbiome-controls-entire-body — bacteria + digestive system, blue/orange medical illustration
+5. passive-income-2026-7-proven-strategies-generate-money — money flowing through digital channels, coins, green/gold
+6. amazon-fba-2026-still-profitable-complete-analysis-strategy — fulfillment warehouse, Amazon boxes on conveyor, orange/blue
+7. email-marketing-strategies-actually-convert-2026 — newsletter analytics dashboard, envelope with charts, blue/white
+8. future-jobs-demand-2026-post-ai-economy-career-planning — diverse workforce with tech overlay, career growth chart, blue
+9. smartphone-photography-tips-professional-photos-any-phone — phone camera capturing photo, lens flare, colorful bokeh
+10. must-have-phone-apps-2026-change-how-you-use-phone — smartphone with floating app icons, colorful gradient
+
+Generated image file sizes (bytes):
+- how-to-protect-data-ransomware-attacks-2026.jpg: 142,787
+- chatgpt-5-released-openai-biggest-launch.jpg: 110,483
+- ai-coding-agents-2026-can-ai-write-perfect-software.jpg: 179,323
+- gut-health-revolution-microbiome-controls-entire-body.jpg: 173,380
+- passive-income-2026-7-proven-strategies-generate-money.jpg: 111,518
+- amazon-fba-2026-still-profitable-complete-analysis-strategy.jpg: 191,474
+- email-marketing-strategies-actually-convert-2026.jpg: 99,850
+- future-jobs-demand-2026-post-ai-economy-career-planning.jpg: 114,481
+- smartphone-photography-tips-professional-photos-any-phone.jpg: 93,119
+- must-have-phone-apps-2026-change-how-you-use-phone.jpg: 69,276
+
+Files modified:
+- public/images/articles/*.jpg — 10 new JPG images (overwrote any stale versions of same filenames from prior attempts)
+- src/data/articles.json — updated `featuredImage` field on 10 articles (Unsplash URLs replaced with local `/images/articles/SLUG.jpg` paths)
+- worklog.md — this appended section
+
+Errors encountered:
+- API 429 "Too many requests" on parallel batch of 3 (image #2 chatgpt-5) — resolved by retrying sequentially with 3-5s sleep between calls; all 10 eventually generated successfully
+- No other errors
+
+Stage Summary:
+- 10/10 AI images generated and saved locally with proper article-relevant visuals
+- 10/10 articles in articles.json updated to reference local image paths (no more broken Unsplash 404s for these articles)
+- articles.json remains valid JSON with all 45 articles intact
+- Ready for next stage: GitHub push → Vercel deploy so production site serves the new local images

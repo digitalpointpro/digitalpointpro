@@ -153,9 +153,6 @@ export default function HomePage() {
       <main className="flex-1 overflow-hidden relative z-10">
         <div className="h-full overflow-y-auto">
           <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8 py-4 sm:py-6">
-            {/* Header Banner Ad */}
-            <AdSlot position="headerBanner" className="mb-4" />
-
             {/* Hero Banner */}
             <Hero />
 
@@ -198,11 +195,6 @@ export default function HomePage() {
               </div>
             </section>
 
-            <Separator className="my-4" />
-
-            {/* Between Sections Ad */}
-            <AdSlot position="betweenArticles" className="my-4" />
-
             {/* Main Content Grid - Latest Articles + Sidebar */}
             <div className="grid grid-cols-1 lg:grid-cols-12 gap-6">
               {/* Main Articles */}
@@ -236,9 +228,8 @@ export default function HomePage() {
                         ))}
                       </div>
 
-                      {/* Between Articles Ad + Smart Link */}
-                      <AdSlot position="betweenArticles" className="my-4" />
-                      <div className="my-4 text-center">
+                      {/* Smart Link — single ad placement (no banner ads) */}
+                      <div className="my-6 text-center">
                         <AdSlot position="smartLink" />
                       </div>
 
@@ -260,8 +251,6 @@ export default function HomePage() {
               <div className="hidden lg:block lg:col-span-4">
                 <div className="sticky top-20">
                   <SidebarRight />
-                  <AdSlot position="sidebarTall" className="mt-4" />
-                  <AdSlot position="midSection" className="mt-4" />
                 </div>
               </div>
             </div>
@@ -272,9 +261,6 @@ export default function HomePage() {
               <SidebarRight />
             </div>
 
-            {/* Footer Banner Ad */}
-            <AdSlot position="footerBanner" className="mt-6" />
-
             {/* Bottom spacer for scroll */}
             <div className="h-8" />
           </div>
@@ -283,11 +269,6 @@ export default function HomePage() {
 
       {/* Footer - Sticky at Bottom */}
       <Footer />
-
-      {/* Mobile Sticky Ad */}
-      <div className="lg:hidden fixed bottom-0 left-0 right-0 z-40 bg-background/95 backdrop-blur-sm border-t py-1 px-2">
-        <AdSlot position="mobileSticky" />
-      </div>
 
       {/* Overlays */}
       {isOverlayOpen && overlayType === 'article' && <ArticleOverlay />}

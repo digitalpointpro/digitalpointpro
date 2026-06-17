@@ -48,27 +48,11 @@ import {
 import { NewsArticleJsonLd, BreadcrumbJsonLd } from '@/components/structured-data'
 import { articleUrl, SITE_CONFIG } from '@/lib/site-config'
 
-// Component that splits article content and inserts ads between paragraphs
+// Component that splits article content. Smart Link is shown only ONCE after the article body (not mid-article).
 function ArticleBodyWithAds({ content }: { content: string }) {
-  // Split content at H2 headings to insert ads between sections
-  const sections = content.split(/(?=^## )/m)
-
   return (
     <div id="article-body-content" className="article-body">
-      {sections.map((section, idx) => (
-        <React.Fragment key={idx}>
-          <ReactMarkdown remarkPlugins={[remarkGfm]}>{section}</ReactMarkdown>
-          {/* Insert banner ad + smart link after every 2nd section */}
-          {(idx > 0 && idx % 2 === 0 && idx < sections.length - 1) && (
-            <div className="my-6">
-              <AdSlot position="betweenArticles" />
-              <div className="mt-4 text-center">
-                <AdSlot position="smartLink" />
-              </div>
-            </div>
-          )}
-        </React.Fragment>
-      ))}
+      <ReactMarkdown remarkPlugins={[remarkGfm]}>{content}</ReactMarkdown>
     </div>
   )
 }
@@ -364,8 +348,6 @@ export default function ArticleOverlay() {
         style={{ height: 'calc(100vh - 88px)' }}
       >
         <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8 py-8">
-          <AdSlot position="headerBanner" className="mb-6" />
-
           <div className="grid grid-cols-1 lg:grid-cols-12 gap-8">
             {/* Main Content */}
             <div className="lg:col-span-8">
@@ -548,12 +530,10 @@ export default function ArticleOverlay() {
                 </div>
               )}
 
-              {/* Smart Link After FAQ */}
+              {/* Smart Link After FAQ — single ad placement in article */}
               <div className="my-6 text-center">
                 <AdSlot position="smartLink" />
               </div>
-
-              <AdSlot position="betweenArticles" className="my-6" />
 
               {/* Related Articles */}
               {related.length > 0 && (
@@ -599,10 +579,6 @@ export default function ArticleOverlay() {
                 )}
 
                 <Newsletter />
-
-                <AdSlot position="sidebar" />
-                <AdSlot position="sidebarTall" className="mt-4" />
-                <AdSlot position="midSection" className="mt-4" />
 
                 {/* Recommended Reads */}
                 {related.length > 0 && (

@@ -214,65 +214,74 @@ export default function RootLayout({
               {`
                 window.OneSignalDeferred = window.OneSignalDeferred || [];
                 OneSignalDeferred.push(async function(OneSignal) {
-                  await OneSignal.init({
-                    appId: "${SITE_CONFIG.oneSignalAppId}",
-                    notifyButton: {
-                      enable: true,
-                      position: 'bottom-right',
-                      size: 'medium',
-                      showCredit: false,
-                      text: {
-                        'tip.state.unsubscribed': 'Subscribe to breaking news alerts',
-                        'tip.state.subscribed': "You're subscribed to breaking news alerts",
-                        'tip.state.blocked': "You've blocked notifications",
-                        'message.prenotify': 'Click to subscribe to notifications',
-                        'message.action.subscribed': "Thanks for subscribing!",
-                        'message.action.resubscribed': "You're subscribed to notifications",
-                        'message.action.unsubscribed': "You won't receive notifications again",
-                        'dialog.main.title': 'Manage Notifications',
-                        'dialog.main.button.subscribe': 'SUBSCRIBE',
-                        'dialog.main.button.unsubscribe': 'UNSUBSCRIBE',
-                        'dialog.blocked.title': 'Unblock Notifications',
-                        'dialog.blocked.message': 'Follow these instructions to allow notifications:'
+                  try {
+                    await OneSignal.init({
+                      appId: "${SITE_CONFIG.oneSignalAppId}",
+                      notifyButton: {
+                        enable: true,
+                        position: 'bottom-right',
+                        size: 'medium',
+                        showCredit: false,
+                        text: {
+                          'tip.state.unsubscribed': 'Subscribe to breaking news alerts',
+                          'tip.state.subscribed': "You're subscribed to breaking news alerts",
+                          'tip.state.blocked': "You've blocked notifications",
+                          'message.prenotify': 'Click to subscribe to notifications',
+                          'message.action.subscribed': "Thanks for subscribing!",
+                          'message.action.resubscribed': "You're subscribed to notifications",
+                          'message.action.unsubscribed': "You won't receive notifications again",
+                          'dialog.main.title': 'Manage Notifications',
+                          'dialog.main.button.subscribe': 'SUBSCRIBE',
+                          'dialog.main.button.unsubscribe': 'UNSUBSCRIBE',
+                          'dialog.blocked.title': 'Unblock Notifications',
+                          'dialog.blocked.message': 'Follow these instructions to allow notifications:'
+                        },
+                        colors: {
+                          'circle.background': '#10b981',
+                          'circle.foreground': 'white',
+                          'badge.background': '#10b981',
+                          'badge.foreground': 'white',
+                          'badge.bordercolor': 'white',
+                          'pulse.color': '#10b981',
+                          'dialog.button.background.hovering': '#0f766e',
+                          'dialog.button.background.active': '#0f766e',
+                          'dialog.button.background': '#10b981',
+                          'dialog.button.foreground': 'white'
+                        }
                       },
-                      colors: {
-                        'circle.background': '#10b981',
-                        'circle.foreground': 'white',
-                        'badge.background': '#10b981',
-                        'badge.foreground': 'white',
-                        'badge.bordercolor': 'white',
-                        'pulse.color': '#10b981',
-                        'dialog.button.background.hovering': '#0f766e',
-                        'dialog.button.background.active': '#0f766e',
-                        'dialog.button.background': '#10b981',
-                        'dialog.button.foreground': 'white'
-                      }
-                    },
-                    promptOptions: {
-                      slidedown: {
-                        prompts: [
-                          {
-                            type: "push",
-                            autoPrompt: false,
-                            text: {
-                              actionMessage: "Get breaking news and trending stories notifications from Digital Point Pro.",
-                              acceptButton: "ALLOW",
-                              cancelButton: "NO THANKS"
-                            },
-                            delay: {
-                              pageViews: 1,
-                              timeDelay: 15
+                      promptOptions: {
+                        slidedown: {
+                          prompts: [
+                            {
+                              type: "push",
+                              autoPrompt: false,
+                              text: {
+                                actionMessage: "Get breaking news and trending stories notifications from Digital Point Pro.",
+                                acceptButton: "ALLOW",
+                                cancelButton: "NO THANKS"
+                              },
+                              delay: {
+                                pageViews: 1,
+                                timeDelay: 15
+                              }
                             }
-                          }
-                        ]
+                          ]
+                        }
+                      },
+                      welcomeNotification: {
+                        title: "${SITE_CONFIG.name}",
+                        message: "Thanks for subscribing! You'll get the latest news alerts.",
+                        url: "${SITE_CONFIG.url}"
                       }
-                    },
-                    welcomeNotification: {
-                      title: "${SITE_CONFIG.name}",
-                      message: "Thanks for subscribing! You'll get the latest news alerts.",
-                      url: "${SITE_CONFIG.url}"
+                    });
+                  } catch (err) {
+                    // OneSignal dashboard may not yet have Web Push configured for this domain.
+                    // Silently swallow init errors so they don't spam the console / break the page.
+                    // User must add the production URL in OneSignal dashboard → Settings → Web Push.
+                    if (typeof console !== 'undefined' && console.warn) {
+                      console.warn('OneSignal init skipped:', err && err.message ? err.message : err);
                     }
-                  });
+                  }
                 });
               `}
             </Script>

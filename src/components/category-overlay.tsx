@@ -126,8 +126,6 @@ export default function CategoryOverlay() {
       {/* Content */}
       <div className="overflow-y-auto" style={{ height: 'calc(100vh - 88px)' }}>
         <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8 py-8">
-          <AdSlot position="headerBanner" className="mb-6" />
-
           {/* Category Header */}
           <div className="mb-8">
             <Badge className="mb-3">{category?.name || 'Category'}</Badge>
@@ -184,12 +182,8 @@ export default function CategoryOverlay() {
                 <div className="sticky top-20 space-y-6">
                   <Newsletter />
 
-                  <AdSlot position="sidebar" />
-                  <AdSlot position="sidebarTall" className="mt-4" />
-                  <AdSlot position="midSection" className="mt-4" />
-
-                  {/* Smart Link */}
-                  <div className="mt-4 text-center">
+                  {/* Smart Link — single ad placement in category view */}
+                  <div className="text-center">
                     <AdSlot position="smartLink" />
                   </div>
 

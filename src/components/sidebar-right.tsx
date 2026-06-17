@@ -37,14 +37,6 @@ export default function SidebarRight() {
 
       {/* Newsletter */}
       <Newsletter />
-
-      {/* Sidebar Ad 300x250 */}
-      <AdSlot position="sidebar" />
-
-      {/* Smart Link */}
-      <div className="text-center">
-        <AdSlot position="smartLink" />
-      </div>
     </aside>
   )
 }
