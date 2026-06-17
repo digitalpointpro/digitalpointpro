@@ -28,7 +28,13 @@ export const SITE_CONFIG = {
   ga4Id: 'G-9PRHFNLQ1S', // e.g. 'G-XXXXXXXXXX'
   // OneSignal push notifications — replace with real app ID after setup
   oneSignalAppId: 'a6d9b648-eb13-43e7-90fb-c744bf8cea57',
-  // Google Search Console verification token (paste the content= value here)
+  // Google Search Console verification token
+  // Step 1: search.google.com/search-console → Add property → URL prefix
+  //         → https://digitalpointpro.vercel.app
+  // Step 2: Choose "HTML tag" method → copy the content="..." value (NOT the whole tag)
+  // Step 3: Paste that value between the quotes below
+  // Step 4: Save → commit → push to GitHub → Vercel auto-deploys
+  // Step 5: Back in GSC, click "Verify" — Google fetches the meta tag from your live site
   gscVerification: '',
 } as const;
 
