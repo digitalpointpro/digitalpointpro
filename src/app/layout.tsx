@@ -1,8 +1,11 @@
-import type { Metadata } from "next";
+import type { Metadata, Viewport } from "next";
+import Script from "next/script";
 import { Geist, Geist_Mono } from "next/font/google";
 import "./globals.css";
 import { Toaster } from "@/components/ui/toaster";
 import { ThemeProvider } from "@/components/theme-provider";
+import { SITE_CONFIG } from "@/lib/site-config";
+import { JsonLd } from "@/components/structured-data";
 
 const geistSans = Geist({
   variable: "--font-geist-sans",
@@ -15,30 +18,108 @@ const geistMono = Geist_Mono({
 });
 
 export const metadata: Metadata = {
-  title: "Digital Point Pro - Breaking News, Tech, Business & Lifestyle",
-  description: "Your premier source for breaking news, AI insights, tech trends, health tips, business strategies, and career guidance. Stay informed with Digital Point Pro.",
-  keywords: ["breaking news", "technology", "AI", "artificial intelligence", "business", "health", "freelancing", "cybersecurity", "remote jobs", "smartphone tips", "Digital Point Pro"],
-  authors: [{ name: "Digital Point Pro Team" }],
-  icons: {
-    icon: "/favicon.ico",
+  metadataBase: new URL(SITE_CONFIG.url),
+  title: {
+    default: `${SITE_CONFIG.name} - ${SITE_CONFIG.tagline}`,
+    template: `%s | ${SITE_CONFIG.name}`,
   },
+  description: SITE_CONFIG.description,
+  applicationName: SITE_CONFIG.name,
+  keywords: [
+    "breaking news",
+    "latest news",
+    "world news",
+    "technology",
+    "AI",
+    "artificial intelligence",
+    "business",
+    "online business",
+    "health",
+    "lifestyle",
+    "freelancing",
+    "cybersecurity",
+    "cyber security",
+    "remote jobs",
+    "smartphone tips",
+    "Pakistan news",
+    "tech news",
+    "Digital Point Pro",
+  ],
+  authors: [{ name: `${SITE_CONFIG.name} Team`, url: SITE_CONFIG.url }],
+  creator: SITE_CONFIG.name,
+  publisher: SITE_CONFIG.name,
+  category: "news",
+  alternates: {
+    canonical: "/",
+  },
+  // Google Search Console verification — paste token in site-config.ts
+  verification: SITE_CONFIG.gscVerification
+    ? { google: SITE_CONFIG.gscVerification }
+    : undefined,
   openGraph: {
-    title: "Digital Point Pro - Knowledge & Trends Platform",
-    description: "Expert insights in technology, business, finance, and personal development.",
-    url: "https://digitalpointpro.com",
-    siteName: "Digital Point Pro",
     type: "website",
-    locale: "en_US",
+    locale: SITE_CONFIG.locale,
+    url: SITE_CONFIG.url,
+    siteName: SITE_CONFIG.name,
+    title: `${SITE_CONFIG.name} - ${SITE_CONFIG.tagline}`,
+    description: SITE_CONFIG.description,
+    images: [
+      {
+        url: SITE_CONFIG.defaultOgImage,
+        width: 1200,
+        height: 630,
+        alt: SITE_CONFIG.name,
+      },
+    ],
   },
   twitter: {
     card: "summary_large_image",
-    title: "Digital Point Pro - Knowledge & Trends Platform",
-    description: "Expert insights in technology, business, finance, and personal development.",
+    site: SITE_CONFIG.social.twitter,
+    creator: SITE_CONFIG.social.twitter,
+    title: `${SITE_CONFIG.name} - ${SITE_CONFIG.tagline}`,
+    description: SITE_CONFIG.description,
+    images: [SITE_CONFIG.defaultOgImage],
   },
   robots: {
     index: true,
     follow: true,
+    nocache: false,
+    googleBot: {
+      index: true,
+      follow: true,
+      "max-image-preview": "large",
+      "max-snippet": -1,
+      "max-video-preview": -1,
+    },
   },
+  manifest: "/manifest.webmanifest",
+  icons: {
+    icon: [
+      { url: "/icon.png", sizes: "1024x1024", type: "image/png" },
+      { url: "/favicon.ico", sizes: "any" },
+    ],
+    apple: [{ url: "/icon.png", sizes: "1024x1024" }],
+  },
+  appleWebApp: {
+    capable: true,
+    title: SITE_CONFIG.name,
+    statusBarStyle: "default",
+  },
+  formatDetection: {
+    telephone: false,
+    address: false,
+    email: false,
+  },
+};
+
+export const viewport: Viewport = {
+  width: "device-width",
+  initialScale: 1,
+  maximumScale: 5,
+  themeColor: [
+    { media: "(prefers-color-scheme: light)", color: SITE_CONFIG.themeColor },
+    { media: "(prefers-color-scheme: dark)", color: "#0f172a" },
+  ],
 };
 
 export default function RootLayout({
@@ -47,7 +128,46 @@ export default function RootLayout({
   children: React.ReactNode;
 }>) {
   return (
-    <html lang="en" suppressHydrationWarning>
+    <html lang={SITE_CONFIG.language} suppressHydrationWarning>
+      <head>
+        {/* Organization + WebSite structured data (sitewide). */}
+        {/* JSON-LD scripts are data-only (not executable), so raw script tags
+            are the recommended approach per Next.js docs. */}
+        <JsonLd
+          data={{
+            "@context": "https://schema.org",
+            "@type": "Organization",
+            name: SITE_CONFIG.name,
+            url: SITE_CONFIG.url,
+            logo: `${SITE_CONFIG.url}${SITE_CONFIG.logo}`,
+            description: SITE_CONFIG.description,
+            sameAs: [
+              SITE_CONFIG.social.facebook,
+              SITE_CONFIG.social.telegram,
+              SITE_CONFIG.social.youtube,
+              `https://twitter.com/${SITE_CONFIG.social.twitter.replace("@", "")}`,
+            ],
+          }}
+        />
+        <JsonLd
+          data={{
+            "@context": "https://schema.org",
+            "@type": "WebSite",
+            name: SITE_CONFIG.name,
+            url: SITE_CONFIG.url,
+            description: SITE_CONFIG.description,
+            inLanguage: SITE_CONFIG.language,
+            potentialAction: {
+              "@type": "SearchAction",
+              target: {
+                "@type": "EntryPoint",
+                urlTemplate: `${SITE_CONFIG.url}/?q={search_term_string}`,
+              },
+              "query-input": "required name=search_term_string",
+            },
+          }}
+        />
+      </head>
       <body
         className={`${geistSans.variable} ${geistMono.variable} antialiased bg-background text-foreground`}
       >
@@ -60,6 +180,104 @@ export default function RootLayout({
           {children}
           <Toaster />
         </ThemeProvider>
+
+        {/* Google Analytics 4 — only loads if GA4 ID is set in site-config.ts */}
+        {SITE_CONFIG.ga4Id && (
+          <>
+            <Script
+              src={`https://www.googletagmanager.com/gtag/js?id=${SITE_CONFIG.ga4Id}`}
+              strategy="afterInteractive"
+            />
+            <Script id="ga4-init" strategy="afterInteractive">
+              {`
+                window.dataLayer = window.dataLayer || [];
+                function gtag(){dataLayer.push(arguments);}
+                gtag('js', new Date());
+                gtag('config', '${SITE_CONFIG.ga4Id}', {
+                  anonymize_ip: true,
+                  send_page_view: true
+                });
+              `}
+            </Script>
+          </>
+        )}
+
+        {/* OneSignal Web Push SDK — only loads if app ID is set */}
+        {SITE_CONFIG.oneSignalAppId && (
+          <>
+            <Script
+              src="https://cdn.onesignal.com/sdks/web/v16/OneSignalSDK.page.js"
+              strategy="afterInteractive"
+              defer
+            />
+            <Script id="onesignal-init" strategy="afterInteractive">
+              {`
+                window.OneSignalDeferred = window.OneSignalDeferred || [];
+                OneSignalDeferred.push(async function(OneSignal) {
+                  await OneSignal.init({
+                    appId: "${SITE_CONFIG.oneSignalAppId}",
+                    notifyButton: {
+                      enable: true,
+                      position: 'bottom-right',
+                      size: 'medium',
+                      showCredit: false,
+                      text: {
+                        'tip.state.unsubscribed': 'Subscribe to breaking news alerts',
+                        'tip.state.subscribed': "You're subscribed to breaking news alerts",
+                        'tip.state.blocked': "You've blocked notifications",
+                        'message.prenotify': 'Click to subscribe to notifications',
+                        'message.action.subscribed': "Thanks for subscribing!",
+                        'message.action.resubscribed': "You're subscribed to notifications",
+                        'message.action.unsubscribed': "You won't receive notifications again",
+                        'dialog.main.title': 'Manage Notifications',
+                        'dialog.main.button.subscribe': 'SUBSCRIBE',
+                        'dialog.main.button.unsubscribe': 'UNSUBSCRIBE',
+                        'dialog.blocked.title': 'Unblock Notifications',
+                        'dialog.blocked.message': 'Follow these instructions to allow notifications:'
+                      },
+                      colors: {
+                        'circle.background': '#10b981',
+                        'circle.foreground': 'white',
+                        'badge.background': '#10b981',
+                        'badge.foreground': 'white',
+                        'badge.bordercolor': 'white',
+                        'pulse.color': '#10b981',
+                        'dialog.button.background.hovering': '#0f766e',
+                        'dialog.button.background.active': '#0f766e',
+                        'dialog.button.background': '#10b981',
+                        'dialog.button.foreground': 'white'
+                      }
+                    },
+                    promptOptions: {
+                      slidedown: {
+                        prompts: [
+                          {
+                            type: "push",
+                            autoPrompt: false,
+                            text: {
+                              actionMessage: "Get breaking news and trending stories notifications from Digital Point Pro.",
+                              acceptButton: "ALLOW",
+                              cancelButton: "NO THANKS"
+                            },
+                            delay: {
+                              pageViews: 1,
+                              timeDelay: 15
+                            }
+                          }
+                        ]
+                      }
+                    },
+                    welcomeNotification: {
+                      title: "${SITE_CONFIG.name}",
+                      message: "Thanks for subscribing! You'll get the latest news alerts.",
+                      url: "${SITE_CONFIG.url}"
+                    }
+                  });
+                });
+              `}
+            </Script>
+          </>
+        )}
       </body>
     </html>
   );

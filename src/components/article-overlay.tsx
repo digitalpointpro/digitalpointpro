@@ -28,6 +28,7 @@ import {
   Twitter,
   Linkedin,
   MessageCircle,
+  Send,
   ChevronRight,
   ArrowLeft,
   List,
@@ -41,7 +42,11 @@ import {
   Shield,
   Smartphone,
   MapPin,
+  Copy,
+  Check,
 } from 'lucide-react'
+import { NewsArticleJsonLd, BreadcrumbJsonLd } from '@/components/structured-data'
+import { articleUrl, SITE_CONFIG } from '@/lib/site-config'
 
 // Component that splits article content and inserts ads between paragraphs
 function ArticleBodyWithAds({ content }: { content: string }) {
@@ -86,6 +91,7 @@ export default function ArticleOverlay() {
   const [article, setArticle] = useState<Article | null>(null)
   const [related, setRelated] = useState<ArticleListItem[]>([])
   const [loading, setLoading] = useState(true)
+  const [copied, setCopied] = useState(false)
   const fetchedSlug = useRef<string | null>(null)
 
   useEffect(() => {
@@ -142,15 +148,85 @@ export default function ArticleOverlay() {
     return () => clearTimeout(timer)
   }, [article?.content])
 
+  // Use canonical article URL (query-param based so it never 404s).
+  // Declared early because the title/meta effect below depends on it.
+  const shareUrl = article ? articleUrl(article.slug) : ''
+  const shareTitle = article?.title || ''
+
+  // Update document title + meta description when article opens.
+  // Helps browser tabs, bookmarks, and social share previews.
+  useEffect(() => {
+    if (!article) return
+    const prevTitle = document.title
+    // Use article.title for the visible tab title (avoid duplication with
+    // metaTitle which may already contain the site name suffix).
+    document.title = `${article.title} | ${SITE_CONFIG.name}`
+
+    // Update meta description
+    let metaDesc = document.querySelector('meta[name="description"]')
+    const prevDesc = metaDesc?.getAttribute('content') || ''
+    if (!metaDesc) {
+      metaDesc = document.createElement('meta')
+      metaDesc.setAttribute('name', 'description')
+      document.head.appendChild(metaDesc)
+    }
+    metaDesc.setAttribute('content', article.metaDescription || article.excerpt || '')
+
+    // Update og:title, og:description, og:url for social previews
+    const setOg = (prop: string, content: string) => {
+      let el = document.querySelector(`meta[property="${prop}"]`)
+      if (!el) {
+        el = document.createElement('meta')
+        el.setAttribute('property', prop)
+        document.head.appendChild(el)
+      }
+      el.setAttribute('content', content)
+    }
+    setOg('og:title', article.metaTitle || article.title)
+    setOg('og:description', article.metaDescription || article.excerpt || '')
+    setOg('og:url', shareUrl)
+    setOg('og:image', article.featuredImage)
+    setOg('og:type', 'article')
+
+    return () => {
+      document.title = prevTitle
+      if (prevDesc) metaDesc?.setAttribute('content', prevDesc)
+    }
+  }, [article, shareUrl])
+
+  // Native Web Share API (mobile) — falls back to buttons on desktop
+  const handleNativeShare = async () => {
+    if (typeof navigator === 'undefined' || !navigator.share) return
+    try {
+      await navigator.share({
+        title: shareTitle,
+        text: article?.excerpt || '',
+        url: shareUrl,
+      })
+    } catch {
+      // user cancelled — no action needed
+    }
+  }
+
+  // Copy link to clipboard
+  const handleCopyLink = async () => {
+    try {
+      await navigator.clipboard.writeText(shareUrl)
+      setCopied(true)
+      setTimeout(() => setCopied(false), 2000)
+    } catch {
+      // clipboard not available
+    }
+  }
+
+  const hasNativeShare = typeof navigator !== 'undefined' && !!navigator.share
+
   const scrollToHeading = (id: string) => {
     const el = document.getElementById(id)
     if (el) {
       el.scrollIntoView({ behavior: 'smooth', block: 'start' })
     }
   }
-
-  const shareUrl = typeof window !== 'undefined' ? window.location.href : ''
-  const shareTitle = article?.title || ''
 
   const formatDate = (dateStr: string) => {
     return new Date(dateStr).toLocaleDateString('en-US', {
@@ -204,6 +280,26 @@ export default function ArticleOverlay() {
 
   return (
     <div className="fixed inset-0 z-50 bg-background overlay-enter">
+      {/* NewsArticle structured data for Google News + rich results */}
+      <NewsArticleJsonLd
+        title={article.title}
+        description={article.excerpt || article.metaDescription}
+        image={article.featuredImage}
+        url={shareUrl}
+        datePublished={article.createdAt}
+        dateModified={article.updatedAt}
+        author={article.author}
+        publisher={SITE_CONFIG.name}
+        category={article.category}
+      />
+      {/* Breadcrumb structured data */}
+      <BreadcrumbJsonLd
+        items={[
+          { name: 'Home', url: SITE_CONFIG.url },
+          { name: article.category, url: `${SITE_CONFIG.url}/?category=${article.categorySlug || ''}` },
+          { name: article.title, url: shareUrl },
+        ]}
+      />
       <ReadingProgress />
 
       {/* Top Navigation Bar with all categories */}
@@ -345,51 +441,90 @@ export default function ArticleOverlay() {
 
               {/* Social Sharing */}
               <Separator className="my-8" />
-              <div className="flex flex-wrap items-center gap-3 mb-8">
-                <span className="text-sm font-medium flex items-center gap-1.5">
-                  <Share2 className="h-4 w-4" />
-                  Share this article:
-                </span>
+              <div className="rounded-xl border bg-muted/30 p-4 mb-8">
+                <div className="flex flex-wrap items-center gap-2 mb-3">
+                  <Share2 className="h-4 w-4 text-primary" />
+                  <span className="text-sm font-semibold">Share this article</span>
+                </div>
                 <div className="flex flex-wrap items-center gap-2">
-                  <Button variant="outline" size="sm" className="gap-1.5 h-8 text-xs" asChild>
+                  {/* Native share (mobile-first) — shows on mobile where it matters most */}
+                  {hasNativeShare && (
+                    <Button
+                      onClick={handleNativeShare}
+                      size="sm"
+                      className="gap-1.5 h-9 text-xs bg-gradient-to-r from-emerald-500 to-teal-500 hover:from-emerald-600 hover:to-teal-600 text-white"
+                    >
+                      <Share2 className="h-3.5 w-3.5" />
+                      Share
+                    </Button>
+                  )}
+                  <Button variant="outline" size="sm" className="gap-1.5 h-9 text-xs" asChild>
                     <a
                       href={`https://www.facebook.com/sharer/sharer.php?u=${encodeURIComponent(shareUrl)}`}
                       target="_blank"
                       rel="noopener noreferrer"
+                      aria-label="Share on Facebook"
                     >
                       <Facebook className="h-3.5 w-3.5" />
                       Facebook
                     </a>
                   </Button>
-                  <Button variant="outline" size="sm" className="gap-1.5 h-8 text-xs" asChild>
+                  <Button variant="outline" size="sm" className="gap-1.5 h-9 text-xs" asChild>
                     <a
                       href={`https://twitter.com/intent/tweet?url=${encodeURIComponent(shareUrl)}&text=${encodeURIComponent(shareTitle)}`}
                       target="_blank"
                       rel="noopener noreferrer"
+                      aria-label="Share on X (Twitter)"
                     >
                       <Twitter className="h-3.5 w-3.5" />
-                      Twitter
+                      X
                     </a>
                   </Button>
-                  <Button variant="outline" size="sm" className="gap-1.5 h-8 text-xs" asChild>
+                  <Button variant="outline" size="sm" className="gap-1.5 h-9 text-xs" asChild>
                     <a
                       href={`https://www.linkedin.com/shareArticle?mini=true&url=${encodeURIComponent(shareUrl)}&title=${encodeURIComponent(shareTitle)}`}
                       target="_blank"
                       rel="noopener noreferrer"
+                      aria-label="Share on LinkedIn"
                     >
                       <Linkedin className="h-3.5 w-3.5" />
                       LinkedIn
                     </a>
                   </Button>
-                  <Button variant="outline" size="sm" className="gap-1.5 h-8 text-xs" asChild>
+                  {/* WhatsApp — biggest traffic source for news in PK/South Asia */}
+                  <Button variant="outline" size="sm" className="gap-1.5 h-9 text-xs" asChild>
                     <a
                       href={`https://wa.me/?text=${encodeURIComponent(shareTitle + ' ' + shareUrl)}`}
                       target="_blank"
                       rel="noopener noreferrer"
+                      aria-label="Share on WhatsApp"
                     >
                       <MessageCircle className="h-3.5 w-3.5" />
                       WhatsApp
                     </a>
+                  </Button>
+                  {/* Telegram — fast-growing news channel traffic */}
+                  <Button variant="outline" size="sm" className="gap-1.5 h-9 text-xs" asChild>
+                    <a
+                      href={`https://t.me/share/url?url=${encodeURIComponent(shareUrl)}&text=${encodeURIComponent(shareTitle)}`}
+                      target="_blank"
+                      rel="noopener noreferrer"
+                      aria-label="Share on Telegram"
+                    >
+                      <Send className="h-3.5 w-3.5" />
+                      Telegram
+                    </a>
+                  </Button>
+                  {/* Copy link */}
+                  <Button
+                    onClick={handleCopyLink}
+                    variant="outline"
+                    size="sm"
+                    className="gap-1.5 h-9 text-xs"
+                    aria-label="Copy article link"
+                  >
+                    {copied ? <Check className="h-3.5 w-3.5 text-emerald-500" /> : <Copy className="h-3.5 w-3.5" />}
+                    {copied ? 'Copied!' : 'Copy Link'}
                   </Button>
                 </div>
               </div>

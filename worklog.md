@@ -220,3 +220,47 @@ gscVerification: '',    // ← token from search.google.com/search-console
 3. GitHub push → Vercel deploy
 4. Google Search Console + Publisher Center me submit
 5. Phir traffic strategies pe kaam (Google Trends articles, FB/WhatsApp/Telegram groups, etc.)
+
+---
+Task ID: 7
+Agent: main
+Task: OneSignal SDK integration + redo reverted files (session restore)
+
+Work Log:
+- User provided OneSignal App ID: a6d9b648-eb13-43e7-90fb-c744bf8cea57
+- User also provided GA4 ID earlier: G-9PRHFNLQ1S
+- Discovered multiple files from previous session got reverted to original state (similar to site-config.ts disappearing earlier):
+  - src/lib/store.ts — reverted to path-based URLs (/article/slug) — would 404 on share
+  - src/app/page.tsx — reverted, no hydration logic
+  - src/app/layout.tsx — reverted to basic metadata, no GA4/OneSignal/JSON-LD
+  - src/components/article-overlay.tsx — reverted, basic share buttons only
+  - public/robots.txt — reappeared (would override dynamic robots.ts)
+- Files that survived: sitemap.ts, robots.ts, manifest.ts, structured-data.tsx, push-notification-prompt.tsx, site-config.ts, og-default.jpg, icon.png
+- Redid ALL changes:
+  1. src/lib/store.ts — query-param URLs (?article=, ?category=, ?news=1, ?legal=) + getOverlayFromUrl()
+  2. src/app/page.tsx — hydration useEffect + popstate fix (uses setState directly, no pushState) + PushNotificationPrompt
+  3. src/app/layout.tsx — FULL rewrite: enhanced metadata (OG, Twitter, canonical, robots directives, appleWebApp), JSON-LD Organization + WebSite schemas, GA4 via next/script, OneSignal Web Push SDK v16 via next/script
+  4. src/components/article-overlay.tsx — added Send/Copy/Check icons import, NewsArticleJsonLd + BreadcrumbJsonLd injection, dynamic title/meta/OG update on article open, native Web Share button, Telegram share button, Copy Link button with clipboard, canonical articleUrl() for all share links
+  5. Deleted public/robots.txt again so dynamic robots.ts is used
+- OneSignal integration details (layout.tsx):
+  - Loads OneSignalSDK.page.js from cdn.onesignal.com/sdks/web/v16/ via next/script (strategy="afterInteractive", defer)
+  - Uses OneSignalDeferred.push() pattern (v16 SDK)
+  - Init with appId, notifyButton (emerald/teal themed, bottom-right), slidedown prompt options (autoPrompt: false, 15s delay), welcomeNotification
+  - Prompt text customized for breaking news
+- Browser-verified:
+  - GA4 script loads with ID G-9PRHFNLQ1S ✓
+  - OneSignal SDK loads from CDN ✓
+  - OneSignal init script present (OneSignalDeferred) ✓
+  - Article direct visit /?article=slug opens overlay ✓
+  - 4 JSON-LD schemas injected (Organization, WebSite, NewsArticle, BreadcrumbList) ✓
+  - Telegram/WhatsApp/Copy share buttons present ✓
+  - Share URLs use canonical format (no 404) ✓
+  - Sitemap serves ✓ | Robots serves ✓
+  - Lint clean ✓ | Server 200 ✓
+
+Stage Summary:
+- OneSignal Web Push SDK FULLY INTEGRATED with App ID a6d9b648-eb13-43e7-90fb-c744bf8cea57
+- GA4 FULLY INTEGRATED with ID G-9PRHFNLQ1S
+- All reverted SEO/sharing fixes REDONE
+- 2 of 3 IDs done (GA4 ✓, OneSignal ✓) — only GSC verification token remaining
+- Ready for: GitHub push → Vercel deploy → OneSignal dashboard verify domain

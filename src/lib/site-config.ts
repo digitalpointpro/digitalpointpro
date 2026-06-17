@@ -27,7 +27,7 @@ export const SITE_CONFIG = {
   // Analytics — replace with real IDs after setup
   ga4Id: 'G-9PRHFNLQ1S', // e.g. 'G-XXXXXXXXXX'
   // OneSignal push notifications — replace with real app ID after setup
-  oneSignalAppId: '',
+  oneSignalAppId: 'a6d9b648-eb13-43e7-90fb-c744bf8cea57',
   // Google Search Console verification token (paste the content= value here)
   gscVerification: '',
 } as const;

@@ -1,7 +1,7 @@
 'use client'
 
-import React, { useState, useEffect } from 'react'
-import { useNavigation } from '@/lib/store'
+import React, { useState, useEffect, useRef } from 'react'
+import { useNavigation, getOverlayFromUrl } from '@/lib/store'
 import { ArticleListItem } from '@/lib/types'
 import Header from '@/components/header'
 import Footer from '@/components/footer'
@@ -16,14 +16,16 @@ import AdminOverlay from '@/components/admin-overlay'
 import LatestNewsOverlay from '@/components/latest-news-overlay'
 import BackToTop from '@/components/back-to-top'
 import AdSlot from '@/components/ad-slot'
+import PushNotificationPrompt from '@/components/push-notification-prompt'
 import { Separator } from '@/components/ui/separator'
 import { Newspaper, Brain, Cpu, Heart, Briefcase, Pen, Shield, Smartphone, MapPin } from 'lucide-react'
 
 export default function HomePage() {
-  const { overlayType, isOverlayOpen, openPage } = useNavigation()
+  const { overlayType, isOverlayOpen, openPage, openArticle } = useNavigation()
   const [searchOpen, setSearchOpen] = useState(false)
   const [latest, setLatest] = useState<ArticleListItem[]>([])
   const [loading, setLoading] = useState(true)
+  const hydratedRef = useRef(false)
 
   // Fetch articles
   useEffect(() => {
@@ -36,6 +38,24 @@ export default function HomePage() {
       .catch(() => setLoading(false))
   }, [])
 
+  // Hydrate overlay from URL query params on first mount.
+  // This makes shared/bookmarked URLs like /?article=slug open the right overlay.
+  useEffect(() => {
+    if (hydratedRef.current) return
+    hydratedRef.current = true
+    const fromUrl = getOverlayFromUrl()
+    if (!fromUrl) return
+    if (fromUrl.type === 'article' && fromUrl.data) {
+      openArticle(fromUrl.data)
+    } else if (fromUrl.type === 'category' && fromUrl.data) {
+      openPage('category', fromUrl.data)
+    } else if (fromUrl.type === 'latest-news') {
+      openPage('latest-news')
+    } else if (fromUrl.type === 'legal' && fromUrl.data) {
+      openPage('legal', fromUrl.data)
+    }
+  }, [openArticle, openPage])
+
   // Search modal event listener
   useEffect(() => {
     const handleOpenSearch = () => setSearchOpen(true)
@@ -43,12 +63,36 @@ export default function HomePage() {
     return () => window.removeEventListener('openSearch', handleOpenSearch)
   }, [])
 
-  // Popstate for browser back/forward
+  // Popstate for browser back/forward — sync overlay state with URL.
+  // NOTE: popstate fires AFTER the browser already changed the URL, so we must
+  // set Zustand state directly WITHOUT calling pushState (which would add a
+  // spurious history entry and break back/forward).
   useEffect(() => {
     const handlePopstate = () => {
+      const fromUrl = getOverlayFromUrl()
       const nav = useNavigation.getState()
-      if (!window.location.pathname || window.location.pathname === '/') {
-        nav.closeOverlay()
+      if (!fromUrl) {
+        // Back to home — close overlay without pushing history
+        useNavigation.setState({
+          overlayType: null,
+          overlayData: null,
+          isOverlayOpen: false,
+          previousOverlayType: null,
+          previousOverlayData: null,
+        })
+        document.body.style.overflow = ''
+      } else {
+        // Navigated to a shared URL via back/forward — open matching overlay
+        if (fromUrl.type !== nav.overlayType || fromUrl.data !== nav.overlayData) {
+          useNavigation.setState({
+            overlayType: fromUrl.type,
+            overlayData: fromUrl.data,
+            isOverlayOpen: true,
+            previousOverlayType: null,
+            previousOverlayData: null,
+          })
+          document.body.style.overflow = 'hidden'
+        }
       }
     }
     window.addEventListener('popstate', handlePopstate)
@@ -259,6 +303,9 @@ export default function HomePage() {
 
       {/* Back to Top */}
       <BackToTop />
+
+      {/* Push notification subscribe prompt (shows after 15s) */}
+      <PushNotificationPrompt />
     </div>
   )
 }
