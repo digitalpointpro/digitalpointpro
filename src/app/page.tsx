@@ -15,7 +15,7 @@ import SearchModal from '@/components/search-modal'
 import AdminOverlay from '@/components/admin-overlay'
 import LatestNewsOverlay from '@/components/latest-news-overlay'
 import BackToTop from '@/components/back-to-top'
-import AdSlot from '@/components/ad-slot'
+import AdSlot, { BottomStickyAd } from '@/components/ad-slot'
 import PushNotificationPrompt from '@/components/push-notification-prompt'
 import { Separator } from '@/components/ui/separator'
 import { Newspaper, Brain, Cpu, Heart, Briefcase, Pen, Shield, Smartphone, MapPin } from 'lucide-react'
@@ -153,6 +153,11 @@ export default function HomePage() {
       <main className="flex-1 overflow-hidden relative z-10">
         <div className="h-full overflow-y-auto">
           <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8 py-4 sm:py-6">
+            {/* Top Banner Ad — 728x90 leaderboard (above hero) */}
+            <div className="mb-4">
+              <AdSlot position="leaderboard" />
+            </div>
+
             {/* Hero Banner */}
             <Hero />
 
@@ -195,9 +200,9 @@ export default function HomePage() {
               </div>
             </section>
 
-            {/* Banner Ad — single 728x90 leaderboard (visible on all screens) */}
+            {/* Center Banner Ad — 728x90 leaderboard (below section cards) */}
             <div className="mt-6">
-              <AdSlot position="headerBanner" />
+              <AdSlot position="leaderboard" />
             </div>
 
             {/* Main Content Grid - Latest Articles + Sidebar */}
@@ -292,6 +297,9 @@ export default function HomePage() {
 
       {/* Push notification subscribe prompt (shows after 15s) */}
       <PushNotificationPrompt />
+
+      {/* Bottom Sticky Ad — fixed at bottom (mobile 320x50, desktop 728x90) */}
+      <BottomStickyAd />
     </div>
   )
 }

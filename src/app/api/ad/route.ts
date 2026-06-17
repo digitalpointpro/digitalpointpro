@@ -1,29 +1,30 @@
 import { NextRequest, NextResponse } from 'next/server'
-import { ADS_CONFIG } from '@/lib/ads-config'
+import { ADS_CONFIG, BANNER_SIZES, BannerType } from '@/lib/ads-config'
 
-// API route that serves the single Adsterra banner ad (728x90) HTML.
-// Ads load inside a SANDBOXED IFRAME on the client:
-//   sandbox="allow-scripts allow-same-origin
-//            allow-top-navigation-by-user-activation
-//            allow-popups"
-// This lets the ad render + open clicks in new tabs,
-// but BLOCKS auto-redirect of the parent page.
+// API route that serves Adsterra banner ad HTML inside a SANDBOXED IFRAME.
 //
-// Only ONE banner ad position is used site-wide (headerBanner).
-// Popunder + Social Bar are loaded directly in layout.tsx
-// (not through this endpoint) because they need full-page access.
+// SANDBOX: allow-scripts allow-same-origin allow-popups
+//   ✅ allow-scripts → ad renders
+//   ✅ allow-same-origin → nested iframes work
+//   ✅ allow-popups → ad click opens NEW TAB (user can view ad)
+//   ❌ allow-top-navigation NOT included → main page NEVER redirects
+//      (fixes ERR_BLOCKED_BY_RESPONSE — ad was redirecting main page
+//       to one-vv0990.com which browser blocks)
+//
+// Supported positions: leaderboard, medium, box, mobileSticky
 
-const BANNER_SIZE = ADS_CONFIG.bannerSize // { width: 728, height: 90 }
+const VALID_POSITIONS: BannerType[] = ['leaderboard', 'medium', 'box', 'mobileSticky']
 
 export async function GET(request: NextRequest) {
   const { searchParams } = new URL(request.url)
-  const position = searchParams.get('position')
+  const position = searchParams.get('position') as BannerType | null
 
-  if (position !== 'headerBanner') {
+  if (!position || !VALID_POSITIONS.includes(position)) {
     return new NextResponse('Invalid ad position', { status: 400 })
   }
 
-  const key = ADS_CONFIG.bannerKey
+  const key = ADS_CONFIG.banners[position]
+  const size = BANNER_SIZES[position]
 
   const html = `<!DOCTYPE html>
 <html>
@@ -40,8 +41,8 @@ export async function GET(request: NextRequest) {
   atOptions = {
     'key': '${key}',
     'format': 'iframe',
-    'height': ${BANNER_SIZE.height},
-    'width': ${BANNER_SIZE.width},
+    'height': ${size.height},
+    'width': ${size.width},
     'params': {}
   };
 </script>
