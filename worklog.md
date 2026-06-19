@@ -731,3 +731,30 @@ Stage Summary:
   2. Sitemaps → enter "sitemap.xml" → Submit
   3. Should now show "Success" instead of "Could not fetch"
 - Also recommend: submit same sitemap in Bing Webmaster Tools for extra traffic
+
+---
+Task ID: 15
+Agent: main
+Task: Update Google Analytics 4 ID to user's new Gmail account
+
+Work Log:
+- User wanted to switch GA4 to their own Gmail (previous ID was from a different Gmail)
+- Guided user through step-by-step GA4 setup process (account → property → data stream → measurement ID)
+- User created new GA4 property on their own Gmail and provided new Measurement ID: G-T0B8JMNB5L
+- Updated src/lib/site-config.ts: ga4Id changed from 'G-9PRHFNLQ1S' (old) → 'G-T0B8JMNB5L' (new)
+- Lint clean ✓
+- Committed (9c46406) + pushed to GitHub (48046ac..9c46406) ✓
+- Waited 100s for Vercel auto-deploy
+
+PRODUCTION VERIFICATION (https://digitalpointpro.vercel.app):
+- Homepage: HTTP 200 ✓
+- New GA4 ID G-T0B8JMNB5L appears 3 times in HTML (gtag config + script src) ✓
+- Old GA4 ID G-9PRHFNLQ1S: 0 occurrences (completely removed) ✓
+- googletagmanager.com script loading with new ID ✓
+- Script URL: https://www.googletagmanager.com/gtag/js?id=G-T0B8JMNB5L ✓
+
+Stage Summary:
+- GA4 ID successfully switched from old Gmail (G-9PRHFNLQ1S) to user's own Gmail (G-T0B8JMNB5L)
+- New GA4 property now tracking website traffic on production
+- User can verify data flowing in analytics.google.com → Reports → Realtime (visit own site to see self appear)
+- Historical data from old property is lost (user chose to create fresh property on own Gmail)
