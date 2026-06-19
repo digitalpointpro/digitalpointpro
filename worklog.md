@@ -883,3 +883,54 @@ Stage Summary:
   * Yahoo: ✓ Will show (Bing-powered)
   * DuckDuckGo: ✓ Will show (Bing-powered)
 - COMPLETE SEO SUCCESS — all platforms operational
+
+---
+Task ID: 17
+Agent: main
+Task: Fix favicon + add brand logo to Google search results
+
+Work Log:
+- User noticed Vercel's default logo showing next to site in Google search results (instead of their own logo)
+- User wanted their website logo to appear in search results
+- Investigated: favicon.ico was 404 (file didn't exist), apple-touch-icon was 404, Organization schema used logo.svg (Google prefers PNG)
+
+FIXES APPLIED:
+1. Generated multi-size favicons from icon.png using Python Pillow:
+   - favicon-16x16.png (16x16)
+   - favicon-32x32.png (32x32)
+   - favicon-48x48.png (48x48)
+   - favicon-96x96.png (96x96)
+   - favicon-192x192.png (192x192)
+   - favicon-512x512.png (512x512)
+   - apple-touch-icon.png (180x180)
+   - android-chrome-192x192.png + android-chrome-512x512.png
+   - favicon.ico (multi-size: 16, 32, 48) — fixed 404
+   - logo.png (512x512 PNG) — for Organization schema
+
+2. Updated src/app/layout.tsx icons config:
+   - Added 8 PNG favicons with proper sizes + types
+   - Added shortcut icon
+   - Fixed apple-touch-icon to use proper PNG (was 404)
+
+3. Updated Organization schema (JSON-LD) in layout.tsx:
+   - Changed logo from /logo.svg to /logo.png (Google prefers PNG)
+   - Added image field for richer knowledge panel
+
+4. Lint clean ✓
+5. Committed (232278b) + pushed to GitHub (0539de8..232278b)
+6. Waited 100s for Vercel auto-deploy
+
+PRODUCTION VERIFICATION:
+- /favicon.ico → 200 ✓ (was 404)
+- /favicon-16x16.png through /favicon-512x512.png → all 200 ✓
+- /apple-touch-icon.png → 200 ✓ (was 404)
+- /logo.png → 200 ✓ (new file)
+- HTML head: 10 favicon link tags properly rendered ✓
+- Organization schema: logo field = https://digitalpointpro.vercel.app/logo.png ✓
+
+Stage Summary:
+- Favicon infrastructure fully fixed
+- Google will now crawl proper favicons + Organization logo
+- Within 1-2 weeks Google will show Digital Point Pro's own logo (not Vercel default) in search results
+- Note: Google's favicon recrawl can take 1-2 weeks for established sites
+- Articles not yet showing in regular Google search (only homepage) is normal — articles take longer to index than site: search
