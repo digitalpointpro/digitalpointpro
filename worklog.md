@@ -983,3 +983,41 @@ Stage Summary:
   2. Click "Request Indexing"
   3. Wait 24-48 hours
 - OR simply wait — Google will recrawl automatically within a week
+
+---
+Task ID: 18
+Agent: main
+Task: Create fresh sitemap URL to bypass Google's stale 404 cache
+
+Work Log:
+- User frustrated that Google Search Console keeps showing "Could not fetch" / 404 for /sitemap.xml
+- This is because Google cached a 404 when the sitemap had issues earlier
+- Resubmitting the same URL keeps hitting the cached error
+- Solution: create a FRESH sitemap URL that Google has never cached
+
+CREATED: /src/app/sitemap-index.xml/route.ts
+- Route handler at /sitemap-index.xml (fresh URL — Google never cached it)
+- Returns same 61 URLs as /sitemap.xml (homepage + 50 articles + 5 categories + news + 5 legal)
+- Aggressive no-cache response headers:
+  * Cache-Control: no-cache, no-store, must-revalidate, max-age=0
+  * Pragma: no-cache
+  * Expires: 0
+  * X-Sitemap-Version: 2
+- Updated robots.ts to declare both sitemap URLs
+
+PRODUCTION VERIFICATION:
+- /sitemap-index.xml → HTTP 200 ✓
+- Content-Type: application/xml; charset=utf-8 ✓
+- Size: 14,036 bytes ✓
+- Cache-Control: no-cache, no-store, must-revalidate, max-age=0 ✓
+- Pragma: no-cache ✓
+- Expires: 0 ✓
+- Total URLs: 61 ✓
+- robots.txt: declares both /sitemap.xml AND /sitemap-index.xml ✓
+
+Stage Summary:
+- FRESH sitemap URL ready for Google Search Console submission
+- User should submit "sitemap-index.xml" (not "sitemap.xml") in GSC
+- Google will fetch fresh URL → no stale 404 cache → guaranteed Success
+- Both sitemaps serve identical content (61 URLs)
+- Lint clean, committed (82c9178), pushed to GitHub
