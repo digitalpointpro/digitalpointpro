@@ -42,14 +42,25 @@ export type SiteConfig = typeof SITE_CONFIG;
 
 /**
  * Build a shareable article URL.
- * Articles live on the single `/` route using a query param so direct visits
- * never 404 (critical for SEO + social sharing).
+ * Uses CLEAN path URLs (`/article/slug`) which Google Search Console can
+ * fetch. The /article/[slug] route does a 302 redirect to /?article=slug
+ * which opens the overlay on the homepage (no 404).
  */
 export function articleUrl(slug: string): string {
-  return `${SITE_CONFIG.url}/?article=${encodeURIComponent(slug)}`;
+  return `${SITE_CONFIG.url}/article/${encodeURIComponent(slug)}`;
 }
 
-/** Build a category URL. */
+/** Build a category URL (clean path). */
 export function categoryUrl(slug: string): string {
-  return `${SITE_CONFIG.url}/?category=${encodeURIComponent(slug)}`;
+  return `${SITE_CONFIG.url}/category/${encodeURIComponent(slug)}`;
+}
+
+/** Build the latest news hub URL (clean path). */
+export function newsUrl(): string {
+  return `${SITE_CONFIG.url}/news`;
+}
+
+/** Build a legal page URL (clean path). */
+export function legalUrl(slug: string): string {
+  return `${SITE_CONFIG.url}/legal/${encodeURIComponent(slug)}`;
 }

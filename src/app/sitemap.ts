@@ -5,10 +5,14 @@ import { SITE_CONFIG } from '@/lib/site-config';
 
 /**
  * Auto-generated XML sitemap.
- * Submitted to Google Search Console so all articles + categories get indexed.
  *
- * Uses query-param URLs (e.g. /?article=slug) which resolve to the single `/`
- * route — direct visits never 404 and the correct overlay opens on load.
+ * IMPORTANT: Uses CLEAN PATH URLs (`/article/slug`, `/category/slug`, etc.)
+ * NOT query-param URLs. Google Search Console returns "Could not fetch"
+ * for query-param URLs — clean paths are fetchable and indexable.
+ *
+ * The clean path routes (/article/[slug], /category/[slug], /news, /legal/[slug])
+ * do a 302 redirect to the overlay-based homepage, so users see the article
+ * overlay while Google indexes the clean canonical URL.
  */
 export default function sitemap(): MetadataRoute.Sitemap {
   const base = SITE_CONFIG.url;
@@ -24,40 +28,40 @@ export default function sitemap(): MetadataRoute.Sitemap {
     },
   ];
 
-  // All published articles
+  // All published articles — clean path /article/slug
   for (const article of articlesData) {
     if (!article.published) continue;
     entries.push({
-      url: `${base}/?article=${encodeURIComponent(article.slug)}`,
+      url: `${base}/article/${encodeURIComponent(article.slug)}`,
       lastModified: new Date(article.updatedAt || article.createdAt),
       changeFrequency: 'weekly',
       priority: 0.8,
     });
   }
 
-  // All categories
+  // All categories — clean path /category/slug
   for (const cat of categoriesData) {
     entries.push({
-      url: `${base}/?category=${encodeURIComponent(cat.slug)}`,
+      url: `${base}/category/${encodeURIComponent(cat.slug)}`,
       lastModified: new Date(cat.updatedAt || cat.createdAt),
       changeFrequency: 'daily',
       priority: 0.7,
     });
   }
 
-  // Latest news hub
+  // Latest news hub — clean path /news
   entries.push({
-    url: `${base}/?news=1`,
+    url: `${base}/news`,
     lastModified: now,
     changeFrequency: 'hourly',
     priority: 0.9,
   });
 
-  // Legal / static pages
+  // Legal / static pages — clean path /legal/slug
   const legalPages = ['about', 'contact', 'privacy', 'terms', 'disclaimer'];
   for (const slug of legalPages) {
     entries.push({
-      url: `${base}/?legal=${slug}`,
+      url: `${base}/legal/${slug}`,
       lastModified: now,
       changeFrequency: 'monthly',
       priority: 0.4,

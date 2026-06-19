@@ -46,7 +46,7 @@ import {
   Check,
 } from 'lucide-react'
 import { NewsArticleJsonLd, BreadcrumbJsonLd } from '@/components/structured-data'
-import { articleUrl, SITE_CONFIG } from '@/lib/site-config'
+import { articleUrl, categoryUrl, SITE_CONFIG } from '@/lib/site-config'
 
 // Component that splits article content. Smart Link is shown only ONCE after the article body (not mid-article).
 function ArticleBodyWithAds({ content }: { content: string }) {
@@ -132,8 +132,9 @@ export default function ArticleOverlay() {
     return () => clearTimeout(timer)
   }, [article?.content])
 
-  // Use canonical article URL (query-param based so it never 404s).
-  // Declared early because the title/meta effect below depends on it.
+  // Use canonical article URL (clean path /article/slug for SEO + sharing).
+  // The /article/[slug] route 302-redirects to /?article=slug which opens
+  // this overlay — no 404 ever. Clean path is Google-fetchable.
   const shareUrl = article ? articleUrl(article.slug) : ''
   const shareTitle = article?.title || ''
 
@@ -280,7 +281,7 @@ export default function ArticleOverlay() {
       <BreadcrumbJsonLd
         items={[
           { name: 'Home', url: SITE_CONFIG.url },
-          { name: article.category, url: `${SITE_CONFIG.url}/?category=${article.categorySlug || ''}` },
+          { name: article.category, url: categoryUrl(article.categorySlug || '') },
           { name: article.title, url: shareUrl },
         ]}
       />
