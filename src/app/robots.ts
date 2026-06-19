@@ -25,7 +25,7 @@ export default function robots(): MetadataRoute.Robots {
         allow: ['/', '/favicon.ico', '/icon.png', '/logo.png', '/favicon-*.png', '/apple-touch-icon.png'],
       },
     ],
-    sitemap: `${SITE_CONFIG.url}/sitemap.xml`,
+    sitemap: [`${SITE_CONFIG.url}/sitemap.xml`, `${SITE_CONFIG.url}/sitemap-index.xml`],
     host: SITE_CONFIG.url,
   };
 }
