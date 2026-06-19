@@ -1021,3 +1021,35 @@ Stage Summary:
 - Google will fetch fresh URL → no stale 404 cache → guaranteed Success
 - Both sitemaps serve identical content (61 URLs)
 - Lint clean, committed (82c9178), pushed to GitHub
+
+---
+Task ID: 18 (compact format)
+Agent: main
+Task: Fix "Sitemap could not be read" error with compact XML format
+
+Work Log:
+- User submitted sitemap-index.xml in Google Search Console
+- 404 error GONE (progress!) but got "Sitemap could not be read" error
+- XML validation showed structure was valid, but had leading whitespace + newlines
+- Hypothesis: Google's strict XML parser may struggle with multi-line indented format
+
+FIX APPLIED:
+- Rewrote /sitemap-index.xml/route.ts to use COMPACT single-line XML
+- Each <url> entry is now on its own line but with NO leading whitespace
+- Entire XML is essentially one line: <?xml...?><urlset>...<url>...</url>...</urlset>
+- Reduced size from 14,036 bytes → 12,448 bytes
+- Bumped X-Sitemap-Version to 3
+
+PRODUCTION VERIFICATION:
+- /sitemap-index.xml → 200 OK ✓
+- Size: 12,448 bytes (was 14,036) ✓
+- Content-Type: application/xml; charset=utf-8 ✓
+- Valid XML: 61 URLs ✓
+- Googlebot fetch: 200 OK, 12,448 bytes ✓
+- Compact format confirmed (single-line XML)
+
+Stage Summary:
+- Compact XML sitemap live
+- User should remove old sitemap-index.xml entry and resubmit fresh
+- Expected: "Success" status within 5-10 minutes
+- 404 error already gone — just need Google to re-read with compact format
