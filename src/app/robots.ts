@@ -3,6 +3,7 @@ import { SITE_CONFIG } from '@/lib/site-config';
 
 /**
  * robots.txt — allows all crawlers, points to the sitemap.
+ * Explicitly allows favicon + logo access for Googlebot-Image (favicon crawler).
  */
 export default function robots(): MetadataRoute.Robots {
   return {
@@ -17,6 +18,11 @@ export default function robots(): MetadataRoute.Robots {
       {
         userAgent: 'Googlebot-News',
         allow: '/',
+      },
+      // Explicitly allow Google's favicon crawler to access icons + logo
+      {
+        userAgent: 'Googlebot-Image',
+        allow: ['/', '/favicon.ico', '/icon.png', '/logo.png', '/favicon-*.png', '/apple-touch-icon.png'],
       },
     ],
     sitemap: `${SITE_CONFIG.url}/sitemap.xml`,
