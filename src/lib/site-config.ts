@@ -36,6 +36,10 @@ export const SITE_CONFIG = {
   // Step 4: Save → commit → push to GitHub → Vercel auto-deploys
   // Step 5: Back in GSC, click "Verify" — Google fetches the meta tag from your live site
   gscVerification: '',
+  // Bing Webmaster Tools verification token
+  // Bing → Add site → Meta Tag verification → copy content="..." value here
+  // Renders as <meta name="msvalidate.01" content="..." />
+  bingVerification: '9FA0CF2DD909F678E5FA3C80E04F0FA4',
 } as const;
 
 export type SiteConfig = typeof SITE_CONFIG;

@@ -53,10 +53,16 @@ export const metadata: Metadata = {
   alternates: {
     canonical: "/",
   },
-  // Google Search Console verification — paste token in site-config.ts
-  verification: SITE_CONFIG.gscVerification
-    ? { google: SITE_CONFIG.gscVerification }
-    : undefined,
+  // Google Search Console + Bing Webmaster Tools verification
+  // Tokens are set in site-config.ts
+  verification: {
+    ...(SITE_CONFIG.gscVerification
+      ? { google: SITE_CONFIG.gscVerification }
+      : {}),
+    ...(SITE_CONFIG.bingVerification
+      ? { other: { 'msvalidate.01': SITE_CONFIG.bingVerification } }
+      : {}),
+  },
   openGraph: {
     type: "website",
     locale: SITE_CONFIG.locale,
