@@ -4,6 +4,9 @@ import { SITE_CONFIG } from '@/lib/site-config';
 /**
  * robots.txt — allows all crawlers, points to the sitemap.
  * Explicitly allows favicon + logo access for Googlebot-Image (favicon crawler).
+ *
+ * NOTE: 'Host' directive intentionally omitted — Googlebot does not support it
+ * and shows a "Rule ignored by Googlebot" warning in Search Console.
  */
 export default function robots(): MetadataRoute.Robots {
   return {
@@ -25,7 +28,6 @@ export default function robots(): MetadataRoute.Robots {
         allow: ['/', '/favicon.ico', '/icon.png', '/logo.png', '/favicon-*.png', '/apple-touch-icon.png'],
       },
     ],
-    sitemap: [`${SITE_CONFIG.url}/sitemap.xml`, `${SITE_CONFIG.url}/sitemap-index.xml`],
-    host: SITE_CONFIG.url,
+    sitemap: [`${SITE_CONFIG.url}/sitemap.xml`, `${SITE_CONFIG.url}/sitemap-index.xml`, `${SITE_CONFIG.url}/sitemap-news.xml`],
   };
 }
