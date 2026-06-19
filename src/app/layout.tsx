@@ -102,10 +102,17 @@ export const metadata: Metadata = {
   manifest: "/manifest.webmanifest",
   icons: {
     icon: [
-      { url: "/icon.png", sizes: "1024x1024", type: "image/png" },
       { url: "/favicon.ico", sizes: "any" },
+      { url: "/favicon-16x16.png", sizes: "16x16", type: "image/png" },
+      { url: "/favicon-32x32.png", sizes: "32x32", type: "image/png" },
+      { url: "/favicon-48x48.png", sizes: "48x48", type: "image/png" },
+      { url: "/favicon-96x96.png", sizes: "96x96", type: "image/png" },
+      { url: "/favicon-192x192.png", sizes: "192x192", type: "image/png" },
+      { url: "/favicon-512x512.png", sizes: "512x512", type: "image/png" },
+      { url: "/icon.png", sizes: "1024x1024", type: "image/png" },
     ],
-    apple: [{ url: "/icon.png", sizes: "1024x1024" }],
+    shortcut: ["/favicon.ico"],
+    apple: [{ url: "/apple-touch-icon.png", sizes: "180x180", type: "image/png" }],
   },
   appleWebApp: {
     capable: true,
@@ -146,7 +153,8 @@ export default function RootLayout({
             "@type": "Organization",
             name: SITE_CONFIG.name,
             url: SITE_CONFIG.url,
-            logo: `${SITE_CONFIG.url}${SITE_CONFIG.logo}`,
+            logo: `${SITE_CONFIG.url}/logo.png`,
+            image: `${SITE_CONFIG.url}/logo.png`,
             description: SITE_CONFIG.description,
             sameAs: [
               SITE_CONFIG.social.facebook,
