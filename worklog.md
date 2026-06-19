@@ -778,3 +778,27 @@ Stage Summary:
   5. Realtime active user appears in GA4 dashboard ✓ (user confirmed)
 - Task complete. User's own Gmail GA4 property is now tracking digitalpointpro.vercel.app traffic.
 - Historical data from old property (G-9PRHFNLQ1S) remains in old account but is no longer collecting new data.
+
+---
+Task ID: 16
+Agent: main
+Task: Add Bing Webmaster Tools verification meta tag
+
+Work Log:
+- User submitted site to Bing Webmaster Tools
+- Bing asked for meta tag verification: <meta name="msvalidate.01" content="9FA0CF2DD909F678E5FA3C80E04F0FA4" />
+- Added `bingVerification` field to SITE_CONFIG in src/lib/site-config.ts with token 9FA0CF2DD909F678E5FA3C80E04F0FA4
+- Updated src/app/layout.tsx metadata.verification to render msvalidate.01 via Next.js `other` field
+- Lint clean
+- Committed (0539de8) + pushed to GitHub (9c46406..0539de8)
+- Waited 90s for Vercel auto-deploy
+
+PRODUCTION VERIFICATION:
+- `<meta name="msvalidate.01" content="9FA0CF2DD909F678E5FA3C80E04F0FA4"/>` present in HTML head ✓
+- Tag renders correctly on https://digitalpointpro.vercel.app/
+
+Stage Summary:
+- Bing verification meta tag is live on production
+- User can now click "Verify" in Bing Webmaster Tools → ownership will be confirmed
+- After verification, user can submit sitemap.xml in Bing for indexation across Bing/Yahoo/DuckDuckGo
+- Google Search Console still pending 24-48h cache refresh for sitemap (separate issue, Google's side)
