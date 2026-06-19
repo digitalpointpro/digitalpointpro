@@ -934,3 +934,52 @@ Stage Summary:
 - Within 1-2 weeks Google will show Digital Point Pro's own logo (not Vercel default) in search results
 - Note: Google's favicon recrawl can take 1-2 weeks for established sites
 - Articles not yet showing in regular Google search (only homepage) is normal — articles take longer to index than site: search
+
+---
+Task ID: 17 (favicon fix v2)
+Agent: main
+Task: Force Google to show custom logo (not Vercel default) in search results
+
+Work Log:
+- User reported Google still showing Vercel default logo (blue globe) in search results
+- Investigated via Google Favicon API (https://www.google.com/s2/favicons?domain=digitalpointpro.vercel.app)
+- Google's cached favicon = blue globe icon (Vercel default or stale cache)
+- Our actual favicon = green DPP letters (correct)
+- Discovered ROOT CAUSE: icon.png was actually JPEG data with .png extension
+  - `file` command revealed: "JPEG image data, JFIF standard"
+  - Wrong content-type confused Google's favicon crawler
+
+FIXES APPLIED:
+1. Re-saved icon.png as proper PNG using Pillow:
+   - Before: JPEG image data, 1024x1024, 36769 bytes
+   - After: PNG image data, 1024x1024, RGBA, 184356 bytes
+2. Regenerated ALL favicons from the now-proper PNG source:
+   - favicon-16x16.png through favicon-512x512.png
+   - apple-touch-icon.png (180x180)
+   - logo.png (512x512)
+   - favicon.ico (multi-size)
+3. Updated src/app/robots.ts:
+   - Added explicit Googlebot-Image rule (Google's favicon crawler)
+   - Allow: /favicon.ico, /icon.png, /logo.png, /favicon-*.png, /apple-touch-icon.png
+   - Tells Google's favicon crawler it's explicitly allowed
+
+4. Lint clean ✓
+5. Committed (e45cd8b) + pushed to GitHub (232278b..e45cd8b)
+6. Waited 100s for Vercel auto-deploy
+
+PRODUCTION VERIFICATION:
+- icon.png now returns proper PNG (was JPEG) ✓
+- robots.txt now includes Googlebot-Image rule ✓
+- Google Favicon API cache: STILL showing old blue globe (expected — Google cache takes time)
+- MD5 unchanged: b8a0bf372c762e966cc99ede8682bc71
+
+Stage Summary:
+- Infrastructure fully fixed:
+  * Proper PNG favicons (was JPEG with wrong extension)
+  * Googlebot-Image explicitly allowed in robots.txt
+- Google's favicon cache will refresh in 1-7 days
+- User needs to use Google Search Console URL Inspection to force recrawl:
+  1. Search Console → URL Inspection → https://digitalpointpro.vercel.app/favicon.ico
+  2. Click "Request Indexing"
+  3. Wait 24-48 hours
+- OR simply wait — Google will recrawl automatically within a week
