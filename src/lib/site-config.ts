@@ -25,7 +25,7 @@ export const SITE_CONFIG = {
     youtube: 'https://youtube.com/@digitalpointpro',
   },
   // Analytics — replace with real IDs after setup
-  ga4Id: 'G-9PRHFNLQ1S', // e.g. 'G-XXXXXXXXXX'
+  ga4Id: 'G-T0B8JMNB5L', // e.g. 'G-XXXXXXXXXX'
   // OneSignal push notifications — replace with real app ID after setup
   oneSignalAppId: 'a6d9b648-eb13-43e7-90fb-c744bf8cea57',
   // Google Search Console verification token
